@@ -1,4 +1,4 @@
-# imbox0client
+# imbox-client
 
 ## Install
 
