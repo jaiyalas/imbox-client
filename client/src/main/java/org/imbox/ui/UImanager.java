@@ -1,4 +1,4 @@
-package org.imbox.uimgt;
+package org.imbox.ui;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
