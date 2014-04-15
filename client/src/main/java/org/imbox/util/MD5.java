@@ -8,7 +8,7 @@ public class MD5{
     protected static StringBuffer  digest_strbuf;
     protected static MessageDigest md5Instance;
     static {
-	try {Read.md5Instance = MessageDigest.getInstance("MD5");}
+	try {MD5.md5Instance = MessageDigest.getInstance("MD5");}
 	catch(NoSuchAlgorithmException e)
 	  {throw new ExceptionInInitializerError(e);}}
 
@@ -17,7 +17,7 @@ public class MD5{
 	MD5.md5Instance.reset();
 	MD5.digest = md5Instance.digest(rawData);
 	MD5.digest_strbuf.delete(0, MD5.digest_strbuf.length());        
-	for(byte b : Read.digest)
+	for(byte b : MD5.digest)
 	    MD5.digest_strbuf.append(String.format("%02x", b & 0xff));
 	return MD5.digest_strbuf.toString();
     }
