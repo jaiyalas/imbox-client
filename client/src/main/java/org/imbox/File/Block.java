@@ -8,11 +8,11 @@ public class Block{
 
     private byte[] bytes;
     private String blockName;
-    private boolean prefixed;
+    private boolean prefixed; // prefix-flag 
 
-    public byte[] getBytes() {return this.bytes;}
-    public String getName()  {return this.blockName;}
-    public boolean hasPrefix(){return this.prefixed;}
+    public byte[]  getBytes()  {return this.bytes;}
+    public String  getName()   {return this.blockName;}
+    public boolean hasPrefix() {return this.prefixed;}
 
     private Block(){};
     private Block(byte[] inBytes){this.bytes = inBytes;};
@@ -36,6 +36,7 @@ public class Block{
 	b.blockName   = prefixComplete(bNum,bIdx,rawName);
 	return b;
     };
+    
     
     public static Block readBlock(int bNum, int bIdx,String rawBlockName) throws IOException{
 	String bName = prefixComplete(bNum,bIdx,rawBlockName);
