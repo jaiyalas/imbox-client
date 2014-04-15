@@ -8,7 +8,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.Timer;
 
-
 public class UImanager
 {
 	private JFrame mainframe;
@@ -18,7 +17,7 @@ public class UImanager
 		mainframe = new JFrame();
 		mainframe.setSize(300, 400);
 		mainframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		text = new JLabel("Welcome to IMBOX!");
+		text = new JLabel("Welcome to IMBOX!",javax.swing.SwingConstants.CENTER);
 		mainframe.getContentPane().add(BorderLayout.CENTER,text);
 	}
 	
