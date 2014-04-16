@@ -50,7 +50,7 @@ public class Read{
 	filesReunification(bNum,fullName);
     }
     
-
+/* ==================================================== */
     private static String prefixComplete(int totalBlockNum, 
 					 int blockIndex, 
 					 String fullName){
