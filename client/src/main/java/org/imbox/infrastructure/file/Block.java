@@ -1,4 +1,4 @@
-package org.imbox.File.Block;
+package org.imbox.infrastructure.file;
 
 import java.io.*;
 import org.apache.commons.io.FileUtils; 

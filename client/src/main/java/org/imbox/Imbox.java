@@ -9,8 +9,9 @@ import java.io.IOException;
 
 import org.apache.commons.io.FileUtils; 
 
-import org.imbox.uimgt.*;
-import org.imbox.util.*;
+import org.imbox.ui.*;
+import org.imbox.infrastructure.*;
+import org.imbox.infrastructure.file.*;
 
 public class Imbox {
     private static void createAndShowGUI() {
