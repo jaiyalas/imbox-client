@@ -17,9 +17,9 @@ public class FileHandler{
     
     /* as using int as index, the file size must less than or equals to 2GB */
     /* as a matter of fact, the max length of array in Java is */
-    public static List<Block> genBlocksFromChannel(FileChannel channel) throws IOException{
+    public static List<Block> genBlocksFromChannel(FileChannel channel, 
+						   String filename) throws IOException{
 	List<Block> bs = new Vector<Block>();
-	
 	ByteBuffer bb  = ByteBuffer.allocate(Const.blocksize);
 	int bIdx = 0;
 	int bNum = (int) Math.ceil(channel.size() / (double) Const.blocksize);
@@ -30,10 +30,10 @@ public class FileHandler{
 	    byte[] bytes = new byte[bb.limit()];
 	    for (int i = 0; i < bb.limit(); i++){bytes[i] = bb.get();}
 	    //save one block from byte[]
-	    // ** bytes2Block(bytes, prefixComplete(bNum,bIdx,fullName));
+	    Block block = Block.genBlock(bytes,bNum,bIdx,filename);
+	    bs.add(block);
 	    bb.clear(); 
             
-	    //System.out.println(Hash.hashMD5(bytes));
         }
 	
 	return bs;
