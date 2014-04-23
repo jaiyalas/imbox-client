@@ -10,7 +10,7 @@ import java.io.IOException;
 
 import org.apache.commons.io.FileUtils; 
 
-import org.imbox.ui.*;
+import org.imbox.client.*;
 import org.imbox.infrastructure.*;
 import org.imbox.infrastructure.file.*;
 
@@ -49,7 +49,10 @@ public class Imbox {
 	UImanager ui = new UImanager();
 
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run(){ ui.show(); }
+            public void run(){ 
+		ui.show(); 
+		ui.refresh();
+	    }
         });
 
 	//UImanager ui = new UImanager();
