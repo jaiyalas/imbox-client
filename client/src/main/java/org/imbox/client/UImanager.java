@@ -7,11 +7,14 @@ import javax.swing.*;
 import javax.swing.text.*;
 import javax.swing.border.*;
 
+import org.imbox.infrastructure.network.loginmaster.Loginmaster;
+
 public class UImanager{
     
     private JFrame         mainFrame;
     private JPanel         mainPanel;
     private int            lineCtr;
+    private Loginmaster    loginmaster;
 
     private JPanel         displayPanel;
     private JScrollPane    scroll;
@@ -27,11 +30,14 @@ public class UImanager{
 
     public UImanager(){
 
+	this.loginmaster = new Loginmaster();
+
 	/** Main Frame Init **/
 	
 	mainFrame = new JFrame("IMBOX");
 	mainPanel = new JPanel();
 	lineCtr   = 0;
+	mainFrame.setResizable(false);
 	mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 	/** Console Area Init **/
@@ -42,13 +48,13 @@ public class UImanager{
 
 	/** Console Area Setup **/
 
-	display.setEditable (false);
         display.setRows(20);
 	display.setColumns(25);
 	display.setLineWrap(true);  
         display.setWrapStyleWord(true);  
 	display.setBackground(Color.BLACK);
 	display.setForeground(Color.GREEN);
+	display.setEditable(false);
 	scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.
 					  VERTICAL_SCROLLBAR_ALWAYS);
 	displayPanel.setBorder(new TitledBorder
@@ -67,11 +73,10 @@ public class UImanager{
 	button.setSize(pwdField.getSize());
 	stateLabel.setSize(pwdField.getSize());
 	loginPanel.setLayout(new GridLayout(2,2));
-
-	stateLabel.setForeground(Color.RED);
+ 
 	stateLabel.setHorizontalAlignment(JLabel.CENTER);
 	stateLabel.setHorizontalTextPosition(JLabel.CENTER);
-	stateLabel.setText("DISCONNECTED"); 
+	setDISCONNECTED();
 
 	nameField.setBorder(new TitledBorder
 			     (new EtchedBorder(),"User:"));
@@ -92,7 +97,12 @@ public class UImanager{
 	mainPanel.add(loginPanel,BorderLayout.SOUTH);
 	mainFrame.getContentPane().add(mainPanel);
 	mainFrame.setLocationRelativeTo(null);
-	mainFrame.pack();	
+	mainFrame.pack();
+	
+	appendMsg(loginmaster.getMAC());
+
+	btnBehavior(ae->connecting());
+	
     };
 
     public void show(){mainFrame.setVisible(true);};	
@@ -110,7 +120,64 @@ public class UImanager{
 	display.append("\n ["+lineCtr+"]> "+msg);
 	refresh();
     };
-    public void refresh(){
+    private void refresh(){
 	display.setCaretPosition(display.getDocument().getLength());
     }; 
+
+    public void setSYNCHRONIZED(){
+	stateLabel.setForeground(Color.BLUE);
+	stateLabel.setText("SYNCHRONIZED");
+	nameField.setEnabled(false);
+	pwdField.setEnabled(false);
+	button.setEnabled(false);
+    };
+    public void setSYNCHRONIZING(){
+	stateLabel.setForeground(Color.MAGENTA);
+	stateLabel.setText("SYNCHRONIZING");
+	nameField.setEnabled(false);
+	pwdField.setEnabled(false);
+	button.setEnabled(false);
+    };
+    public void setDISCONNECTED(){
+	stateLabel.setForeground(Color.GRAY);
+	stateLabel.setText("DISCONNECTED"); 
+	button.setEnabled(true);
+	nameField.setEnabled(true);
+	pwdField.setEnabled(true);
+    };
+    public void setCONFLICT(){
+	stateLabel.setForeground(Color.ORANGE);
+	stateLabel.setText("SYNCHRONIZED with CONFLICT!");
+	nameField.setEnabled(false);
+	pwdField.setEnabled(false);
+	button.setEnabled(false);
+    };
+
+    public void connecting(){	
+	String name = nameField.getText();
+	String pwd = pwdField.getText();
+	if(name.equals("") || 
+	   pwd.equals("")){
+	    appendMsg("Information incomplete! "+
+		      "Please check you account name and password!");
+	}else{
+	    /** NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE **/
+	    loginmaster.setInfo(name,pwd);
+	    //loginmaster.authenticate();
+	    if(loginmaster.getstatus()){
+		appendMsg("Connected to Server\n    "+
+			  "You're logging in server with \n    <"+
+			  name+"/"+
+			  pwd+">");
+		setSYNCHRONIZING();
+		/** auto-sync should be involked here **/
+		setSYNCHRONIZED();
+	    }else{ //loginFail
+		appendMsg("Login failed, please verify your network "+
+			  "and/or your login information.");
+	    }
+	}	    
+	
+    };
+
 }

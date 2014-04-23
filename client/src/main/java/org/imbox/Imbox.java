@@ -50,10 +50,9 @@ public class Imbox {
 
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run(){
-		ui.btnBehavior(ae->ui.appendMsg("Yooo~"));
+		//ui.btnBehavior(ae->ui.syncState());
 		ui.show(); 
-		for(int i=0;i<=100;i++) ui.appendMsg("Event"+i);  
-		//ui.refresh();
+		//for(int i=0;i<=100;i++) ui.appendMsg("Event"+i);
 	    }
         });
 
