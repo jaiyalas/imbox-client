@@ -49,9 +49,11 @@ public class Imbox {
 	UImanager ui = new UImanager();
 
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run(){ 
+            public void run(){
+		ui.btnBehavior(ae->ui.appendMsg("Yooo~"));
 		ui.show(); 
-		ui.refresh();
+		for(int i=0;i<=100;i++) ui.appendMsg("Event"+i);  
+		//ui.refresh();
 	    }
         });
 
