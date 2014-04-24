@@ -3,7 +3,7 @@ import java.util.Date;
 import org.apache.commons.io.monitor.FileAlterationListener;
 import org.apache.commons.io.monitor.FileAlterationObserver;
 
-public class MonitorImp implements FileAlterationListener {
+public class MonitorImp implements FileAlterationListener{
  
     public void onStart(final FileAlterationObserver observer) {
         System.out.println("The WindowsFileListener has STARTed on " + observer.getDirectory().getAbsolutePath());

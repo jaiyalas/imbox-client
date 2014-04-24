@@ -3,7 +3,6 @@ package org.imbox.infrastructure;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import org.imbox.infrastructure.Error;
 
 public class Hash{
     /* old version */
@@ -14,13 +13,19 @@ public class Hash{
     //	try {Hash.md5Instance = MessageDigest.getInstance("MD5");}
     //	catch(NoSuchAlgorithmException e)
     //	  {throw new ExceptionInInitializerError(e);}}
-    public static String hashMD5(byte[] rawData)throws NoSuchAlgorithmException{
-	MessageDigest md5 = MessageDigest.getInstance("MD5");
-	md5.reset();
-	byte[]        digest = md5.digest(rawData);
-	StringBuffer  sb     = new StringBuffer();        
-	for(byte i : digest)
-	    sb.append(String.format("%02x", i & 0xff));
-	return sb.toString();
+    public static String hashMD5(byte[] rawData){
+	try{
+	    MessageDigest md5 = MessageDigest.getInstance("MD5");
+	    md5.reset();
+	    byte[]        digest = md5.digest(rawData);
+	    StringBuffer  sb     = new StringBuffer();        
+	    for(byte i : digest)
+		sb.append(String.format("%02x", i & 0xff));
+	    return sb.toString();
+	}catch(NoSuchAlgorithmException e){
+	    System.err.println(e.toString());
+	    System.exit(1);
+	}
+	return "";
     }
 }
