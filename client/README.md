@@ -4,12 +4,12 @@
 
 **Building**
 
-  * JDK 1.6+ (Java 8 recommended)
+  * JDK 1.8+
   * [Maven](https://maven.apache.org/) 
 
 **Executing**
 
-  * JRE 1.6+ (Java 8 recommended)
+  * JRE 1.8+
 
 ## Usage
 
