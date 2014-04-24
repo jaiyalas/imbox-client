@@ -51,7 +51,7 @@ public class UImanager{
         display.setRows(20);
 	display.setColumns(25);
 	display.setLineWrap(true);  
-        display.setWrapStyleWord(true);  
+        display.setWrapStyleWord(false);  
 	display.setBackground(Color.BLACK);
 	display.setForeground(Color.GREEN);
 	display.setEditable(false);
@@ -152,23 +152,28 @@ public class UImanager{
 	pwdField.setEnabled(false);
 	button.setEnabled(false);
     };
+    public void setSHUTDOWN(){
+	stateLabel.setForeground(Color.GRAY);
+	stateLabel.setText("SYSTEM ERROR");
+	nameField.setEnabled(false);
+	pwdField.setEnabled(false);
+	button.setEnabled(false);
+    };
 
     public void connecting(){	
 	String name = nameField.getText();
 	String pwd = pwdField.getText();
 	if(name.equals("") || 
 	   pwd.equals("")){
-	    appendMsg("Information incomplete! "+
-		      "Please check you account name and password!");
+	    appendMsg("Please check you account name and password!");
 	}else{
 	    /** NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE **/
 	    loginmaster.setInfo(name,pwd);
 	    //loginmaster.authenticate();
 	    if(loginmaster.getstatus()){
-		appendMsg("Connected to Server\n    "+
-			  "You're logging in server with \n    <"+
-			  name+"/"+
-			  pwd+">");
+		appendMsg("Connecting to Server. "+
+			  "You're logging in server with \n"+
+			  "    <"+name+"/"+pwd+">");
 		setSYNCHRONIZING();
 		/** auto-sync should be involked here **/
 		setSYNCHRONIZED();
