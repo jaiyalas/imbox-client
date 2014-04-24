@@ -1,0 +1,57 @@
+token = 20140423 + accountname
+用AES加密 key用MACaddress
+
+
+errorcode:
+-2: http failure
+-1: connection failure
+0: no problem
+1: authentication failure
+2: server side error (need to be more specific in future)
+20: exception failure (see exception log) 
+
+
+JSON:
+/createaccount
+	POST {'account'|'password'|'MAC'}
+	server return {'token' | 'succ' | 'errorcode'}
+
+
+/login
+	POST {'account'  | 'password' | 'MAC' }
+	server return {'token' | 'succ' | 'errorcode'}
+
+/getserversnapshot 
+	GET
+	server return {'snapshot':[blocknames]}
+	
+/getserverlock
+	POST {'token'|'MAC'}
+	server return {'succ' | 'errorcode'}
+
+/releaseserverlock
+	POST {'token'|'MAC'}
+	server return {'succ'| 'errorcode'}
+	
+
+/getfile
+	POST {'token'|'blockname'|'filename'| 'seq'}
+	server return {'succ'|'data'|'errorcode'}
+	
+/postfile
+	POST {'token' | 'blockdata'|'seq'}
+	server return {'succ'| 'errorcode'}
+	
+/generateURL
+	POST {'account'|'filename'}
+	server return {'URL'|'succ'| 'errorcode'}
+	
+/generateFile
+	POST {'account'|'filename'}
+	server return {'data'|'succ'| 'errorcode'}
+		
+'' is tag name
+{} is json object
+[] is json array
+undefined POST/GET is free for use(better blocked?)
+
