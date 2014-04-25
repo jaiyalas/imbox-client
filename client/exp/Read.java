@@ -49,19 +49,7 @@ public class Read{
 	/* === FILE REUNION === */
 	filesReunification(bNum,fullName);
     }
-    
-/* ==================================================== */
-    private static String prefixComplete(int totalBlockNum, 
-					 int blockIndex, 
-					 String fullName){
-	StringBuffer sb = new StringBuffer();
-	sb.append(totalBlockNum);
-	sb.append("_");
-	sb.append(blockIndex);
-	sb.append("_");
-	sb.append(fullName);
-	return sb.toString();
-    }
+
     private static int filesReunification(int bNum, String fullName){
 	try{
 	    OutputStream os = new FileOutputStream(new File("new___"+fullName));
@@ -77,6 +65,21 @@ public class Read{
 	    return(-1);
 	}
     }
+
+    
+/* ==================================================== */
+    private static String prefixComplete(int totalBlockNum, 
+					 int blockIndex, 
+					 String fullName){
+	StringBuffer sb = new StringBuffer();
+	sb.append(totalBlockNum);
+	sb.append("_");
+	sb.append(blockIndex);
+	sb.append("_");
+	sb.append(fullName);
+	return sb.toString();
+    }
+
     private static int bytes2Block(byte[] bytes, String fname) throws IOException{
 	OutputStream os = new FileOutputStream(new File(fname));
 	IOUtils.write(bytes, os);

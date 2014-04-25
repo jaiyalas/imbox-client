@@ -15,7 +15,7 @@ public class MonitorShell{
     
     private UIManager ui;
     
-    private 
+    private MonitorShell(){};
 
     public MonitorShell(){
 	workspace = new File(Workspace.HOME);
