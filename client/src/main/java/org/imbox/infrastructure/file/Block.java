@@ -9,8 +9,6 @@ import org.apache.commons.io.IOUtils;
 import org.imbox.infrastructure.*;
 import org.imbox.infrastructure.file.*;
 
-// BN may be String or byte[] or anything 
-// which can present a 128 bit-string
 public class Block{
 
     private byte[] content;

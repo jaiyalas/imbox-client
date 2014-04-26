@@ -1,6 +1,7 @@
 package org.imbox.client.fileMonitor;
 
-import java.io.File;
+import java.io.*;
+import java.util.*;
 import java.util.function.*;
 import org.apache.commons.io.monitor.*;
 
@@ -10,6 +11,7 @@ import org.imbox.client.synchronize.*;
 
 import org.imbox.infrastructure.*;
 import org.imbox.infrastructure.log.*;
+import org.imbox.infrastructure.file.*;
 
 // this is a client only module
 public class MonitorShell{
@@ -46,6 +48,15 @@ public class MonitorShell{
 	Consumer<File> fun_newF = (File file) -> {
 	    //logwriter.dosomething();
 	    //synker.dosomething();
+
+	    /** ###################### **/
+	    try{
+	    List<Block> bs = FileHandler.genBlocksFromChannel
+	    (new RandomAccessFile(file,"r").getChannel());
+	    bs.forEach(b -> ui.appendMsg("BLOCK["+b.getPos()+"]"+b.getName()));
+	    }catch(IOException e){}
+	    /** ###################### **/
+
 	    ui.appendMsg(file.getAbsoluteFile() + " was created.");
 	};
 	Consumer<File> fun_newD = (File file) -> {

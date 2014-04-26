@@ -1,24 +1,17 @@
 package org.imbox.infrastructure.file;
 
 import java.io.*;
-import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
-import java.util.Vector;
-import java.util.List;
+import java.util.*;
 
-import org.imbox.infrastructure.file.Block;
-import org.imbox.infrastructure.Const;
-import org.imbox.infrastructure.Hash;
+import org.imbox.infrastructure.file.*;
+import org.imbox.infrastructure.*;
 
 public class FileHandler{
     
-    /* as using int as index, the file size must less than or equals to 2GB */
-    /* as a matter of fact, the max length of array in Java is */
-    public static List<Block> genBlocksFromChannel(FileChannel channel, 
-						   String filename) throws IOException{
+    public static List<Block> genBlocksFromChannel(FileChannel channel)throws IOException{
 	List<Block> bs = new Vector<Block>();
 	ByteBuffer bb  = ByteBuffer.allocate(Const.blocksize);
 	int bIdx = 0;
