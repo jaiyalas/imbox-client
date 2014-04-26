@@ -1,67 +1,97 @@
 package org.imbox.infrastructure.file;
 
 import java.io.*;
+import java.util.*;
+
 import org.apache.commons.io.FileUtils; 
 import org.apache.commons.io.IOUtils;
 
+import org.imbox.infrastructure.*;
+import org.imbox.infrastructure.file.*;
+
+// BN may be String or byte[] or anything 
+// which can present a 128 bit-string
 public class Block{
 
-    private byte[] bytes;
-    private String blockName;
-    private boolean prefixed; // prefix-flag 
+    private byte[] content;
+    private String name; // via md5
+    private int    position;
 
-    public byte[]  getBytes()  {return this.bytes;}
-    public String  getName()   {return this.blockName;}
-    public boolean hasPrefix() {return this.prefixed;}
+    public byte[] getContent() {return this.content;}
+    public String getName()    {return this.name;}
+    public int    getPos()     {return this.position;}
 
     private Block(){};
-    private Block(byte[] inBytes){this.bytes = inBytes;};
+    private Block(byte[] _c){this.content = _c;};
 
-    // should be sync. (?)
-    public static Block genBlock(byte[] inBytes){
-	Block b    = new Block(inBytes);
-	b.prefixed = false;
-	b.blockName   = "untitled";
+
+    public static Block genBlock(byte[] _content,
+				 int _pos){
+	Block b      = new Block(_content);
+	b.position   = _pos;
+	b.name       = Hash.getMD5String(_content);
 	return b;
     };
-    public static Block genBlock(byte[] inBytes,String rawName){
-	Block b    = new Block(inBytes);
-	b.prefixed = false;
-	b.blockName   = rawName;
+    public static Block genBlock(String _name, 
+				 byte[] _content,
+				 int _pos){
+	Block b      = new Block(_content);
+	b.position   = _pos;
+	b.name       = _name;
 	return b;
-    };   
-    public static Block genBlock(byte[] inBytes,int bNum, int bIdx,String rawName){
-	Block b    = new Block(inBytes);
-	b.prefixed = true;
-	b.blockName   = prefixComplete(bNum,bIdx,rawName);
-	return b;
-    };
-    
-    
-    public static Block readBlock(int bNum, int bIdx,String rawBlockName) throws IOException{
-	String bName = prefixComplete(bNum,bIdx,rawBlockName);
-	InputStream is    = new FileInputStream(new File(bName));
+    };    
+
+    /** ------------------------- **/
+
+    public static byte[] readBlockFromHD(String _name)throws IOException{
+	InputStream is    = new FileInputStream(new File(_name));
 	byte[]      bytes = IOUtils.toByteArray(is);
 	is.close();
-	Block b = genBlock(bytes,bName);
-	b.prefixed = true;
-	return b;
+	return bytes;
     };
-    public static int writeBlock(Block b, String rawName) throws IOException{
-	OutputStream os = new FileOutputStream(new File(rawName));
-	IOUtils.write(b.getBytes(), os);
-	os.flush();os.close();
-	return b.getBytes().length;
-    };
-    
-    private static String prefixComplete(int totalBlockNum, 
-					 int blockIndex, 
-					 String fullName){
-	StringBuffer sb = new StringBuffer();
-	sb.append(totalBlockNum);sb.append("_");
-	sb.append(blockIndex);sb.append("_");
-	sb.append(fullName);
-	return sb.toString();
+    public static Block readBlockFromHD(BlockRec br)throws IOException{
+	InputStream in = new FileInputStream(new File(br.getName()));
+	byte[]   bytes = IOUtils.toByteArray(in);
+	in.close();
+	return genBlock(br.getName(),bytes,br.getPos());
     };
 
+
+    public static Block readBlockFromHD(String _name, 
+					int _pos)throws IOException{
+	return Block.readBlockFromHD(new BlockRec(_name,_pos));
+    };
+
+    /** ------------------------- **/
+
+    public static byte[] joinBlocks(List<BlockRec> brs)throws IOException{
+	Collections.sort(brs,(BlockRec  b0, BlockRec b1) -> {
+		return b0.getPos() - b1.getPos();});
+	List<Byte> byteList = new Vector<Byte>();
+	brs.forEach(br -> {
+		try{
+		    byte[] bytes = readBlockFromHD(br.getName());
+		    for(byte b : bytes){byteList.add(new Byte(b));}
+		}catch(IOException e){}
+	    });
+	byte[] res = new byte[byteList.size()];
+	for(int i = 0;i<byteList.size();i++){
+	    res[i] = byteList.get(i).byteValue();
+	}
+	return res;
+    };
+
+    /** ------------------------- **/
+
+    public static void writeBlock(Block b) throws IOException{
+	OutputStream os = new FileOutputStream(new File(b.getName()));
+	IOUtils.write(b.getContent(), os);
+	os.flush();os.close();
+    };
+    public static void writeBlock(byte[] bs) throws IOException{
+	OutputStream os = new FileOutputStream
+	    (new File(Hash.getMD5String(bs)));
+	IOUtils.write(bs, os);
+	os.flush();os.close();
+    };
 }

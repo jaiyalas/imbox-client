@@ -26,13 +26,13 @@ public class FileHandler{
 
         while(channel.read(bb) > 0){
             bb.flip(); // reset index of ByteBuffer
-            bIdx += 1;       // succ block index
 	    byte[] bytes = new byte[bb.limit()];
 	    for (int i = 0; i < bb.limit(); i++){bytes[i] = bb.get();}
 	    //save one block from byte[]
-	    Block block = Block.genBlock(bytes,bNum,bIdx,filename);
+	    Block block = Block.genBlock(bytes,bIdx);
 	    bs.add(block);
 	    bb.clear(); 
+            bIdx += 1;       // succ block index
             
         }
 	
