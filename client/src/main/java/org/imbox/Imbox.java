@@ -12,8 +12,10 @@ import org.apache.commons.io.FileUtils;
 
 import org.imbox.client.*;
 import org.imbox.client.fileMonitor.*;
+import org.imbox.client.synchronize.*;
 
 import org.imbox.infrastructure.*;
+import org.imbox.infrastructure.log.*;
 import org.imbox.infrastructure.file.*;
 import org.imbox.infrastructure.exceptions.*;
 
@@ -32,22 +34,12 @@ public class Imbox {
 	}
 	ui.show();
 
+	LogWriter logwriter = new LogWriter();
+	Synker    synker    = new Synker();
 	
-	
-	MonitorShell shell = new MonitorShell(workspace,ui);
+	MonitorShell shell = new MonitorShell(workspace,ui,logwriter,synker);
 	try{
 	    shell.start(); //folk
 	}catch(Exception e){}
-
-	//javax.swing.SwingUtilities.invokeLater(new Runnable() {
-        //    public void run(){
-		//ui.btnBehavior(ae->ui.syncState());
-	//	ui.show(); 
-		//for(int i=0;i<=100;i++) ui.appendMsg("Event"+i);
-	//    }
-        //});
-
-	//UImanager ui = new UImanager();
-	//ui.show();
     }
 }

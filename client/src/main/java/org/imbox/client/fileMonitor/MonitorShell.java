@@ -4,53 +4,89 @@ import java.io.File;
 import java.util.function.*;
 import org.apache.commons.io.monitor.*;
 
-
-import org.imbox.client.Workspace; //{FSEP, HOME}
-import org.imbox.client.UImanager;
-
+import org.imbox.client.*;
 import org.imbox.client.fileMonitor.*;
+import org.imbox.client.synchronize.*;
+
+import org.imbox.infrastructure.*;
+import org.imbox.infrastructure.log.*;
 
 // this is a client only module
 public class MonitorShell{
 
-    private File workspace;
-    private FileAlterationObserver fao;
-    private FileAlterationMonitor monitor;
-    private FileEventHandler handler;
-    
+    private File      workspace;
     private UImanager ui;
-    //private LogWriter logwriter;
-    //private Synker synker;
+    private LogWriter logwriter;
+    private Synker    synker;
+    
+    private FileAlterationObserver fao;
+    private FileAlterationMonitor  monitor;
+    private FileEventHandler       handler;
 
-    //public MonitorShell(UIManager _ui, LogWriter _logwriter, Synker _synker){
-    public MonitorShell(File _workspace, UImanager _ui){					     
+    public MonitorShell(File _workspace, 
+			UImanager _ui, 
+			LogWriter _logwriter, 
+			Synker _synker){					     
+	this.workspace = _workspace;
 	this.ui        = _ui;
-	//this.logwriter = _logwriter;
-	//this.synker    = _synker;
+	this.logwriter = _logwriter;
+	this.synker    = _synker;
 	
-	workspace = _workspace;
-	ui.appendMsg(workspace.toString());
-	fao = new FileAlterationObserver(workspace);
 	handler = new FileEventHandler();
-	fao.addListener(handler);
-	monitor = new FileAlterationMonitor(1 * 1000);
-	monitor.addObserver(fao);
-
-	Consumer<File> f0 = (File f) -> {ui.appendMsg(f.getAbsoluteFile() + " was created.");};
-	Consumer<File> f1 = (File f) -> {ui.appendMsg(f.getAbsoluteFile() + " was deleted.");};
-	Consumer<File> f2 = (File f) -> {ui.appendMsg(f.getAbsoluteFile() + " was changed.");};
+	fao = new FileAlterationObserver(workspace);
+	monitor = new FileAlterationMonitor(Const.monitorPeriod * 1000);
 	
-	handler.updateHandler(AltType.FileCreate, f0);
-	handler.updateHandler(AltType.DireCreate, f0);
-	handler.updateHandler(AltType.FileDelete, f1);
-	handler.updateHandler(AltType.DireDelete, f1);
-	handler.updateHandler(AltType.FileChange, f2);
-	handler.updateHandler(AltType.DireChange, f2);
+	handlersInitial();
 
-    }
-    public void start() throws Exception{
-	monitor.start();
-    }
+	fao.addListener(handler);
+	monitor.addObserver(fao);
+    };
+
+    private void handlersInitial(){
+	Consumer<File> fun_newF = (File file) -> {
+	    //logwriter.dosomething();
+	    //synker.dosomething();
+	    ui.appendMsg(file.getAbsoluteFile() + " was created.");
+	};
+	Consumer<File> fun_newD = (File file) -> {
+	    //logwriter.dosomething();
+	    //synker.dosomething();
+	    ui.appendMsg(file.getAbsoluteFile() + " was deleted.");
+	};
+	Consumer<File> fun_delF = (File file) -> {
+	    //logwriter.dosomething();
+	    //synker.dosomething();
+	    ui.appendMsg(file.getAbsoluteFile() + " was changed.");
+	};
+	Consumer<File> fun_delD = (File file) -> {
+	    //logwriter.dosomething();
+	    //synker.dosomething();
+	    ui.appendMsg(file.getAbsoluteFile() + " was changed.");
+	};
+	Consumer<File> fun_chgF = (File file) -> {
+	    //logwriter.dosomething();
+	    //synker.dosomething();
+	    ui.appendMsg(file.getAbsoluteFile() + " was changed.");
+	};
+	Consumer<File> fun_chgD = (File file) -> {
+	    //logwriter.dosomething();
+	    //synker.dosomething();
+	    ui.appendMsg(file.getAbsoluteFile() + " was changed.");
+	};
+	
+	handler.updateHandler(AltType.FileCreate, fun_newF);
+	handler.updateHandler(AltType.DireCreate, fun_newD);
+	handler.updateHandler(AltType.FileDelete, fun_delF);
+	handler.updateHandler(AltType.DireDelete, fun_delD);
+	handler.updateHandler(AltType.FileChange, fun_chgF);
+	handler.updateHandler(AltType.DireChange, fun_chgD);
+    };
+
+    public void updateHandler(AltType _at, Consumer<File> _fun){
+	handler.updateHandler(_at, _fun);
+    };
+
+    public void start() throws Exception{monitor.start();};
 
 };
 
