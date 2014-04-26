@@ -38,19 +38,35 @@ public class Monitor {
         
 	fao.addListener(new MonitorImp());
         
-	final FileAlterationMonitor monitor = new FileAlterationMonitor(10 * 1000);
+	final FileAlterationMonitor monitor = new FileAlterationMonitor(3 * 1000);
         
 	monitor.addObserver(fao);
         
 	System.out.println("Starting monitor. CTRL+C to stop.");
         monitor.start();
+	//for(int i =0 ; i<=100 ; i++){
+	//    Thread.sleep(1750);
+	//    System.out.println(i);
+	//}
  
-        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-            @Override
-            public void run() { try {
-                System.out.println("Stopping monitor.");
-                monitor.stop();
-		} catch(Exception ignored){}};
-        }));
+        //Runtime.getRuntime().addShutdownHook(new Thread(new Runnable(){
+        //    @Override
+        //    public void run() { try {
+        //        System.out.println("Stopping monitor.");
+        //        monitor.stop();
+	//	} catch(Exception ignored){ 
+	//	    System.out.println(ignored.toString());
+	//	}};
+        //}));
+
+	/** lambda as a new Runnable **/
+	//Runtime.getRuntime().addShutdownHook(new Thread(()->{
+		    //System.out.println("THE END");
+	//}));
+
+	/** lambda as a new Thread **/
+	Runtime.getRuntime().addShutdownHook(()->{
+		    System.out.println("THE END");
+	});
     }
 }
