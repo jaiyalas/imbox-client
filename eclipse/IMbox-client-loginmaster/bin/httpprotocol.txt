@@ -35,11 +35,11 @@ JSON:
 	
 
 /getfile
-	POST {'token'|'blockname'|'filename'| 'seq'}
+	POST {'token'|'MAC'|'blockname'|'filename'| 'seq'}
 	server return {'succ'|'data'|'errorcode'}
 	
 /postfile
-	POST {'token' | 'blockdata'|'seq'}
+	POST {'token' |'MAC'| 'blockdata'|'seq'}
 	server return {'succ'| 'errorcode'}
 	
 /generateURL

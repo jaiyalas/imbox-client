@@ -8,6 +8,8 @@ errorcode:
 0: no problem
 1: authentication failure
 2: server side error (need to be more specific in future)
+3: file not found error
+4: write block fail error
 20: exception failure (see exception log) 
 
 
@@ -35,11 +37,11 @@ JSON:
 	
 
 /getfile
-	POST {'token'|'blockname'|'filename'| 'seq'}
+	POST {'token'|'MAC'|'blockname'|'filename'| 'seq'}
 	server return {'succ'|'data'|'errorcode'}
 	
 /postfile
-	POST {'token' | 'blockdata'|'seq'}
+	POST {'token' |'MAC'| 'blockname' | 'blockdata'|'seq'}  // the block name is for upload test, should be cleared out in near future.
 	server return {'succ'| 'errorcode'}
 	
 /generateURL
