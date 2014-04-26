@@ -11,6 +11,8 @@ import java.io.IOException;
 import org.apache.commons.io.FileUtils; 
 
 import org.imbox.client.*;
+import org.imbox.client.fileMonitor.*;
+
 import org.imbox.infrastructure.*;
 import org.imbox.infrastructure.file.*;
 import org.imbox.infrastructure.exceptions.*;
@@ -19,9 +21,9 @@ public class Imbox {
     public static void main(String[] args) throws IOException {
 	UImanager ui = new UImanager();
 
-	boolean b = false;
+	File workspace = new File(Workspace.HOME);
 	try{
-	    b = Workspace.prepareWorkspace();
+	    workspace = Workspace.prepareWorkspace();
 	}catch(IMBOX_DirConfException e){
 	    ui.appendMsg(e.toString());
 	}catch(IMBOX_MkdirFailException e){
@@ -29,7 +31,14 @@ public class Imbox {
 	    ui.setSHUTDOWN();
 	}
 	ui.show();
+
 	
+	
+	MonitorShell shell = new MonitorShell(workspace,ui);
+	try{
+	    shell.start(); //folk
+	}catch(Exception e){}
+
 	//javax.swing.SwingUtilities.invokeLater(new Runnable() {
         //    public void run(){
 		//ui.btnBehavior(ae->ui.syncState());

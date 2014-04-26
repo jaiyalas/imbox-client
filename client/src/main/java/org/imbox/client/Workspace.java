@@ -5,15 +5,15 @@ import java.io.*;
 import org.imbox.infrastructure.exceptions.*;
 
 public class Workspace{
-    private static String FSEP; 
-    private static String HOME; 
+    public static String FSEP; 
+    public static String HOME; 
 
     static{
 	FSEP = System.getProperty("file.separator").toLowerCase();
 	HOME    = System.getProperty("user.home").toLowerCase();
     };
 
-    public static boolean prepareWorkspace()throws IMBOX_DirConfException, 
+    public static File prepareWorkspace()throws IMBOX_DirConfException, 
 						   IMBOX_MkdirFailException{
 	File workspace = new File(HOME+FSEP+"imbox");
 	if(workspace.exists()){
@@ -26,7 +26,7 @@ public class Workspace{
 		throw new IMBOX_MkdirFailException("mkdir \""+HOME+FSEP+
 						   "imbox\" failed");}
 	}
-	return true; 
+	return workspace; 
     };
 
 }; 
