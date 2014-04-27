@@ -73,14 +73,14 @@ public class MonitorShell{
 	    //synker.dosomething();
 
 	    /** ###################### **/
-	    try{
-		List<BlockRec> brs = new Vector<BlockRec>();
-		brs.add(new BlockRec("68cb9becf2fd6e45caed6d022e3682d6",1));
-		brs.add(new BlockRec("73f3ebd4a254dec29e281eefe00c5431",0));
-		FileHandler.writeFileFromBlocks(Workspace.SYSDIRs,brs,Workspace.SYSDIRs,"grd.pdf");
-	    }catch(IOException e){
-		ui.appendMsg(e.toString());
-	    }
+	    //try{
+	    //  List<BlockRec> brs = new Vector<BlockRec>();
+	    //	brs.add(new BlockRec("68cb9becf2fd6e45caed6d022e3682d6",1));
+	    //	brs.add(new BlockRec("73f3ebd4a254dec29e281eefe00c5431",0));
+	    //	FileHandler.writeFileFromBlocks(Workspace.SYSDIRs,brs,Workspace.SYSDIRs,"grd.pdf");
+	    //}catch(IOException e){
+	    //	ui.appendMsg(e.toString());
+	    //}
 	    /** ###################### **/
 
 	    ui.appendMsg(file.getAbsoluteFile() + " was deleted.");
