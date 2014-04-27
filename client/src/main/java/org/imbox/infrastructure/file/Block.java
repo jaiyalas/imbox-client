@@ -18,6 +18,7 @@ public class Block{
     public byte[] getContent() {return this.content;}
     public String getName()    {return this.name;}
     public int    getPos()     {return this.position;}
+    public int    getSize()    {return this.content.length;}
 
     private Block(){};
     private Block(byte[] _c){this.content = _c;};
@@ -40,53 +41,37 @@ public class Block{
 
     /** ------------------------- **/
 
-    public static byte[] readBlockFromHD(String _name)throws IOException{
-	InputStream is    = new FileInputStream(new File(_name));
+    public static byte[] readBlockFromHD(String _sysDir,
+					 String _name)throws IOException{
+	InputStream is    = new FileInputStream(new File(_sysDir+_name));
 	byte[]      bytes = IOUtils.toByteArray(is);
 	is.close();
 	return bytes;
     };
-    public static Block readBlockFromHD(BlockRec br)throws IOException{
-	InputStream in = new FileInputStream(new File(br.getName()));
+    public static Block readBlockFromHD(String   _sysDir, 
+					BlockRec _br)throws IOException{
+	InputStream in = new FileInputStream(new File(_sysDir+_br.getName()));
 	byte[]   bytes = IOUtils.toByteArray(in);
 	in.close();
-	return genBlock(br.getName(),bytes,br.getPos());
+	return genBlock(_br.getName(),bytes,_br.getPos());
     };
-    public static Block readBlockFromHD(String _name, 
-					int _pos)throws IOException{
-	return Block.readBlockFromHD(new BlockRec(_name,_pos));
-    };
-
-    /** ------------------------- **/
-
-    public static byte[] joinBlocks(List<BlockRec> brs)throws IOException{
-	Collections.sort(brs,(BlockRec  b0, BlockRec b1) -> {
-		return b0.getPos() - b1.getPos();});
-	List<Byte> byteList = new Vector<Byte>();
-	brs.forEach(br -> {
-		try{
-		    byte[] bytes = readBlockFromHD(br.getName());
-		    for(byte b : bytes){byteList.add(new Byte(b));}
-		}catch(IOException e){}
-	    });
-	byte[] res = new byte[byteList.size()];
-	for(int i = 0;i<byteList.size();i++){
-	    res[i] = byteList.get(i).byteValue();
-	}
-	return res;
+    public static Block readBlockFromHD(String _sysDir, 
+					String _name, 
+					int    _pos)throws IOException{
+	return Block.readBlockFromHD(_sysDir,new BlockRec(_name,_pos));
     };
 
     /** ------------------------- **/
 
-    public static void writeBlock(Block b,String path) throws IOException{
-	OutputStream os = new FileOutputStream(new File(path+b.getName()));
-	IOUtils.write(b.getContent(), os);
+    public static void writeBlock(String _sysDir, Block _b) throws IOException{
+	OutputStream os = new FileOutputStream(new File(_sysDir+_b.getName()));
+	IOUtils.write(_b.getContent(), os);
 	os.flush();os.close();
     };
-    public static void writeBlock(byte[] bs, String path) throws IOException{
+    public static void writeBlock(String _sysDir, byte[] _bs) throws IOException{
 	OutputStream os = new FileOutputStream
-	    (new File(path+Hash.getMD5String(bs)));
-	IOUtils.write(bs, os);
+	    (new File(_sysDir+Hash.getMD5String(_bs)));
+	IOUtils.write(_bs, os);
 	os.flush();os.close();
     };
 }

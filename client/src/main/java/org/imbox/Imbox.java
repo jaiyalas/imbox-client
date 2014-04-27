@@ -25,7 +25,7 @@ public class Imbox {
 
 	File workspace = new File(Workspace.HOME);
 	try{
-	    workspace = Workspace.prepareWorkspace();
+	    workspace = Workspace.prepareWorkspaceC();
 	}catch(IMBOX_DirConfException e){
 	    ui.appendMsg(e.toString());
 	}catch(IMBOX_MkdirFailException e){

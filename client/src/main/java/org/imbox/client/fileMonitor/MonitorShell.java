@@ -53,36 +53,52 @@ public class MonitorShell{
 	    try{
 	    List<Block> bs = FileHandler.genBlocksFromChannel
 	    (new RandomAccessFile(file,"r").getChannel());
-	    bs.forEach(b -> ui.appendMsg("BLOCK["+b.getPos()+"]"+b.getName()));
+	    bs.forEach(b -> {
+		    try{
+			Block.writeBlock(Workspace.SYSDIRs,b);
+			ui.appendMsg("BLOCK["+b.getPos()+"]"+b.getName());
+		    }catch(IOException e){}
+		});
 	    }catch(IOException e){}
 	    /** ###################### **/
-
 	    ui.appendMsg(file.getAbsoluteFile() + " was created.");
 	};
-	Consumer<File> fun_newD = (File file) -> {
+	Consumer<File> fun_newD = (File dir) -> {
 	    //logwriter.dosomething();
 	    //synker.dosomething();
-	    ui.appendMsg(file.getAbsoluteFile() + " was deleted.");
+	    ui.appendMsg(dir.getAbsoluteFile() + " was created.");
 	};
 	Consumer<File> fun_delF = (File file) -> {
 	    //logwriter.dosomething();
 	    //synker.dosomething();
-	    ui.appendMsg(file.getAbsoluteFile() + " was changed.");
+
+	    /** ###################### **/
+	    try{
+		List<BlockRec> brs = new Vector<BlockRec>();
+		brs.add(new BlockRec("68cb9becf2fd6e45caed6d022e3682d6",1));
+		brs.add(new BlockRec("73f3ebd4a254dec29e281eefe00c5431",0));
+		FileHandler.writeFileFromBlocks(Workspace.SYSDIRs,brs,Workspace.SYSDIRs,"grd.pdf");
+	    }catch(IOException e){
+		ui.appendMsg(e.toString());
+	    }
+	    /** ###################### **/
+
+	    ui.appendMsg(file.getAbsoluteFile() + " was deleted.");
 	};
-	Consumer<File> fun_delD = (File file) -> {
+	Consumer<File> fun_delD = (File dir) -> {
 	    //logwriter.dosomething();
 	    //synker.dosomething();
-	    ui.appendMsg(file.getAbsoluteFile() + " was changed.");
+	    ui.appendMsg(dir.getAbsoluteFile() + " was deleted.");
 	};
 	Consumer<File> fun_chgF = (File file) -> {
 	    //logwriter.dosomething();
 	    //synker.dosomething();
 	    ui.appendMsg(file.getAbsoluteFile() + " was changed.");
 	};
-	Consumer<File> fun_chgD = (File file) -> {
+	Consumer<File> fun_chgD = (File dir) -> {
 	    //logwriter.dosomething();
 	    //synker.dosomething();
-	    ui.appendMsg(file.getAbsoluteFile() + " was changed.");
+	    ui.appendMsg(dir.getAbsoluteFile() + " was changed.");
 	};
 	
 	handler.updateHandler(AltType.FileCreate, fun_newF);

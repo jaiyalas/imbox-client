@@ -19,8 +19,8 @@ public class Read{
 
 	/* === FILE SLIPT === */
 
-	final String fullName = "jre-8-macosx-x64.dmg";
-	int blocksize = 20*Const.mb;
+	final String fullName = "SCAR「ジョーカー_許されざる捜査官」ドラマ主題歌) - YouTube.mp4";
+	int blocksize = 700;
 
         RandomAccessFile file    = new RandomAccessFile(fullName,"r");
         FileChannel      channel = file.getChannel();
