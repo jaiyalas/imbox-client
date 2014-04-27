@@ -9,6 +9,9 @@ import org.imbox.client.*;
 import org.imbox.client.fileMonitor.*;
 import org.imbox.client.synchronize.*;
 
+import org.imbox.client.networkrelated.*;
+import org.imbox.client.networkrelated.ultility.*;
+
 import org.imbox.infrastructure.*;
 import org.imbox.infrastructure.log.*;
 import org.imbox.infrastructure.file.*;
@@ -49,17 +52,17 @@ public class MonitorShell{
 	    //logwriter.dosomething();
 	    //synker.dosomething();
 
+	    ui.appendMsg("TOKEN = "+Internetrecord.gettoken());
+
 	    /** ###################### **/
 	    try{
 	    List<Block> bs = FileHandler.genBlocksFromChannel
 	    (new RandomAccessFile(file,"r").getChannel());
 	    bs.forEach(b -> {
-		    try{
-			Block.writeBlock(Workspace.SYSDIRs,b);
-			ui.appendMsg("BLOCK["+b.getPos()+"]"+b.getName());
-		    }catch(IOException e){}
-		});
-	    }catch(IOException e){}
+		    Blockposter bp = new Blockposter(file.getName(),b.getContent(),b.getPos());
+		    ui.appendMsg("sent block "+b.getName()+" = "+bp.getstatus());
+	    	});
+	    }catch(IOException e){} 
 	    /** ###################### **/
 	    ui.appendMsg(file.getAbsoluteFile() + " was created.");
 	};

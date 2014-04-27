@@ -7,7 +7,7 @@ import javax.swing.*;
 import javax.swing.text.*;
 import javax.swing.border.*;
 
-import org.imbox.infrastructure.network.loginmaster.Loginmaster;
+import org.imbox.client.networkrelated.Loginmaster;
 
 public class UImanager{
     
@@ -168,8 +168,9 @@ public class UImanager{
 	    appendMsg("Please check you account name and password!");
 	}else{
 	    /** NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE **/
+
 	    loginmaster.setInfo(name,pwd);
-	    //loginmaster.authenticate();
+	    loginmaster.authenticate();
 	    if(loginmaster.getstatus()){
 		appendMsg("Connecting to Server. "+
 			  "You're logging in server with \n"+
