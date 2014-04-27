@@ -22,7 +22,6 @@ public class Block{
     private Block(){};
     private Block(byte[] _c){this.content = _c;};
 
-
     public static Block genBlock(byte[] _content,
 				 int _pos){
 	Block b      = new Block(_content);
@@ -53,8 +52,6 @@ public class Block{
 	in.close();
 	return genBlock(br.getName(),bytes,br.getPos());
     };
-
-
     public static Block readBlockFromHD(String _name, 
 					int _pos)throws IOException{
 	return Block.readBlockFromHD(new BlockRec(_name,_pos));
@@ -81,14 +78,14 @@ public class Block{
 
     /** ------------------------- **/
 
-    public static void writeBlock(Block b) throws IOException{
-	OutputStream os = new FileOutputStream(new File(b.getName()));
+    public static void writeBlock(Block b,String path) throws IOException{
+	OutputStream os = new FileOutputStream(new File(path+b.getName()));
 	IOUtils.write(b.getContent(), os);
 	os.flush();os.close();
     };
-    public static void writeBlock(byte[] bs) throws IOException{
+    public static void writeBlock(byte[] bs, String path) throws IOException{
 	OutputStream os = new FileOutputStream
-	    (new File(Hash.getMD5String(bs)));
+	    (new File(path+Hash.getMD5String(bs)));
 	IOUtils.write(bs, os);
 	os.flush();os.close();
     };
