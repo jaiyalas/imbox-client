@@ -1,4 +1,4 @@
-package db_query;
+package org.imbox.Database;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.util.*;
@@ -7,64 +7,64 @@ public class Insert_block extends db_connect{
 	String filePath;
     public Insert_block(String filePath){
     	try{
-    		//Åª¤JblockÀÉ®×©ñ¶i¸ê®Æ®w¤¤(¦pªGFID¬Û¦P«hª½±µ¨ú¥NÂÂªºblock¨Ã¼W¥[·sªº©Î§R°£¦hªº
-    		this.filePath = filePath;                               //Åª¨úÀÉ®×
+    		//Åªï¿½Jblockï¿½É®×©ï¿½iï¿½ï¿½Æ®wï¿½ï¿½(ï¿½pï¿½GFIDï¿½Û¦Pï¿½hï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½Âªï¿½blockï¿½Ã¼Wï¿½[ï¿½sï¿½ï¿½ï¿½Î§Rï¿½ï¿½ï¿½hï¿½ï¿½
+    		this.filePath = filePath;                               //Åªï¿½ï¿½ï¿½É®ï¿½
     		File file = new File(filePath);
     		FileReader fr = new FileReader(file);
     	    BufferedReader br = new BufferedReader(fr);
-    		String[] tempArray = new String[3];                 //¼È¦s¸ê®Æªº¤@ºû°}¦C
-    		ArrayList<String> myList = new ArrayList<String>(); //°ÊºA¤@ºû°}¦C
+    		String[] tempArray = new String[3];                 //ï¿½È¦sï¿½ï¿½Æªï¿½ï¿½@ï¿½ï¿½ï¿½}ï¿½C
+    		ArrayList<String> myList = new ArrayList<String>(); //ï¿½ÊºAï¿½@ï¿½ï¿½ï¿½}ï¿½C
     		while (br.ready()) {
-    	        String line = br.readLine();         //Åª¨ú¤@¦æ¸ê®Æ©ñ¤Jline
-    	        tempArray = line.split("\\s");       //¥ÎªÅ¥Õ¤À¶}
+    	        String line = br.readLine();         //Åªï¿½ï¿½ï¿½@ï¿½ï¿½ï¿½Æ©ï¿½Jline
+    	        tempArray = line.split("\\s");       //ï¿½ÎªÅ¥Õ¤ï¿½ï¿½}
     	        for(int i=0;i<tempArray.length;i++)
-    	        	myList.add(tempArray[i]);        //©ñ¤J°ÊºA¤@ºû°}¦C
+    	        	myList.add(tempArray[i]);        //ï¿½ï¿½Jï¿½ÊºAï¿½@ï¿½ï¿½ï¿½}ï¿½C
      	    }
     		fr.close();
-    		int size = myList.size()/3;                   //¦³´X­Óblock­n·s¼W
-    		int index = 0;                                //myList¤¤Åª¸ê®Æ«ü¼Ð
-    		String[][] inputArray = new String[size][3];  //©ñ¸ê®Æªº¤Gºû°}¦C
+    		int size = myList.size()/3;                   //ï¿½ï¿½ï¿½Xï¿½ï¿½blockï¿½nï¿½sï¿½W
+    		int index = 0;                                //myListï¿½ï¿½Åªï¿½ï¿½Æ«ï¿½ï¿½ï¿½
+    		String[][] inputArray = new String[size][3];  //ï¿½ï¿½ï¿½Æªï¿½ï¿½Gï¿½ï¿½ï¿½}ï¿½C
     		for(int j=0; j < size ; j++){
                 for(int k=0 ; k<3 ; k++){
                 	inputArray[j][k]= myList.get(index);
-                	index++;              //¤@­Óindex¨Ó¨M©wmyListÅª¨ú­Èªº¦ì¸m
+                	index++;              //ï¿½@ï¿½ï¿½indexï¿½Ó¨Mï¿½wmyListÅªï¿½ï¿½ï¿½Èªï¿½ï¿½ï¿½m
                 }
             }
-    		//¬O§_¬°ÀÉ®×­×§ïªº·s¼Wblock
+    		//ï¿½Oï¿½_ï¿½ï¿½ï¿½É®×­×§ïªºï¿½sï¿½Wblock
     		Statement stmt = connect.createStatement();
-    		String searchFID = "SELECT count(*) FROM block_map WHERE FID = '"+inputArray[0][2]+"'"; //­pºâÂÂªº¦³´Xµ§
+    		String searchFID = "SELECT count(*) FROM block_map WHERE FID = '"+inputArray[0][2]+"'"; //ï¿½pï¿½ï¿½ï¿½Âªï¿½ï¿½ï¿½ï¿½Xï¿½ï¿½
     		ResultSet FIDresult = stmt.executeQuery(searchFID);
      		if(FIDresult.next()){
-    			//serverºÝ¤w¦³ÀÉ®×block¡A«D·sÀÉ®×
-    			int count = FIDresult.getInt(1);  //­ì¥»block¦³´Xµ§
-    			//·sÀÉ®×block¼Æ¤ñ­ì¥»¦h
+    			//serverï¿½Ý¤wï¿½ï¿½ï¿½É®ï¿½blockï¿½Aï¿½Dï¿½sï¿½É®ï¿½
+    			int count = FIDresult.getInt(1);  //ï¿½ì¥»blockï¿½ï¿½ï¿½Xï¿½ï¿½
+    			//ï¿½sï¿½É®ï¿½blockï¿½Æ¤ï¿½ì¥»ï¿½h
     			if(count <= size){   
-    				//ÂÂªºblockName´«¦¨·sªº
+    				//ï¿½Âªï¿½blockNameï¿½ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½
     				for(int i=0; i <count ; i++){  
     					String update_b = "UPDATE block_map SET blockName='"+inputArray[i][0]+"' WHERE FID = '"+inputArray[i][2]+"' AND sequence ="+(i+1);
     					stmt.executeUpdate(update_b);
     				}
-    				//·sªºblockª½±µ´¡¤J
+    				//ï¿½sï¿½ï¿½blockï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½J
     				for(int j=count+1 ; j <= size ; j++){  
     					String insert_b = "INSERT INTO block_map VALUES (NULL,'"+inputArray[j-1][0]+"', "+j+",'"+inputArray[j-1][2]+"')";
     	        		stmt.executeUpdate(insert_b);
     				}
     			}
-    			//·sÀÉ®×block¼Æ¤ñ­ì¥»¤Ö
+    			//ï¿½sï¿½É®ï¿½blockï¿½Æ¤ï¿½ì¥»ï¿½ï¿½
     			else{
-    				//ÂÂªºblockName´«¦¨·sªº
+    				//ï¿½Âªï¿½blockNameï¿½ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½
     				for(int i=0; i < size ; i++){  
     					String update_b = "UPDATE block_map SET blockName='"+inputArray[i][0]+"' WHERE FID = '"+inputArray[i][2]+"' AND sequence ="+(i+1);
     					stmt.executeUpdate(update_b);
     				}
-    				//¦h¥X¨Óªºblock§R°£
+    				//ï¿½hï¿½Xï¿½Óªï¿½blockï¿½Rï¿½ï¿½
     				for(int j=size+1 ; j <= count ; j++){  
     					String delete_b = "DELETE FROM block_map WHERE FID = '" + inputArray[0][2] + "' AND sequence= "+ j;
     	        		stmt.executeUpdate(delete_b);
     				}
     			}
     		}
-     		else{	//·sÀÉ®×ª½±µ±Nblock¸ê®Æ©ñ¶i¸ê®Æ®w¤¤
+     		else{	//ï¿½sï¿½É®×ªï¿½ï¿½ï¿½ï¿½Nblockï¿½ï¿½Æ©ï¿½iï¿½ï¿½Æ®wï¿½ï¿½
      			int k = 1;
      			for(int j=0; j < size ; j++){
      				String insert = "INSERT INTO block_map VALUES (NULL,'"+inputArray[j][0]+"', "+k+",'"+inputArray[j][2]+"')";
@@ -72,14 +72,14 @@ public class Insert_block extends db_connect{
      				k++;
      			}
      		}
-     		connect.close();  //Ãö³¬¸ê®Æ®w
+     		connect.close();  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®w
        	}catch(Exception e){
     		System.out.println(e.toString());
     	}
 
     }
 	public static void main(String[] args) {
-		/*System.out.println("µ¹ÀÉ®×¦WºÙ");
+		/*System.out.println("ï¿½ï¿½ï¿½É®×¦Wï¿½ï¿½");
 		Scanner input = new Scanner(System.in);
 		String filePath = input.next();
         new Insert_block(filePath);

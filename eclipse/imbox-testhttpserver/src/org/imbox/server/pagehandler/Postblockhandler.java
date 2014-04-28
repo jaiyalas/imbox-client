@@ -57,10 +57,6 @@ public class Postblockhandler implements HttpHandler
 						{
 							Base64 base64 = new Base64();
 							byte[] blockdata = base64.decode(reader.getdatastring());
-							for(int i =0;i<blockdata.length;i++)
-							{
-								blockdata[i] = (byte)reader.getdatastring().charAt(i);
-							}
 							//TODO:write to DB
 							System.out.println(Workspace.HOME);
 							Block.writeBlock(Workspace.SYSDIRs, blockdata);

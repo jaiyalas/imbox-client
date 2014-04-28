@@ -1,4 +1,4 @@
-package db_query;
+package org.imbox.Database;
 import java.sql.ResultSet;
 import java.sql.Statement;
 //import java.util.Scanner;
@@ -10,18 +10,18 @@ public class search_block extends db_connect{
     		String searchFID = "SELECT blockName,sequence FROM block_map WHERE FID = '"+FID+"'";
     		Statement stmt = connect.createStatement();
     		ResultSet FIDresult = stmt.executeQuery(searchFID);
-            //¦³ÀÉ®×block¤@µ§¤@µ§¦L¥X
+            //ï¿½ï¿½ï¿½É®ï¿½blockï¿½@ï¿½ï¿½ï¿½@ï¿½ï¿½ï¿½Lï¿½X
 			while(FIDresult.next()){
 				String result_b = FIDresult.getString("blockName");
 				String result_s = FIDresult.getString("sequence");
-				System.out.println("b_name¡G"+result_b+", seq¡G"+result_s);
+				System.out.println("b_nameï¿½G"+result_b+", seqï¿½G"+result_s);
 			}
         }catch(Exception e){
-		System.out.println("¨Ò¥~:"+e.toString()); 
+		System.out.println("ï¿½Ò¥~:"+e.toString()); 
 	    }
     }
 	public static void main(String[] args) {
-		/*System.out.println("µ¹ÀÉ®×ID");
+		/*System.out.println("ï¿½ï¿½ï¿½É®ï¿½ID");
 		Scanner input = new Scanner(System.in);
 		String FID = input.next();
 		new search_block(FID);

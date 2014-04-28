@@ -1,4 +1,0 @@
-this is the server file and should be downloaded to the client side
-
-
-if this file shows up in the client side, than the demo should be successful.

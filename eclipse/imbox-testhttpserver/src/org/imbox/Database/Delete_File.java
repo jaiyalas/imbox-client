@@ -1,39 +1,39 @@
-package db_query;
+package org.imbox.Database;
 import java.sql.ResultSet;
 import java.sql.Statement;
 //import java.util.Scanner;
 
 public class Delete_File extends db_connect{
 	String acc,FID;
-	//µ¹©w°Ñ¼Æ(ÀÉ®×ID)
+	//ï¿½ï¿½ï¿½wï¿½Ñ¼ï¿½(ï¿½É®ï¿½ID)
     public Delete_File(String FID){
         this.FID = FID;
     	try{  
     		String searchFID = "SELECT counter FROM server_file WHERE FID = '"+FID+"'";
     		Statement stmt = connect.createStatement();
 			ResultSet FIDresult = stmt.executeQuery(searchFID);
-			if(FIDresult.next()){ //¦øªA¾¹¦³ÀÉ®×
+			if(FIDresult.next()){ //ï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½É®ï¿½
 				int counter = FIDresult.getInt("counter");
-				//counter­Y¬°1«hª½±µ§R°£¦øªA¾¹ÀÉ®×¡A¨¾¤î¿ù»~<1³£·|¤@°_§R°£
+				//counterï¿½Yï¿½ï¿½1ï¿½hï¿½ï¿½ï¿½ï¿½ï¿½Rï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½É®×¡Aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½~<1ï¿½ï¿½ï¿½|ï¿½@ï¿½_ï¿½Rï¿½ï¿½
 				if(counter<=1){
 					String delete = "DELETE FROM server_file WHERE FID = '"+FID+"'";
-					stmt.executeUpdate(delete);   //¦¹®ÉuserºÝ©Mblock³£·|³Q¦Û°Ê§R°£
+					stmt.executeUpdate(delete);   //ï¿½ï¿½ï¿½ï¿½userï¿½Ý©Mblockï¿½ï¿½ï¿½|ï¿½Qï¿½Û°Ê§Rï¿½ï¿½
 				}
-				else{  //¤j©ó1«hcounter-1
+				else{  //ï¿½jï¿½ï¿½1ï¿½hcounter-1
 					String counter_minus = "UPDATE server_file SET counter=counter-1 WHERE FID = '"+FID+"'";
 					stmt.executeUpdate(counter_minus);
 				}
 			}
 			else{
-				System.out.println("¦øªAºÝµL¦¹ÀÉ®×");
+				System.out.println("ï¿½ï¿½ï¿½Aï¿½ÝµLï¿½ï¿½ï¿½É®ï¿½");
 			}
-			connect.close();  //Ãö³¬¸ê®Æ®w
+			connect.close();  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®w
     	}catch(Exception e){
-			System.out.println("¨Ò¥~:"+e.toString()); 
+			System.out.println("ï¿½Ò¥~:"+e.toString()); 
 		}
     }
 	public static void main(String[] args) {
-		/*System.out.println("µ¹©w°Ñ¼Æ¡G ÀÉ®×ID");
+		/*System.out.println("ï¿½ï¿½ï¿½wï¿½Ñ¼Æ¡G ï¿½É®ï¿½ID");
 		Scanner input = new Scanner(System.in);
 		String FID = input.next();
 		new Delete_File(FID);

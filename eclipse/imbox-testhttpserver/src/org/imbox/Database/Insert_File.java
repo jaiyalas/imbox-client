@@ -1,47 +1,47 @@
-package db_query;
+package org.imbox.Database;
 import java.sql.*;
 //import java.util.Scanner;
 public class Insert_File extends db_connect{
     String acc,FileName,FID,MD5;
-	//給定四參數(使用者帳號，檔案名，檔案ID，檔案MD5)
+	//嚙踝蕭嚙緩嚙罵嚙諸潘蕭(嚙誕用者帳嚙踝蕭嚙璀嚙褕案名嚙璀嚙褕殷蕭ID嚙璀嚙褕殷蕭MD5)
 	public Insert_File(String acc,String FileName,String FID,String MD5){
 		this.acc = acc;   this.FileName = FileName;
 		this.FID = FID;   this.MD5 = MD5;
 		try{          
-			//查找伺服器端檔案有無相同FID(主鍵)，或之後要用MD5都可
+			//嚙範嚙踝蕭嚙踝蕭A嚙踝蕭嚙踝蕭嚙褕案佗蕭嚙盤嚙諛同FID(嚙瘩嚙踝蕭)嚙璀嚙諄歹蕭嚙踝蕭n嚙踝蕭MD5嚙踝蕭嚙箠
 			String searchFID = "SELECT FID FROM server_file WHERE FID = '"+FID+"'";
 			Statement stmt = connect.createStatement();
 			ResultSet FIDresult = stmt.executeQuery(searchFID);
 			if(FIDresult.next()){    
-				//有相同，增加該FID server_file counter
-				//System.out.println("有一樣檔案");
+				//嚙踝蕭嚙諛同嚙璀嚙磕嚙稼嚙踝蕭FID server_file counter
+				//System.out.println("嚙踝蕭嚙瑾嚙踝蕭嚙褕殷蕭");
 				String counter_plus = "UPDATE server_file SET counter=counter+1 WHERE FID = '"+FID+"'";
 				stmt.executeUpdate(counter_plus);
 			}
-			else{    //為新檔案
-				//新增進server_file table，counter設為1
+			else{    //嚙踝蕭嚙編嚙褕殷蕭
+				//嚙編嚙磕嚙箠server_file table嚙璀counter嚙稽嚙踝蕭1
 				String insert = "INSERT INTO server_file VALUES ('"+ FID +"', 1,'"+ MD5 +"')";
 				stmt.executeUpdate(insert);
-				//新增進block?
+				//嚙編嚙磕嚙箠block?
 				
 			}
-			//新增至使用者自己的檔案資料表，有相同檔案名稱給予警告
+			//嚙編嚙磕嚙豌使用者自己嚙踝蕭嚙褕案賂蕭う嚙璀嚙踝蕭嚙諛同嚙褕案名嚙誶蛛蕭嚙踝蕭警嚙箠
 			String searchFN = "SELECT fileName FROM "+acc+" WHERE fileName = '"+FileName+"'";
 			ResultSet FNresult = stmt.executeQuery(searchFN);
 			if(FNresult.next()){
-				System.out.println("該user已有使用過這個檔案名稱");
+				System.out.println("嚙踝蕭user嚙緩嚙踝蕭嚙誕用過嚙緻嚙踝蕭嚙褕案名嚙踝蕭");
 			}
 			else{
 				String owner = "INSERT INTO "+acc+" VALUES ('"+FileName+"','"+FID+"','"+MD5 +"','"+MD5+"')";
 				stmt.executeUpdate(owner);
 			}
-			connect.close();        //關閉資料庫
+			connect.close();        //嚙踝蕭嚙踝蕭嚙踝蕭おw
 		}catch(Exception e){
-			System.out.println("例外:"+e.toString()); 
+			System.out.println("嚙課外:"+e.toString()); 
 		}
 	}
 	public static void main(String[] args) {
-		/*System.out.println("給定四參數：使用者帳號    檔案名    檔案ID  檔案MD5");
+		/*System.out.println("嚙踝蕭嚙緩嚙罵嚙諸數：嚙誕用者帳嚙踝蕭    嚙褕案名    嚙褕殷蕭ID  嚙褕殷蕭MD5");
 		Scanner input = new Scanner(System.in);
 		String acc = input.next();  	String FileName = input.next();
 		String FID = input.next();		String MD5 = input.next();

@@ -1,10 +1,10 @@
-package db_query;
+package org.imbox.Database;
 import java.sql.Statement;
 //import java.util.Scanner;
 
 public class Delete_File_user extends db_connect{
 	String acc,FID;
-	//給定參數(使用者帳號，檔案ID)
+	//嚙踝蕭嚙緩嚙諸潘蕭(嚙誕用者帳嚙踝蕭嚙璀嚙褕殷蕭ID)
     public Delete_File_user(String acc,String FID){
         this.FID = FID;
     	try{  
@@ -14,11 +14,11 @@ public class Delete_File_user extends db_connect{
 				new Delete_File(FID);
 				
     	}catch(Exception e){
-			System.out.println("例外:"+e.toString()); 
+			System.out.println("嚙課外:"+e.toString()); 
 		}
     }
 	public static void main(String[] args) {
-		/*System.out.println("給定參數：使用者帳號     檔案ID");
+		/*System.out.println("嚙踝蕭嚙緩嚙諸數：嚙誕用者帳嚙踝蕭     嚙褕殷蕭ID");
 		Scanner input = new Scanner(System.in);
 		String acc = input.next();      String FID = input.next();
 		new Delete_File_user(acc,FID);

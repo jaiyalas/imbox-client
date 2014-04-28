@@ -1,6 +1,7 @@
 package org.imbox.server.pagehandler;
 import java.io.IOException;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.imbox.infrastructure.Workspace;
 import org.imbox.infrastructure.file.Block;
@@ -57,7 +58,8 @@ public class Getblockhandler implements HttpHandler
 							//token is correct
 							//get path from DB
 							byte[] bytedata = Block.readBlockFromHD(Workspace.SYSDIRs, reader.getblockname());
-							String data = IOUtils.toString(bytedata, "UTF-8");
+							Base64 base64 = new Base64();
+							String data = base64.encodeAsString(bytedata);
 							//return result
 							if (data.length() >0)
 							{

@@ -23,7 +23,7 @@ public class IMboxserver
 	public IMboxserver()
 	{
 		try{
-		server = HttpServer.create(new InetSocketAddress(80), 0);
+		server = HttpServer.create(new InetSocketAddress(8080), 0);
 		//server.createContext("/createaccount",new Newaccounthandler());
 		server.createContext("/login", new Loginhandler());
 		//server.createContext("/getserversnapshot",new Getserversnapshothandler());

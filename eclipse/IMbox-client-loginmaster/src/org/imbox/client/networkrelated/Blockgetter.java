@@ -1,9 +1,11 @@
 package org.imbox.client.networkrelated;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpResponse;
 import org.imbox.client.networkrelated.ultility.Internetrecord;
 import org.imbox.client.networkrelated.ultility.Responsereader;
 import org.imbox.client.networkrelated.ultility.Simpleconnection;
+import org.imbox.infrastructure.file.Block;
 import org.json.JSONObject;
 
 
@@ -57,6 +59,9 @@ public class Blockgetter
 				status = obj.getBoolean("succ");
 				errorcode = obj.getInt("errorcode");
 				datastring = obj.getString("data");
+				Base64 base64 = new Base64();
+				//TODO: write data to local? 
+				//Block.writeBlock(_sysDir, base64.decode(datastring));
 			}else
 			{
 				System.out.println("http error: " + Integer.toString(res.getStatusLine().getStatusCode()));

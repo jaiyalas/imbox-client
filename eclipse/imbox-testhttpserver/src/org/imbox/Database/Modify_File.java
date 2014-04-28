@@ -1,39 +1,39 @@
-package db_query;
+package org.imbox.Database;
 import java.sql.ResultSet;
 import java.sql.Statement;
 //import java.util.Scanner;
 
 public class Modify_File extends db_connect{
 	String acc,old_FID,new_FID,newName,new_MD5;
-	//µ¹©w°Ñ¼Æ(±b¸¹¡AÂÂªºÀÉ®×ID¡A·sªºÀÉ®×ID¡A·sªºÀÉ®×¦W¡A·sªºÀÉ®×MD5)
+	//ï¿½ï¿½ï¿½wï¿½Ñ¼ï¿½(ï¿½bï¿½ï¿½ï¿½Aï¿½Âªï¿½ï¿½É®ï¿½IDï¿½Aï¿½sï¿½ï¿½ï¿½É®ï¿½IDï¿½Aï¿½sï¿½ï¿½ï¿½É®×¦Wï¿½Aï¿½sï¿½ï¿½ï¿½É®ï¿½MD5)
     public Modify_File(String acc,String old_FID,String new_FID,String newName,String new_MD5){
     	this.acc = acc;            this.old_FID = old_FID;    	
     	this.new_FID = new_FID;    this.newName=newName;     this.new_MD5 = new_MD5;
     	try{  
-    		//¨ú¥XÂÂªºMD5
+    		//ï¿½ï¿½ï¿½Xï¿½Âªï¿½MD5
     		String oldMD5 = "SELECT f_MD5 FROM "+acc+" WHERE FID = '"+old_FID+"'";
     		Statement stmt = connect.createStatement();
 			ResultSet oldMD5_result = stmt.executeQuery(oldMD5);
 			if(oldMD5_result.next()){ 
 				String old_MD5 = oldMD5_result.getString("f_MD5");
-	    		//§R±¼ÂÂªºÀÉ®×
+	    		//ï¿½Rï¿½ï¿½ï¿½Âªï¿½ï¿½É®ï¿½
 	    		new Delete_File_user(acc,old_FID);
-				//´«¦¨·sªºÀÉ®×
+				//ï¿½ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½É®ï¿½
 	    		new Insert_File(acc,newName,new_FID,new_MD5);
-	    		//­ì¥»ªºMD5©ñ¨ìantedent_MD5
+	    		//ï¿½ì¥»ï¿½ï¿½MD5ï¿½ï¿½ï¿½antedent_MD5
 	    		String newMD5 = "UPDATE "+acc+" SET antedent_f_MD5='"+old_MD5+"' WHERE FID = '"+new_FID+"'";
 	    		stmt.executeUpdate(newMD5);
 			}
 			else{
-				System.out.println("¦øªAºÝµL¦¹ÀÉ®×");
+				System.out.println("ï¿½ï¿½ï¿½Aï¿½ÝµLï¿½ï¿½ï¿½É®ï¿½");
 			}
-			connect.close();  //Ãö³¬¸ê®Æ®w
+			connect.close();  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®w
     	}catch(Exception e){
-			System.out.println("¨Ò¥~:"+e.toString()); 
+			System.out.println("ï¿½Ò¥~:"+e.toString()); 
 		}
     }
 	public static void main(String[] args) {
-		/*System.out.println("µ¹©w¤­°Ñ¼Æ¡G¨Ï¥ÎªÌ±b¸¹    ÂÂªºÀÉ®×ID  ·sªºÀÉ®×ID  ·sªºÀÉ®×¦W   ·sªºÀÉ®×MD5");
+		/*System.out.println("ï¿½ï¿½ï¿½wï¿½ï¿½ï¿½Ñ¼Æ¡Gï¿½Ï¥ÎªÌ±bï¿½ï¿½    ï¿½Âªï¿½ï¿½É®ï¿½ID  ï¿½sï¿½ï¿½ï¿½É®ï¿½ID  ï¿½sï¿½ï¿½ï¿½É®×¦W   ï¿½sï¿½ï¿½ï¿½É®ï¿½MD5");
 		Scanner input = new Scanner(System.in);
 		String acc = input.next();
 		String old_FID = input.next();      String new_FID = input.next();
