@@ -1,13 +1,11 @@
 package org.imbox.server.pagehandler;
 import java.io.IOException;
 
-
 import org.apache.commons.codec.binary.Base64;
 import org.imbox.infrastructure.Workspace;
 import org.imbox.infrastructure.file.Block;
 import org.imbox.server.functions.Authenticator;
 import org.imbox.server.functions.Httpresponser;
-import org.imbox.server.functions.Serverblockwriter;
 import org.imbox.server.jsonreaders.Postfilereader;
 import org.json.JSONObject;
 

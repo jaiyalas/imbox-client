@@ -1,9 +1,10 @@
 package org.imbox.server.pagehandler;
 import java.io.IOException;
-
+import java.net.URI;
 
 import org.imbox.server.functions.Authenticator;
 import org.imbox.server.functions.Httpresponser;
+import org.imbox.server.functions.Uriparser;
 import org.imbox.server.jsonreaders.Accountfilenamereader;
 import org.json.JSONObject;
 
@@ -34,6 +35,14 @@ public class Generatefilehandler implements HttpHandler
 				if (httpconnection.getRequestMethod().equals("GET"))
 				{
 					System.out.println("this is a http get method @ generatefile, post should be used");
+					URI responsemap;
+					responsemap = httpconnection.getRequestURI();
+					System.out.println(responsemap.toString());
+					Uriparser up = new Uriparser(responsemap.toString());
+					String md5 = up.getmd5();
+					String filename = up.getfilename();
+				    //TODO: get file by md5 + filename and return as body?
+				    
 					String response = "this is a http get method @ generatefile";
 					Httpresponser res = new Httpresponser(httpconnection, response);
 					res.execute();

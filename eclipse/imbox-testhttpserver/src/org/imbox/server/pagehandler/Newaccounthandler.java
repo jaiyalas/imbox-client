@@ -1,7 +1,5 @@
 package org.imbox.server.pagehandler;
 import java.io.IOException;
-import java.io.OutputStream;
-
 
 import org.imbox.server.functions.Authenticator;
 import org.imbox.server.functions.Httpresponser;

@@ -16,7 +16,7 @@ public class Url extends db_connect{
 		ResultSet md5_result = stmt.executeQuery(md5);
 		md5_result.next();
 		String md5name = md5_result.getString(1);
-		urlname = "http://"+domain+"/" + md5name+ "/"+filename; 
+		urlname = "http://"+domain+"/generatefile" + "."+md5name+ "."+filename; 
 		System.out.println(urlname);
 		}catch(Exception e){
 		System.out.println("exception:"+e.toString()); 
