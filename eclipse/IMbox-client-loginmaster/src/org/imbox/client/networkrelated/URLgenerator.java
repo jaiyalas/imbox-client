@@ -1,6 +1,7 @@
 package org.imbox.client.networkrelated;
 
 import org.apache.http.HttpResponse;
+import org.imbox.client.networkrelated.ultility.Internetrecord;
 import org.imbox.client.networkrelated.ultility.Responsereader;
 import org.imbox.client.networkrelated.ultility.Simpleconnection;
 import org.json.JSONObject;
@@ -28,6 +29,8 @@ public class URLgenerator
 		try
 		{
 			JSONObject obj = new JSONObject();
+			obj.put("MAC",Internetrecord.getMAC());
+			obj.put("token",Internetrecord.gettoken());
 			obj.put("account", this.account);
 			obj.put("filename", this.filename);
 			Simpleconnection conn = new Simpleconnection();

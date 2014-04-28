@@ -6,6 +6,8 @@
 			<accessrule kind="accessible" pattern="com/sun/net/**"/>
 		</accessrules>
 	</classpathentry>
-	<classpathentry kind="lib" path="E:/javacode/imbox-testhttpserver/lib/java-json.jar"/>
+	<classpathentry kind="lib" path="lib/java-json.jar"/>
+	<classpathentry kind="lib" path="lib/commons-io-2.4.jar"/>
+	<classpathentry kind="lib" path="lib/commons-codec-1.6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

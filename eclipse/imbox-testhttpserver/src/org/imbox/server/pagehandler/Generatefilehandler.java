@@ -2,6 +2,7 @@ package org.imbox.server.pagehandler;
 import java.io.IOException;
 
 
+import org.imbox.server.functions.Authenticator;
 import org.imbox.server.functions.Httpresponser;
 import org.imbox.server.jsonreaders.Accountfilenamereader;
 import org.json.JSONObject;
@@ -44,15 +45,32 @@ public class Generatefilehandler implements HttpHandler
 						Accountfilenamereader reader = new Accountfilenamereader(httpconnection);
 						System.out.println("account = " + reader.getaccount());
 						System.out.println("filename = " + reader.getfilename());
-						//TODO: getfile here
-						String data = "datastring";
-						JSONObject obj=new JSONObject();
-						obj.put("data", data);
-						obj.put("succ", false);
-						obj.put("errorcode", 2);
-						String response = obj.toString();
-						Httpresponser res = new Httpresponser(httpconnection, response);
-						res.execute();
+						System.out.println("MAC = " + reader.getMAC());
+						System.out.println("token = " + reader.gettoken());
+						Authenticator auth = new Authenticator();
+						if (auth.Authenticatebytoken(reader.gettoken(), reader.getMAC()))
+						{
+							//authenticate success
+							//TODO: getfile here
+							String data = "datastring";
+							JSONObject obj=new JSONObject();
+							obj.put("data", data);
+							obj.put("succ", true);
+							obj.put("errorcode", 0);
+							String response = obj.toString();
+							Httpresponser res = new Httpresponser(httpconnection, response);
+							res.execute();
+						}else
+						{
+							String data = new String();
+							JSONObject obj=new JSONObject();
+							obj.put("data", data);
+							obj.put("succ", false);
+							obj.put("errorcode", 1);
+							String response = obj.toString();
+							Httpresponser res = new Httpresponser(httpconnection, response);
+							res.execute();
+						}
 					}else
 					{
 						System.out.println("unknown method:" + httpconnection.getRequestMethod());

@@ -48,6 +48,12 @@ public class Authenticator
 		return Tokenmaker(account,MAC);
 	}
 	
+	
+	public String getaccountname(String token, String MAC)
+	{
+		Tokenpair tokenpair = decrypttoken(token, MAC);
+		return tokenpair.account;
+	}
 	private String Tokenmaker(String account,String MAC)
 	{
 		String tokenbeforeencrypt = new String();

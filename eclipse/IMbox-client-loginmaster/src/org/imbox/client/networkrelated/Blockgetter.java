@@ -7,35 +7,48 @@ import org.imbox.client.networkrelated.ultility.Simpleconnection;
 import org.json.JSONObject;
 
 
-public class Serverlockgetter
+public class Blockgetter
 {
+	private String blockname;
+	private String filename;
+	private int seq;
 	private boolean status;
+	private String datastring;
 	private int errorcode;
-	public Serverlockgetter()
+	
+	public Blockgetter(String blockname,String filename,int seq)
 	{
-		status = false;
+		this.blockname = blockname;
+		this.filename = filename;
+		this.seq = seq;
+		status=false;
+		datastring = new String();
 		errorcode = -1;
-		getlock();
+		sendrequest();
 	}
 	
-	private void getlock()
+	private void sendrequest()
 	{
 		try
 		{
 			JSONObject obj = new JSONObject();
 			obj.put("token", Internetrecord.gettoken());
 			obj.put("MAC", Internetrecord.getMAC());
+			obj.put("blockname", blockname);
+			obj.put("filename", filename);
+			obj.put("seq", seq);
 			Simpleconnection conn = new Simpleconnection();
-			HttpResponse res = conn.httppost("getserverlock", obj);
-			checkstatus(res);
+			readresponse(conn.httppost("getblock", obj));
+			
 		}catch(Exception e)
 		{
 			e.printStackTrace();
 		}
 	}
 	
-	private void checkstatus(HttpResponse res)
+	private void readresponse(HttpResponse res)
 	{
+		
 		try {
 			if (res.getStatusLine().getStatusCode() == 200)
 			{
@@ -43,16 +56,19 @@ public class Serverlockgetter
 				JSONObject obj = new JSONObject(reader.getresponse());
 				status = obj.getBoolean("succ");
 				errorcode = obj.getInt("errorcode");
+				datastring = obj.getString("data");
 			}else
 			{
 				System.out.println("http error: " + Integer.toString(res.getStatusLine().getStatusCode()));
 				status = false;
 				errorcode = -2;
+				datastring = new String();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			status = false;
-			errorcode = 20;
+			errorcode =20;
+			datastring = new String();
 		}
 		
 	}
@@ -66,4 +82,10 @@ public class Serverlockgetter
 	{
 		return errorcode;
 	}
+	
+	public String getdata()
+	{
+		return datastring;
+	}
+
 }

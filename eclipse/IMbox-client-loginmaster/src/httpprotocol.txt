@@ -8,52 +8,95 @@ errorcode:
 0: no problem
 1: authentication failure
 2: server side error (need to be more specific in future)
-3: file not found error
-4: write block fail error
 20: exception failure (see exception log) 
 
 
 JSON:
 /createaccount
-	POST {'account'|'password'|'MAC'}
-	server return {'token' | 'succ' | 'errorcode'}
+    POST {'account'|'password'|'MAC'}
+    server return {'token' | 'succ' | 'errorcode'}
 
 
 /login
-	POST {'account'  | 'password' | 'MAC' }
-	server return {'token' | 'succ' | 'errorcode'}
+    POST {'account'  | 'password' | 'MAC' }
+    server return {'token' | 'succ' | 'errorcode'}
 
 /getserversnapshot 
-	GET
-	server return {'snapshot':[blocknames]}
-	
+    GET
+    server return {'snapshot':[blocknames]}
+    
 /getserverlock
-	POST {'token'|'MAC'}
-	server return {'succ' | 'errorcode'}
+    POST {'token'|'MAC'}
+    server return {'succ' | 'errorcode'}
 
 /releaseserverlock
-	POST {'token'|'MAC'}
-	server return {'succ'| 'errorcode'}
-	
+    POST {'token'|'MAC'}
+    server return {'succ'| 'errorcode'}
+    
 
 /getfile
-	POST {'token'|'MAC'|'blockname'|'filename'| 'seq'}
-	server return {'succ'|'data'|'errorcode'}
-	
+    POST {'token'|'MAC'|'blockname'|'filename'| 'seq'}
+    server return {'succ'|'data'|'errorcode'}
+    
 /postfile
-	POST {'token' |'MAC'| 'blockname' | 'blockdata'|'seq'}  // the block name is for upload test, should be cleared out in near future.
-	server return {'succ'| 'errorcode'}
-	
+    POST {'token' |'MAC'| 'blockdata'|'seq'}
+    server return {'succ'| 'errorcode'}
+    
 /generateURL
-	POST {'account'|'filename'}
-	server return {'URL'|'succ'| 'errorcode'}
-	
+    POST {'account'|'filename'}
+    server return {'URL'|'succ'| 'errorcode'}
+    
 /generateFile
-	POST {'account'|'filename'}
-	server return {'data'|'succ'| 'errorcode'}
-		
+    POST {'account'|'filename'}
+    server return {'data'|'succ'| 'errorcode'}
+        
 '' is tag name
 {} is json object
 [] is json array
 undefined POST/GET is free for use(better blocked?)
+
+
+
+
+//rework
+
+/login
+    POST {'account'  | 'password' | 'MAC' }
+    server return {'token' | 'succ' | 'errorcode'}
+
+/syncrequest
+   POST {'token','MAC'}
+   server return {'filelist':[array of record pair]| 'succ'| 'errorcode'}    //self define datastructure that contains record pair ['filename', 'filemd5']
+
+/getblockrecord
+    POST {'token','MAC','filename'}
+    server return {'blocklist' : [array of BlockRec] | 'succ'| 'errorcode'}     // record of that file, contains 'block md5' + 'sequence'
+    
+/getblock
+    POST {'token'|'MAC'|'blockname'|'filename'| 'seq'}
+    server return {'succ'|'data'|'errorcode'}
+    
+/postblock
+    POST {'token' |'MAC'| 'blockdata'|'filename'|'seq'}
+    server return {'succ'| 'errorcode'}
+   
+/generateURL
+    POST {'token' | 'MAC' | 'account'|'filename'}
+    server return {'URL'|'succ'| 'errorcode'}
+
+/generateFile           <- this is the response action of URL given in generateURL
+    POST {'token' | 'MAC' | 'account'|'filename'}
+    server return {'data'|'succ'| 'errorcode'}
+    
+/getserverlock
+    POST {'token'|'MAC'}
+    server return {'succ' | 'errorcode'}
+
+/releaseserverlock
+    POST {'token'|'MAC'}
+    server return {'succ'| 'errorcode'}
+    
+/networkcheck
+    GET
+    server return "success"
 

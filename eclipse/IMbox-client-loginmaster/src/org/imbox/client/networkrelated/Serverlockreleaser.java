@@ -1,9 +1,7 @@
 package org.imbox.client.networkrelated;
 
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-
 import org.apache.http.HttpResponse;
+import org.imbox.client.networkrelated.ultility.Internetrecord;
 import org.imbox.client.networkrelated.ultility.Responsereader;
 import org.imbox.client.networkrelated.ultility.Simpleconnection;
 import org.json.JSONObject;
@@ -11,14 +9,10 @@ import org.json.JSONObject;
 
 public class Serverlockreleaser
 {
-	private String token;
-	private String MAC;
 	private boolean status;
 	private int errorcode;
-	public Serverlockreleaser(String token)
+	public Serverlockreleaser()
 	{
-		this.token = token;
-		this.MAC = getmacaddress();
 		getlock();
 	}
 	
@@ -27,8 +21,8 @@ public class Serverlockreleaser
 		try
 		{
 			JSONObject obj = new JSONObject();
-			obj.put("token", this.token);
-			obj.put("MAC", this.MAC);
+			obj.put("token", Internetrecord.gettoken());
+			obj.put("MAC", Internetrecord.getMAC());
 			Simpleconnection conn = new Simpleconnection();
 			HttpResponse res = conn.httppost("releaseserverlock", obj);
 			checkstatus(res);
@@ -70,26 +64,5 @@ public class Serverlockreleaser
 	public int geterrorcode()
 	{
 		return errorcode;
-	}
-	
-	private String getmacaddress()
-	{
-		InetAddress ip;
-		try
-		{
-			ip = InetAddress.getLocalHost();
-			NetworkInterface network = NetworkInterface.getByInetAddress(ip);
-			byte[] mac = network.getHardwareAddress();
-			StringBuilder sb = new StringBuilder();
-			for (int i = 0; i < mac.length; i++) {
-				sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? ":" : ""));		
-			}
-			return sb.toString();
-		}catch(Exception e)
-		{
-			e.printStackTrace();
-			return "";
-		}
-		
 	}
 }

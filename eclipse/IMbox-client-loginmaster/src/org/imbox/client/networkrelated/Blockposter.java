@@ -1,5 +1,6 @@
 package org.imbox.client.networkrelated;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpResponse;
 import org.imbox.client.networkrelated.ultility.Internetrecord;
 import org.imbox.client.networkrelated.ultility.Responsereader;
@@ -7,35 +8,67 @@ import org.imbox.client.networkrelated.ultility.Simpleconnection;
 import org.json.JSONObject;
 
 
-public class Serverlockgetter
+public class Blockposter
 {
+	private String blockdatastring;
+	private String filename;
+	private int seq;
 	private boolean status;
+	private String datastring;
 	private int errorcode;
-	public Serverlockgetter()
+	
+	public Blockposter(String filename, String blockdata,int seq)
 	{
+		blockdatastring = blockdata;
+		this.filename = filename;
+		this.seq = seq;
 		status = false;
 		errorcode = -1;
-		getlock();
+		datastring = new String();
+		sendfilestring();
 	}
 	
-	private void getlock()
+	public Blockposter(String filename, byte[] blockdata,int seq)
+	{
+		
+		try
+		{
+			Base64 base64 = new Base64();
+			blockdatastring = new String(base64.encode(blockdata));
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		this.filename = filename;
+		this.seq = seq;
+		status = false;
+		errorcode = -1;
+		datastring = new String();
+		sendfilestring();
+	}
+	
+	private void sendfilestring()
 	{
 		try
 		{
 			JSONObject obj = new JSONObject();
 			obj.put("token", Internetrecord.gettoken());
-			obj.put("MAC", Internetrecord.getMAC());
+			obj.put("MAC" , Internetrecord.getMAC());
+			obj.put("filename", filename);
+			obj.put("blockdata", blockdatastring);
+			obj.put("seq", seq);
 			Simpleconnection conn = new Simpleconnection();
-			HttpResponse res = conn.httppost("getserverlock", obj);
-			checkstatus(res);
+			readresponse(conn.httppost("postblock", obj));
+			
 		}catch(Exception e)
 		{
 			e.printStackTrace();
 		}
 	}
 	
-	private void checkstatus(HttpResponse res)
+	private void readresponse(HttpResponse res)
 	{
+		
 		try {
 			if (res.getStatusLine().getStatusCode() == 200)
 			{
@@ -66,4 +99,10 @@ public class Serverlockgetter
 	{
 		return errorcode;
 	}
+	
+	public String getdata()
+	{
+		return datastring;
+	}
+
 }

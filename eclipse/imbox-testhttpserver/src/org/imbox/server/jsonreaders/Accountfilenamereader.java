@@ -9,6 +9,8 @@ import com.sun.net.httpserver.HttpExchange;
 
 public class Accountfilenamereader
 {
+	private String MAC;
+	private String token;
 	private String filename;
 	private String accountname;
 	private String jsonstring;
@@ -38,6 +40,8 @@ public class Accountfilenamereader
 	{
 		try {
 			JSONObject obj = new JSONObject(jsonstring);
+			MAC = obj.getString("MAC");
+			token = obj.getString("token");
 			accountname = obj.getString("account");
 			filename = obj.getString("filename");
 		} catch (Exception e) {
@@ -54,5 +58,15 @@ public class Accountfilenamereader
 	public String getaccount()
 	{
 		return accountname;
+	}
+	
+	public String getMAC()
+	{
+		return MAC;
+	}
+	
+	public String gettoken()
+	{
+		return token;
 	}
 }

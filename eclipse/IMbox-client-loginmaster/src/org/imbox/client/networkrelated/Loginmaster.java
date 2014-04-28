@@ -6,6 +6,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import org.apache.http.HttpResponse;
+import org.imbox.client.networkrelated.ultility.Internetrecord;
 import org.imbox.client.networkrelated.ultility.Responsereader;
 import org.imbox.client.networkrelated.ultility.Simpleconnection;
 import org.json.JSONObject;
@@ -16,16 +17,12 @@ public class Loginmaster
 {
 	private String accountname;
 	private String password;
-	private String token;
-	private String MAC;
 	private boolean status;
 	private int errorcode;
 	public Loginmaster(String accountname,String password) 
 	{ 
 		this.accountname = accountname; 
-		this.password = password ; 
-		this.MAC = getmacaddress(); 
-		this.token = ""; 
+		this.password = password ;
 		this.status = false; 
 		this.errorcode = -1; 
 	} 
@@ -38,7 +35,6 @@ public class Loginmaster
 	{ 
 		this.accountname = name; 
 		this.password = pwd;
-		this.MAC = getmacaddress();
 	}
 	
 	public void authenticate()
@@ -47,13 +43,13 @@ public class Loginmaster
 			JSONObject obj=new JSONObject();
 			obj.put("account", accountname);
 			obj.put("password", getencrypt());
-			obj.put("MAC", MAC);
+			obj.put("MAC", Internetrecord.getMAC());
 			Simpleconnection conn = new Simpleconnection();
 			HttpResponse res = conn.httppost("login", obj);
 			readresponse(res);
 		} catch (Exception e){
 			e.printStackTrace();
-			token = new String();
+			Internetrecord.settoken("");
 			status = false;
 			errorcode = 0;
 		}	 
@@ -66,29 +62,29 @@ public class Loginmaster
 			{
 				Responsereader responsereader = new Responsereader(res);
 				JSONObject result = new JSONObject(responsereader.getresponse());
-				token = result.getString("token");
+				Internetrecord.settoken(result.getString("token"));
 				status = result.getBoolean("succ");
 				errorcode = result.getInt("errorcode");
 			}else
 			{
 				System.out.println("http error: " + Integer.toString(res.getStatusLine().getStatusCode()));
-				token = new String();
+				Internetrecord.settoken("");
 				status = false;
 				errorcode = -2;
 			}
 		}catch(Exception e)
 		{
 			e.printStackTrace();
-			token = new String();
+			Internetrecord.settoken("");
 			status = false;
 			errorcode = 20;
 		}
 	}
 	
-	public String gettoken()
-	{
-		return token;
-	}
+//	public String gettoken()
+//	{
+//		return token;
+//	}
 	
 	public boolean getstatus()
 	{
