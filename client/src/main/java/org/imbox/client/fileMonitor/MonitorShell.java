@@ -52,8 +52,6 @@ public class MonitorShell{
 	    //logwriter.dosomething();
 	    //synker.dosomething();
 
-	    ui.appendMsg("TOKEN = "+Internetrecord.gettoken());
-
 	    /** ###################### **/
 	    try{
 	    List<Block> bs = FileHandler.genBlocksFromChannel

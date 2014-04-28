@@ -7,7 +7,8 @@ import javax.swing.*;
 import javax.swing.text.*;
 import javax.swing.border.*;
 
-import org.imbox.client.networkrelated.Loginmaster;
+import org.imbox.client.networkrelated.*;
+import org.imbox.client.networkrelated.ultility.*;
 
 public class UImanager{
     
@@ -176,6 +177,7 @@ public class UImanager{
 			  "You're logging in server with \n"+
 			  "    <"+name+"/"+pwd+">");
 		setSYNCHRONIZING();
+		appendMsg("TOKEN = "+Internetrecord.gettoken());
 		/** auto-sync should be involked here **/
 		setSYNCHRONIZED();
 	    }else{ //loginFail
