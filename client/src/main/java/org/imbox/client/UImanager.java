@@ -49,8 +49,9 @@ public class UImanager{
 
 	/** Console Area Setup **/
 
+	display.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 16));
         display.setRows(20);
-	display.setColumns(25);
+	display.setColumns(40);
 	display.setLineWrap(true);  
         display.setWrapStyleWord(false);  
 	display.setBackground(Color.BLACK);
