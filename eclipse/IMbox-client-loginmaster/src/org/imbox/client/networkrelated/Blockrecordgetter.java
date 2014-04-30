@@ -20,10 +20,9 @@ public class Blockrecordgetter
 	public Blockrecordgetter(String filename)
 	{
 		this.filename = filename;
-		sendrequest();
 	}
 	
-	private void sendrequest()
+	public void sendrequest()
 	{
 		try
 		{
@@ -32,7 +31,7 @@ public class Blockrecordgetter
 			obj.put("MAC", Internetrecord.getMAC());
 			obj.put("filename", filename);
 			Simpleconnection conn = new Simpleconnection();
-			HttpResponse res = conn.httppost("createaccount", obj);
+			HttpResponse res = conn.httppost("getblockrecord", obj);
 			if (res.getStatusLine().getStatusCode() == 200)
 			{
 				Responsereader responsereader = new Responsereader(res);
@@ -58,9 +57,9 @@ public class Blockrecordgetter
 		List<BlockRec> returnlist = new ArrayList<BlockRec>();
 		try
 		{
-			for (int i = 0;i<jsonblocklistarray.length();i+=2)
+			for (int i = 0;i<jsonblocklistarray.length();i++)
 			{
-				returnlist.add(new BlockRec(jsonblocklistarray.get(i).toString(), (int) jsonblocklistarray.get(i+1)));
+				returnlist.add(new BlockRec(jsonblocklistarray.get(i).toString(), (int) i));
 			}
 		}catch(Exception e)
 		{

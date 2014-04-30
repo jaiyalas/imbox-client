@@ -2,31 +2,30 @@ package org.imbox.server.pagehandler;
 
 import java.io.IOException;
 
-
+import org.imbox.database.Insert_File;
 import org.imbox.server.functions.Authenticator;
 import org.imbox.server.functions.Httpresponser;
-import org.imbox.server.jsonreaders.TokenMACreader;
+import org.imbox.server.jsonreaders.Newfilereader;
 import org.json.JSONObject;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
-
-public class Getserverlockhandler implements HttpHandler
+public class Newfilehandler implements HttpHandler
 {
 	private HttpExchange httpconnection;
 	private String connectionIP;
+	
 	@Override
-	public void handle(HttpExchange httpconnection) throws IOException 
-	{
+	public void handle(HttpExchange httpconnection) throws IOException {
 		this.httpconnection = httpconnection;
 		connectionIP = httpconnection.getRemoteAddress().getAddress().toString();
 		Handlerthread multithread = new Handlerthread();
 		multithread.setName("clientconnection");
 		multithread.start();
 		
-		
 	}
+	
 	private class Handlerthread extends Thread
 	{
 		@Override
@@ -36,42 +35,53 @@ public class Getserverlockhandler implements HttpHandler
 			{
 				if (httpconnection.getRequestMethod().equals("GET"))
 				{
-					System.out.println("this is a http get method @ getserverlock");
-					String response = "this is a http get method @ getserverlock";
+					System.out.println("this is a http get method @ newfilehandler");
+					String response = "this is a http get method";
 					Httpresponser res = new Httpresponser(httpconnection, response);
 					res.execute();
 				}else
 				{
 					if (httpconnection.getRequestMethod().equals("POST"))
 					{
-						System.out.println("this is a post method @ getserverlock");
-						TokenMACreader requestreader = new TokenMACreader(httpconnection);
-						System.out.println("token = " + requestreader.gettoken());
-						System.out.println("MAC = " + requestreader.getMAC());
-						//TODO: grant server lock here
+						System.out.println("this is a http post method @ newfilehandler");
+						Newfilereader reader = new Newfilereader(httpconnection);
+						reader.readjson();
 						Authenticator auth = new Authenticator();
-						boolean result = auth.Authenticatebytoken(requestreader.gettoken(), requestreader.getMAC(),connectionIP);
-						//TODO: getresult();
-						if (result)
+						if (auth.Authenticatebytoken(reader.gettoken(), reader.getmac(), connectionIP))
 						{
-							JSONObject obj=new JSONObject();
-							obj.put("succ", true);
-							obj.put("errorcode", 0);        //TODO: error code here if any
-							String response = obj.toString();
-							Httpresponser res = new Httpresponser(httpconnection, response);
-							res.execute();
+							//db
+							Insert_File newfile = new Insert_File(auth.getaccountname(), reader.getfilename(), reader.getmd5(),  reader.getmd5(),  reader.getmd5());
+							newfile.InsertFile();
+							if (newfile.getFileInsert())
+							{
+								JSONObject obj=new JSONObject();
+								obj.put("succ", true);
+								obj.put("errorcode", 0);
+								String response = obj.toString();
+								Httpresponser res = new Httpresponser(httpconnection, response);
+								res.execute();
+							}else
+							{
+								JSONObject obj=new JSONObject();
+								obj.put("succ", false);
+								obj.put("errorcode", 5);
+								String response = obj.toString();
+								Httpresponser res = new Httpresponser(httpconnection, response);
+								res.execute();
+							}
+							//response
 						}else
 						{
 							JSONObject obj=new JSONObject();
 							obj.put("succ", false);
-							obj.put("errorcode", 1);		 //TODO: error code here if any
+							obj.put("errorcode", 1);
 							String response = obj.toString();
 							Httpresponser res = new Httpresponser(httpconnection, response);
 							res.execute();
 						}
 					}else
 					{
-						System.out.println("@getserverlcok - unknown method:" + httpconnection.getRequestMethod());
+						System.out.println("unknown method:" + httpconnection.getRequestMethod());
 						String response = "this is a unkown method"+ httpconnection.getRequestMethod();
 						Httpresponser res = new Httpresponser(httpconnection, response);
 						res.execute();
@@ -82,7 +92,6 @@ public class Getserverlockhandler implements HttpHandler
 				e.printStackTrace();
 			}
 		}
-		
 	}
 	
 }

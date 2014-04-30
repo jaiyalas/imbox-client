@@ -1,45 +1,59 @@
-package org.imbox.Database;
+package org.imbox.database;
 import java.sql.ResultSet;
 import java.sql.Statement;
 //import java.util.Scanner;
 
 public class Modify_File extends db_connect{
-	String acc,old_FID,new_FID,newName,new_MD5;
-	//���w�Ѽ�(�b���A�ª��ɮ�ID�A�s���ɮ�ID�A�s���ɮצW�A�s���ɮ�MD5)
-    public Modify_File(String acc,String old_FID,String new_FID,String newName,String new_MD5){
-    	this.acc = acc;            this.old_FID = old_FID;    	
+	private String acc,oldName,new_FID,newName,new_MD5;
+	private boolean userFileModify;
+	//input: account, old_fileName, new_FID, new_fileName,new_fileMD5
+    public Modify_File(String acc,String oldName,String new_FID,String newName,String new_MD5){
+    	this.acc = acc;            this.oldName = oldName;    
     	this.new_FID = new_FID;    this.newName=newName;     this.new_MD5 = new_MD5;
+    }
+    public void setFileModify(boolean userFileModify){    //set if user has file for update
+    	this.userFileModify = userFileModify;
+    }
+    public boolean getFileModify(){                  //get if user has file for update
+    	return userFileModify;
+    }
+    public void ModifyFile(){
     	try{  
-    		//���X�ª�MD5
-    		String oldMD5 = "SELECT f_MD5 FROM "+acc+" WHERE FID = '"+old_FID+"'";
+    		//get oldFileMD5
+    		String searchMD5 = "SELECT f_MD5 FROM "+acc+" WHERE fileName = '"+oldName+"'";
     		Statement stmt = connect.createStatement();
-			ResultSet oldMD5_result = stmt.executeQuery(oldMD5);
-			if(oldMD5_result.next()){ 
-				String old_MD5 = oldMD5_result.getString("f_MD5");
-	    		//�R���ª��ɮ�
-	    		new Delete_File_user(acc,old_FID);
-				//�����s���ɮ�
-	    		new Insert_File(acc,newName,new_FID,new_MD5);
-	    		//�쥻��MD5���antedent_MD5
-	    		String newMD5 = "UPDATE "+acc+" SET antedent_f_MD5='"+old_MD5+"' WHERE FID = '"+new_FID+"'";
-	    		stmt.executeUpdate(newMD5);
+			ResultSet searchMD5_result = stmt.executeQuery(searchMD5);
+			if(searchMD5_result.next()){ 
+				setFileModify(true);
+				String old_MD5 = searchMD5_result.getString("f_MD5");
+	    	    //delete old file
+	    		Delete_File_user delete = new Delete_File_user(acc,old_MD5);
+	    		delete.DeleteFileUser();
+				//insert new file
+	    		Insert_File insert = new Insert_File(acc,newName,new_FID,old_MD5,new_MD5);
+	    		insert.InsertFile();
+	    		//put old MD5 into antedent_MD5(wrong)
+	    		//String newMD5 = "UPDATE "+acc+" SET antedent_f_MD5='"+old_MD5+"' WHERE f_MD5 = '"+new_MD5+"'";
+	    		//stmt.executeUpdate(newMD5);
 			}
 			else{
-				System.out.println("���A�ݵL���ɮ�");
+				setFileModify(false);
 			}
-			connect.close();  //������Ʈw
+			connect.close();  //close database
     	}catch(Exception e){
-			System.out.println("�ҥ~:"+e.toString()); 
+			System.out.println(e.toString()); 
 		}
     }
 	public static void main(String[] args) {
-		/*System.out.println("���w���ѼơG�ϥΪ̱b��    �ª��ɮ�ID  �s���ɮ�ID  �s���ɮצW   �s���ɮ�MD5");
+		/*System.out.println("input: account, old_fileName, new_fid, new_Name, new_fileMD5");
 		Scanner input = new Scanner(System.in);
-		String acc = input.next();
-		String old_FID = input.next();      String new_FID = input.next();
+		String acc = input.next();          String oldName = input.next(); 
+        String new_FID = input.next();		
 		String newName = input.next();  	String new_MD5 = input.next();
-		new Modify_File(acc,old_FID,new_FID,newName,new_MD5);
-		input.close();*/
+		Modify_File modify = new Modify_File(acc,oldName,new_FID,newName,new_MD5);
+		modify.ModifyFile();
+		System.out.println(modify.getFileModify());
+    	input.close();*/
 	}
 
 }

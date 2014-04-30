@@ -1,12 +1,12 @@
 package org.imbox.server.pagehandler;
 import java.io.IOException;
 
-import org.apache.commons.codec.binary.Base64;
+import org.imbox.infrastructure.Casting;
 import org.imbox.infrastructure.Workspace;
 import org.imbox.infrastructure.file.Block;
 import org.imbox.server.functions.Authenticator;
 import org.imbox.server.functions.Httpresponser;
-import org.imbox.server.jsonreaders.Getfilereader;
+import org.imbox.server.jsonreaders.Getblockreader;
 import org.json.JSONObject;
 
 import com.sun.net.httpserver.HttpExchange;
@@ -16,10 +16,12 @@ import com.sun.net.httpserver.HttpHandler;
 public class Getblockhandler implements HttpHandler
 {
 	private HttpExchange httpconnection;
+	private String connectionIP;
 	@Override
 	public void handle(HttpExchange httpconnection) throws IOException 
 	{	
 		this.httpconnection = httpconnection;
+		connectionIP = httpconnection.getRemoteAddress().getAddress().toString();
 		Handlerthread multithread = new Handlerthread();
 		multithread.setName("clientconnection");
 		multithread.start();
@@ -44,47 +46,59 @@ public class Getblockhandler implements HttpHandler
 					if (httpconnection.getRequestMethod().equals("POST"))
 					{
 						System.out.println("this is a post method @ getfile");
-						Getfilereader reader = new Getfilereader(httpconnection);
+						Getblockreader reader = new Getblockreader(httpconnection);
 						System.out.println("token = " + reader.gettoken());
 						System.out.println("MAC = "+ reader.getmac());
 						System.out.println("blockname = " + reader.getblockname());
-						System.out.println("filename = " + reader.getfilename());
+						//System.out.println("filename = " + reader.getfilename());
 						System.out.println("sequence = " + Integer.toString(reader.getsequence()));
 						//TODO: get file here, attach to data, change type if needed
 						Authenticator auth = new Authenticator();
-						if (auth.Authenticatebytoken(reader.gettoken(), reader.getmac()))
+						if (auth.Authenticatebytoken(reader.gettoken(), reader.getmac(),connectionIP))
 						{
 							//token is correct
-							//get path from DB
-							byte[] bytedata = Block.readBlockFromHD(Workspace.SYSDIRs, reader.getblockname());
-							Base64 base64 = new Base64();
-							String data = base64.encodeAsString(bytedata);
-							//return result
-							if (data.length() >0)
+							try
 							{
-								JSONObject obj=new JSONObject();
-								obj.put("succ", true);
-								obj.put("data", data);  // TODO: change type if needed
-								obj.put("errorcode", 0); // TODO: add errorcode if needed
-								String response = obj.toString();
-								Httpresponser res = new Httpresponser(httpconnection, response);
-								res.execute();
-							}else
+								byte[] bytedata = Block.readBlockFromHD(Workspace.SYSDIRs, reader.getblockname());
+								String data = Casting.bytesToString(bytedata);
+								//return result
+								if (data.length() >0)
+								{
+									JSONObject obj=new JSONObject();
+									obj.put("succ", true);
+									obj.put("data", data);
+									obj.put("errorcode", 0); 
+									String response = obj.toString();
+									Httpresponser res = new Httpresponser(httpconnection, response);
+									res.execute();
+								}else
+								{
+									JSONObject obj=new JSONObject();
+									obj.put("succ", false);
+									obj.put("data", new String());
+									obj.put("errorcode", 3);
+									String response = obj.toString();
+									Httpresponser res = new Httpresponser(httpconnection, response);
+									res.execute();
+								}
+							}catch(Exception e)
 							{
+								e.printStackTrace();
 								JSONObject obj=new JSONObject();
 								obj.put("succ", false);
-								obj.put("data", data);  // TODO: change type if needed
-								obj.put("errorcode", 3); // TODO: add errorcode if needed
+								obj.put("data", new String()); 
+								obj.put("errorcode", 4);
 								String response = obj.toString();
 								Httpresponser res = new Httpresponser(httpconnection, response);
 								res.execute();
 							}
+							
 						}else
 						{
 							JSONObject obj=new JSONObject();
 							obj.put("succ", false);
-							obj.put("data", new String());  // TODO: change type if needed
-							obj.put("errorcode", 1); // TODO: add errorcode if needed
+							obj.put("data", new String());
+							obj.put("errorcode", 1);
 							String response = obj.toString();
 							Httpresponser res = new Httpresponser(httpconnection, response);
 							res.execute();
@@ -100,7 +114,22 @@ public class Getblockhandler implements HttpHandler
 				}
 			}catch(Exception e)
 			{
-				e.printStackTrace();
+				try
+				{
+					JSONObject obj=new JSONObject();
+					obj.put("succ", false);
+					obj.put("data", new String());
+					obj.put("errorcode", 4);
+					String response = obj.toString();
+					Httpresponser res = new Httpresponser(httpconnection, response);
+					res.execute();
+					System.out.println("the below error has happen in 'Getblockhandler'");
+					e.printStackTrace();
+				}catch(Exception layer2e)
+				{
+					System.out.println("the below error has happen in 'Getblockhandler',layer2exception");
+					layer2e.printStackTrace();
+				}
 			}
 		}
 		

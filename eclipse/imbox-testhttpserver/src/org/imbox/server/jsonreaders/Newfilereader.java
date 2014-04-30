@@ -7,22 +7,21 @@ import org.json.JSONObject;
 
 import com.sun.net.httpserver.HttpExchange;
 
-public class Getblockreader
+public class Newfilereader
 {
 	private String token;
-	private String blockname;
 	private String MAC;
-	private int sequence;
+	private String filename;
+	private String md5;
 	private HttpExchange request;
 	private String jsonstring;
 	
-	public Getblockreader(HttpExchange httpconnection)
+	public Newfilereader(HttpExchange httpconnection)
 	{
 		request = httpconnection;
-		getjson();
 	}
 	
-	private void getjson()
+	public void readjson()
 	{
 		try {
 			InputStreamReader requestreader =  new InputStreamReader(request.getRequestBody(),"utf-8");
@@ -38,32 +37,32 @@ public class Getblockreader
 	
 	private void parsejson()
 	{
-		try {
+		try
+		{
 			JSONObject obj = new JSONObject(jsonstring);
 			token = obj.getString("token");
 			MAC = obj.getString("MAC");
-			blockname = obj.getString("blockname");
-			sequence = obj.getInt("seq");
-		} catch (Exception e) {
+			filename = obj.getString("filename");
+			md5 = obj.getString("md5"); 
+			
+		}catch(Exception e)
+		{
 			e.printStackTrace();
 		}
 	}
 	
+	public String getfilename()
+	{
+		return filename;
+	}
+	public String getmd5()
+	{
+		return md5;
+	}
 	public String gettoken()
 	{
 		return token;
 	}
-	
-	public String getblockname()
-	{
-		return blockname;
-	}
-	
-	public int getsequence()
-	{
-		return sequence;
-	}
-	
 	public String getmac()
 	{
 		return MAC;

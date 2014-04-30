@@ -1,8 +1,7 @@
-package org.imbox.server.functions;
+package org.imbox.database;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-import org.imbox.Database.db_connect;
 
 
 public class Url extends db_connect{

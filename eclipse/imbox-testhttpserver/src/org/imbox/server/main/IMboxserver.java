@@ -3,10 +3,11 @@ package org.imbox.server.main;
 import java.net.InetSocketAddress;
 
 import org.imbox.infrastructure.Workspace;
+import org.imbox.server.pagehandler.Createnewaccounthandler;
 import org.imbox.server.pagehandler.GenerateURLhandler;
 import org.imbox.server.pagehandler.Generatefilehandler;
-import org.imbox.server.pagehandler.Getblockrecordhandler;
 import org.imbox.server.pagehandler.Getblockhandler;
+import org.imbox.server.pagehandler.Getblockrecordhandler;
 import org.imbox.server.pagehandler.Getserverlockhandler;
 import org.imbox.server.pagehandler.Loginhandler;
 import org.imbox.server.pagehandler.Networkcheckhandler;
@@ -23,8 +24,8 @@ public class IMboxserver
 	public IMboxserver()
 	{
 		try{
-		server = HttpServer.create(new InetSocketAddress(8080), 0);
-		//server.createContext("/createaccount",new Newaccounthandler());
+		server = HttpServer.create(new InetSocketAddress(80), 0);
+		server.createContext("/createaccount",new Createnewaccounthandler());
 		server.createContext("/login", new Loginhandler());
 		//server.createContext("/getserversnapshot",new Getserversnapshothandler());
 		server.createContext("/getserverlock",new Getserverlockhandler());

@@ -2,9 +2,9 @@ package org.imbox.server.pagehandler;
 import java.io.IOException;
 
 
+import org.imbox.database.Url;
 import org.imbox.server.functions.Authenticator;
 import org.imbox.server.functions.Httpresponser;
-import org.imbox.server.functions.Url;
 import org.imbox.server.jsonreaders.Accountfilenamereader;
 import org.json.JSONObject;
 
@@ -15,10 +15,12 @@ import com.sun.net.httpserver.HttpHandler;
 public class GenerateURLhandler implements HttpHandler
 {
 	private HttpExchange httpconnection;
+	private String connectionIP;
 	@Override
 	public void handle(HttpExchange httpconnection) throws IOException 
 	{
 		this.httpconnection = httpconnection;
+		connectionIP = httpconnection.getRemoteAddress().getAddress().toString();
 		Handlerthread multithread = new Handlerthread();
 		multithread.setName("clientconnection");
 		multithread.start();
@@ -50,7 +52,7 @@ public class GenerateURLhandler implements HttpHandler
 						System.out.println("MAC = " + reader.getMAC());
 						System.out.println("token = " + reader.gettoken());
 						Authenticator auth = new Authenticator();
-						if (auth.Authenticatebytoken(reader.gettoken(), reader.getMAC()))
+						if (auth.Authenticatebytoken(reader.gettoken(), reader.getMAC(),connectionIP))
 						{
 							Url returnurl =new Url(reader.getaccount(), reader.getfilename());
 							JSONObject obj=new JSONObject();

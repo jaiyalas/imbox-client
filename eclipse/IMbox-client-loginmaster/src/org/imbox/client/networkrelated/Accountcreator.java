@@ -7,6 +7,7 @@ import org.apache.http.HttpResponse;
 import org.imbox.client.networkrelated.ultility.Internetrecord;
 import org.imbox.client.networkrelated.ultility.Responsereader;
 import org.imbox.client.networkrelated.ultility.Simpleconnection;
+import org.imbox.infrastructure.Casting;
 import org.json.JSONObject;
 
 
@@ -26,10 +27,9 @@ public class Accountcreator
 		responsestatus = false;
 		responseerrorcode = -1;
 		token = "";
-		register();
 	}
 	
-	private void register()
+	public void register()
 	{
 		try {
 			JSONObject obj=new JSONObject();
@@ -87,10 +87,10 @@ public class Accountcreator
 	private String getencrypt()
 	{
 		try {
-			MessageDigest encrypter = MessageDigest.getInstance("SHA-256");
+			MessageDigest encrypter = MessageDigest.getInstance("md5");
 			encrypter.update(password.getBytes());
 			byte[] digest = encrypter.digest();
-			return new String(digest);
+			return Casting.bytesToString(digest);
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}

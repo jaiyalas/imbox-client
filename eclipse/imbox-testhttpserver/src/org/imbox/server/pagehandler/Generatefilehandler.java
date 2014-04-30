@@ -15,10 +15,12 @@ import com.sun.net.httpserver.HttpHandler;
 public class Generatefilehandler implements HttpHandler
 {
 	private HttpExchange httpconnection;
+	private String connectionIP;
 	@Override
 	public void handle(HttpExchange httpconnection) throws IOException 
 	{
 		this.httpconnection = httpconnection;
+		connectionIP = httpconnection.getRemoteAddress().getAddress().toString();
 		Handlerthread multithread = new Handlerthread();
 		multithread.setName("clientconnection");
 		multithread.start();
@@ -41,6 +43,7 @@ public class Generatefilehandler implements HttpHandler
 					Uriparser up = new Uriparser(responsemap.toString());
 					String md5 = up.getmd5();
 					String filename = up.getfilename();
+					System.out.println(md5 +"\t" + filename);
 				    //TODO: get file by md5 + filename and return as body?
 				    
 					String response = "this is a http get method @ generatefile";
@@ -57,7 +60,7 @@ public class Generatefilehandler implements HttpHandler
 						System.out.println("MAC = " + reader.getMAC());
 						System.out.println("token = " + reader.gettoken());
 						Authenticator auth = new Authenticator();
-						if (auth.Authenticatebytoken(reader.gettoken(), reader.getMAC()))
+						if (auth.Authenticatebytoken(reader.gettoken(), reader.getMAC(),connectionIP))
 						{
 							//authenticate success
 							//TODO: getfile here

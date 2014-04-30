@@ -2,10 +2,12 @@ package org.imbox.server.pagehandler;
 
 import java.io.IOException;
 
+import org.imbox.database.Filefidgetter;
+import org.imbox.database.search_block;
 import org.imbox.server.functions.Authenticator;
+import org.imbox.server.functions.Blocklistgetter;
 import org.imbox.server.functions.Httpresponser;
-import org.imbox.server.jsonreaders.Getblockreader;
-import org.json.JSONArray;
+import org.imbox.server.jsonreaders.Getblockrecordreader;
 import org.json.JSONObject;
 
 import com.sun.net.httpserver.HttpExchange;
@@ -15,9 +17,11 @@ import com.sun.net.httpserver.HttpHandler;
 public class Getblockrecordhandler implements HttpHandler
 {
 	private HttpExchange httpconnection;
+	private String connectionIP;
 	@Override
 	public void handle(HttpExchange httpconnection) throws IOException {
 		this.httpconnection = httpconnection;
+		connectionIP = httpconnection.getRemoteAddress().getAddress().toString();
 		Handlerthread multithread = new Handlerthread();
 		multithread.setName("clientconnection");
 		multithread.start();
@@ -41,18 +45,22 @@ public class Getblockrecordhandler implements HttpHandler
 					if (httpconnection.getRequestMethod().equals("POST"))
 					{
 						System.out.println("this is a post method @ Getblockrecordhandler");
-						Getblockreader reader = new Getblockreader(httpconnection);
+						Getblockrecordreader reader = new Getblockrecordreader(httpconnection);
 						System.out.println("MAC = " + reader.getmac());
 						System.out.println("token = " + reader.gettoken());
 						System.out.println("filename = " + reader.getfilename());
 						Authenticator auth = new Authenticator();
-						if (auth.Authenticatebytoken(reader.gettoken(), reader.getmac()))
+						if (auth.Authenticatebytoken(reader.gettoken(), reader.getmac(),connectionIP))
 						{
 							//authenticate success
-							//TODO: return array of blockrecord of a specific file
-							JSONArray blocklistofaccount = new JSONArray();
+							Filefidgetter ffg = new Filefidgetter(auth.getaccountname(), reader.getfilename());
+							ffg.preparefileid();
+							search_block sb = new search_block(ffg.getfileid());
+							sb.searchBlock();
+							Blocklistgetter blg = new Blocklistgetter(sb.getList());
+							blg.preparejsonarray();
 							JSONObject obj=new JSONObject();
-							obj.put("blocklist", blocklistofaccount.toString());
+							obj.put("blocklist", blg.getjsonarray());
 							obj.put("succ", true);
 							obj.put("errorcode", 0);
 							String response = obj.toString();
@@ -79,7 +87,23 @@ public class Getblockrecordhandler implements HttpHandler
 				}
 			}catch(Exception e)
 			{
-				e.printStackTrace();
+				try
+				{
+					String data = new String();
+					JSONObject obj=new JSONObject();
+					obj.put("data", data);
+					obj.put("succ", false);
+					obj.put("errorcode", 4);
+					String response = obj.toString();
+					Httpresponser res = new Httpresponser(httpconnection, response);
+					res.execute();
+					System.out.println("the below error has happen in 'Getblockrecordhandler'");
+					e.printStackTrace();
+				}catch(Exception layer2e)
+				{
+					System.out.println("the below error has happen in 'Getblockrecordhandler',layer2exception");
+					layer2e.printStackTrace();
+				}
 			}
 		}
 	}

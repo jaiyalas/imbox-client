@@ -21,10 +21,9 @@ public class URLgenerator
 		URL=new String();
 		status = false;
 		errorcode = -1;
-		sendrequest();
 	}
 	
-	private void sendrequest()
+	public void sendrequest()
 	{
 		try
 		{

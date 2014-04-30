@@ -1,30 +1,30 @@
 package org.imbox.server.functions;
 
+import java.util.List;
+
 import org.json.JSONArray;
 
 
 public class Blocklistgetter
 {
-	private String account;
-	private String filename;
-	public Blocklistgetter(String account,String filename)
+	private List<String> datalist;
+	private JSONArray returnarray;
+	public Blocklistgetter(List<String> datalist)
 	{
-		this.account = account;
-		this.filename = filename;
+		this.datalist = datalist;
 	}
 	
-	public JSONArray getblocklist()
+	public void preparejsonarray()
 	{
-		JSONArray returnarray = new JSONArray();
-		try
+		returnarray = new JSONArray();
+		for (int i = 0;i < datalist.size();i++)
 		{
-			//go to DB get List<BlockRec>
-			//and put to json array  ['Blockname','sequence','Blockname','sequence']
-			//NOTICE: BlockRec(String,int);
-		}catch(Exception e)
-		{
-			e.printStackTrace();
+			returnarray.put(datalist.get(i));
 		}
+	}
+	
+	public JSONArray getjsonarray()
+	{
 		return returnarray;
 	}
 }

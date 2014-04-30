@@ -1,36 +1,20 @@
-package org.imbox.Database;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+package org.imbox.database;
+import java.sql.*;
 public class db_connect {
-	protected static Connection connect = null;
-	String driver = "com.mysql.jdbc.Driver";
-    String url = "jdbc:mysql://localhost:3306/group2_db";  //�s���Ӹ�Ʈw
-    String user = "root";              //mysql�b��
-    String password = "cindyboy";      //mysql�K�X
-    
-	public db_connect(){ 
-	    try { 
-	      Class.forName(driver); 
-	      //���Udriver 
-	      connect = DriverManager.getConnection(url,user,password); 
-	      //���oconnection
-	      if(!connect.isClosed())
-	          System.out.println("successfuly connected t0 DB"); 
-	      //connect.close();
-	      //System.out.println("��Ʈw�������\"); 
-	    } 
-	    catch(ClassNotFoundException e) 
-	    { 
-	      System.out.println("cannot find driver type:"+e.toString()); 
-	    }//���i��|����sqlexception 
-	    catch(SQLException e) { 
-	      System.out.println("exception:"+e.toString()); 
-	    } 
-	} 
-	public static void main(String[] args) {
-        new db_connect();
+    private static String driver   = "com.mysql.jdbc.Driver";
+    private static String url      = "jdbc:mysql://54.254.1.241:3306/";
+    protected static String dbname   = "group2_db";
+    private static String user     = "root";
+    private static String password = "cindyboy";
+    protected static Connection connect;
+    static{
+	try{
+	Class.forName(driver);
+	connect = DriverManager.getConnection(url+dbname,user,password);
+	}catch(ClassNotFoundException | SQLException e){
+	    throw new ExceptionInInitializerError(e);
 	}
-
+    };
+    public db_connect(){ };
+    
 }

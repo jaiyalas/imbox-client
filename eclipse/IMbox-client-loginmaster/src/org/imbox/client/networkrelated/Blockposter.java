@@ -1,10 +1,10 @@
 package org.imbox.client.networkrelated;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpResponse;
 import org.imbox.client.networkrelated.ultility.Internetrecord;
 import org.imbox.client.networkrelated.ultility.Responsereader;
 import org.imbox.client.networkrelated.ultility.Simpleconnection;
+import org.imbox.infrastructure.Casting;
 import org.json.JSONObject;
 
 
@@ -25,7 +25,6 @@ public class Blockposter
 		status = false;
 		errorcode = -1;
 		datastring = new String();
-		sendfilestring();
 	}
 	
 	public Blockposter(String filename, byte[] blockdata,int seq)
@@ -33,8 +32,7 @@ public class Blockposter
 		
 		try
 		{
-			Base64 base64 = new Base64();
-			blockdatastring = new String(base64.encode(blockdata));
+			blockdatastring = Casting.bytesToString(blockdata);
 		}catch(Exception e)
 		{
 			e.printStackTrace();
@@ -44,10 +42,9 @@ public class Blockposter
 		status = false;
 		errorcode = -1;
 		datastring = new String();
-		sendfilestring();
 	}
 	
-	private void sendfilestring()
+	public void sendrequest()
 	{
 		try
 		{

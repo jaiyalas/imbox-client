@@ -14,10 +14,12 @@ import com.sun.net.httpserver.HttpHandler;
 public class Releaseserverlockhandler implements HttpHandler
 {
 	private HttpExchange httpconnection;
+	private String connectionIP;
 	@Override
 	public void handle(HttpExchange httpconnection) throws IOException 
 	{
 		this.httpconnection = httpconnection;
+		connectionIP = httpconnection.getRemoteAddress().getAddress().toString();
 		Handlerthread multithread = new Handlerthread();
 		multithread.setName("clientconnection");
 		multithread.start();
@@ -48,7 +50,7 @@ public class Releaseserverlockhandler implements HttpHandler
 						//TODO: release server lock here
 						//TODO: getresult();
 						Authenticator auth = new Authenticator();
-						if (auth.Authenticatebytoken(requestreader.gettoken(), requestreader.getMAC()))
+						if (auth.Authenticatebytoken(requestreader.gettoken(), requestreader.getMAC(),connectionIP))
 						{
 							JSONObject obj=new JSONObject();
 							obj.put("succ", true);

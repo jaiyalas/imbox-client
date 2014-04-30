@@ -1,42 +1,54 @@
-package org.imbox.Database;
+package org.imbox.database;
 import java.sql.ResultSet;
 import java.sql.Statement;
 //import java.util.Scanner;
 
 public class Delete_File extends db_connect{
-	String acc,FID;
-	//���w�Ѽ�(�ɮ�ID)
-    public Delete_File(String FID){
-        this.FID = FID;
+	private String MD5;
+	private boolean hasFileDelete;
+	//input: file_MD5
+    public Delete_File(String MD5){
+        this.MD5 = MD5;
+    }
+    public void setFileDelete(boolean hasFileDelete){    //set if server has file for delete
+    	this.hasFileDelete = hasFileDelete;
+    }
+    public boolean getFileDelete(){                  //get if server has file for delete
+    	return hasFileDelete;
+    }
+    public void DeleteFile(){
     	try{  
-    		String searchFID = "SELECT counter FROM server_file WHERE FID = '"+FID+"'";
+    		String searchFID = "SELECT counter FROM server_file WHERE f_MD5 = '"+MD5+"'";
     		Statement stmt = connect.createStatement();
 			ResultSet FIDresult = stmt.executeQuery(searchFID);
-			if(FIDresult.next()){ //���A�����ɮ�
+			if(FIDresult.next()){                               //server has file
+				setFileDelete(true);
 				int counter = FIDresult.getInt("counter");
-				//counter�Y��1�h�����R�����A���ɮסA������~<1���|�@�_�R��
+				//counter=1  =>  delete server file
 				if(counter<=1){
-					String delete = "DELETE FROM server_file WHERE FID = '"+FID+"'";
-					stmt.executeUpdate(delete);   //����user�ݩMblock���|�Q�۰ʧR��
+					String delete = "DELETE FROM server_file WHERE f_MD5 = '"+MD5+"'";
+					stmt.executeUpdate(delete);   //user and block auto delete
 				}
-				else{  //�j��1�hcounter-1
-					String counter_minus = "UPDATE server_file SET counter=counter-1 WHERE FID = '"+FID+"'";
+				else{  //>1  =>  counter-1
+					String counter_minus = "UPDATE server_file SET counter=counter-1 WHERE f_MD5 = '"+MD5+"'";
 					stmt.executeUpdate(counter_minus);
 				}
 			}
 			else{
-				System.out.println("���A�ݵL���ɮ�");
+				setFileDelete(false);
 			}
-			connect.close();  //������Ʈw
+			connect.close();  //close database
     	}catch(Exception e){
-			System.out.println("�ҥ~:"+e.toString()); 
+			System.out.println(e.toString()); 
 		}
     }
 	public static void main(String[] args) {
-		/*System.out.println("���w�ѼơG �ɮ�ID");
+		/*System.out.println("input: file_MD5");
 		Scanner input = new Scanner(System.in);
-		String FID = input.next();
-		new Delete_File(FID);
+		String MD5 = input.next();
+		Delete_File delete = new Delete_File(MD5);
+		delete.DeleteFile();
+		System.out.println(delete.getFileDelete());
 		input.close();*/
 	}
 

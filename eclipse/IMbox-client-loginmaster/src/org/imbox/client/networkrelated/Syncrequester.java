@@ -19,10 +19,10 @@ public class Syncrequester
 	private JSONArray jsonfilelistarray;
 	public Syncrequester()
 	{
-		sendrequest();
+		
 	}
 	
-	private void sendrequest()
+	public void sendrequest()
 	{
 		try
 		{
@@ -30,7 +30,7 @@ public class Syncrequester
 			obj.put("token", Internetrecord.gettoken());
 			obj.put("MAC", Internetrecord.getMAC());
 			Simpleconnection conn = new Simpleconnection();
-			HttpResponse res = conn.httppost("createaccount", obj);
+			HttpResponse res = conn.httppost("syncrequest", obj);
 			if (res.getStatusLine().getStatusCode() == 200)
 			{
 				Responsereader responsereader = new Responsereader(res);

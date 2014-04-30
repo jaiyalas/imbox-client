@@ -1,34 +1,33 @@
 package org.imbox.client.networkrelated;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpResponse;
 import org.imbox.client.networkrelated.ultility.Internetrecord;
 import org.imbox.client.networkrelated.ultility.Responsereader;
 import org.imbox.client.networkrelated.ultility.Simpleconnection;
+import org.imbox.infrastructure.Casting;
+import org.imbox.infrastructure.file.Block;
 import org.json.JSONObject;
 
 
 public class Blockgetter
 {
 	private String blockname;
-	private String filename;
 	private int seq;
 	private boolean status;
 	private String datastring;
 	private int errorcode;
+	private Block resultblock;
 	
-	public Blockgetter(String blockname,String filename,int seq)
+	public Blockgetter(String blockname,int seq)
 	{
 		this.blockname = blockname;
-		this.filename = filename;
 		this.seq = seq;
 		status=false;
 		datastring = new String();
 		errorcode = -1;
-		sendrequest();
 	}
 	
-	private void sendrequest()
+	public void sendrequest()
 	{
 		try
 		{
@@ -36,7 +35,6 @@ public class Blockgetter
 			obj.put("token", Internetrecord.gettoken());
 			obj.put("MAC", Internetrecord.getMAC());
 			obj.put("blockname", blockname);
-			obj.put("filename", filename);
 			obj.put("seq", seq);
 			Simpleconnection conn = new Simpleconnection();
 			readresponse(conn.httppost("getblock", obj));
@@ -58,9 +56,8 @@ public class Blockgetter
 				status = obj.getBoolean("succ");
 				errorcode = obj.getInt("errorcode");
 				datastring = obj.getString("data");
-				Base64 base64 = new Base64();
-				//TODO: write data to local? 
-				//Block.writeBlock(_sysDir, base64.decode(datastring));
+				byte[] content = Casting.stringToBytes(datastring);
+				resultblock = Block.genBlock(content, seq);
 			}else
 			{
 				System.out.println("http error: " + Integer.toString(res.getStatusLine().getStatusCode()));
@@ -90,6 +87,11 @@ public class Blockgetter
 	public String getdata()
 	{
 		return datastring;
+	}
+	
+	public Block getresultblock()
+	{
+		return resultblock;
 	}
 
 }

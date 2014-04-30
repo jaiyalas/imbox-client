@@ -2,11 +2,11 @@ package org.imbox.server.pagehandler;
 
 import java.io.IOException;
 
+import org.imbox.database.Userfilelistgetter;
 import org.imbox.server.functions.Authenticator;
 import org.imbox.server.functions.Filelistgetter;
 import org.imbox.server.functions.Httpresponser;
 import org.imbox.server.jsonreaders.TokenMACreader;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.sun.net.httpserver.HttpExchange;
@@ -15,10 +15,11 @@ import com.sun.net.httpserver.HttpHandler;
 public class Syncrequesthandler implements HttpHandler
 {
 	private HttpExchange httpconnection;
-
+	private String connectionIP;
 	@Override
 	public void handle(HttpExchange httpconnection) throws IOException {
 		this.httpconnection = httpconnection;
+		connectionIP = httpconnection.getRemoteAddress().getAddress().toString();
 		Handlerthread multithread = new Handlerthread();
 		multithread.setName("clientconnection");
 		multithread.start();
@@ -47,14 +48,16 @@ public class Syncrequesthandler implements HttpHandler
 						System.out.println("MAC = " + reader.getMAC());
 						System.out.println("token = " + reader.gettoken());
 						Authenticator auth = new Authenticator();
-						if (auth.Authenticatebytoken(reader.gettoken(), reader.getMAC()))
+						if (auth.Authenticatebytoken(reader.gettoken(), reader.getMAC(),connectionIP))
 						{
 							//authenticate success
 							//TODO: return array of file owned by this account
-							Filelistgetter fg = new Filelistgetter(auth.getaccountname(reader.gettoken(), reader.getMAC()));
-							JSONArray filelistofaccount = fg.getfilelist();
+							Userfilelistgetter ufg = new Userfilelistgetter(auth.getaccountname());
+							ufg.preparefilelist();
+							Filelistgetter fg = new Filelistgetter(ufg.getlist());
+							fg.preparejsonarray();
 							JSONObject obj=new JSONObject();
-							obj.put("filelist", filelistofaccount.toString());
+							obj.put("filelist", fg.getjsonarray());
 							obj.put("succ", true);
 							obj.put("errorcode", 0);
 							String response = obj.toString();
@@ -81,7 +84,23 @@ public class Syncrequesthandler implements HttpHandler
 				}
 			}catch(Exception e)
 			{
-				e.printStackTrace();
+				try
+				{
+					String data = new String();
+					JSONObject obj=new JSONObject();
+					obj.put("data", data);
+					obj.put("succ", false);
+					obj.put("errorcode", 4);
+					String response = obj.toString();
+					Httpresponser res = new Httpresponser(httpconnection, response);
+					res.execute();
+					System.out.println("the below error has happen in 'Syncrequesthandler'");
+					e.printStackTrace();
+				}catch (Exception layer2e)
+				{
+					System.out.println("the below error has happen in 'Syncrequesthandler',layer2exception");
+					layer2e.printStackTrace();
+				}
 			}
 		}
 	}

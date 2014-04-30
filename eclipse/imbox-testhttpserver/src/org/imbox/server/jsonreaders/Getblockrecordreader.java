@@ -7,20 +7,19 @@ import org.json.JSONObject;
 
 import com.sun.net.httpserver.HttpExchange;
 
-public class Postfilereader
+
+public class Getblockrecordreader
 {
 	private String token;
 	private String MAC;
-	private String blockdata;
 	private String filename;
-	private int sequence;
-	private String jsonstring;
 	private HttpExchange request;
-	public Postfilereader(HttpExchange httpconnection)
+	private String jsonstring;
+	
+	public Getblockrecordreader(HttpExchange httpconnection)
 	{
 		request = httpconnection;
 		getjson();
-		
 	}
 	
 	private void getjson()
@@ -43,13 +42,10 @@ public class Postfilereader
 			JSONObject obj = new JSONObject(jsonstring);
 			token = obj.getString("token");
 			MAC = obj.getString("MAC");
-			blockdata = obj.getString("blockdata");
-			sequence = obj.getInt("seq");
 			filename = obj.getString("filename");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 	}
 	
 	public String gettoken()
@@ -57,19 +53,10 @@ public class Postfilereader
 		return token;
 	}
 	
-	public String getdatastring()
-	{
-		return blockdata;
-	}
-	
-	public int getsequence()
-	{
-		return sequence;
-	}
-	
 	public String getmac()
 	{
 		return MAC;
+		
 	}
 	
 	public String getfilename()

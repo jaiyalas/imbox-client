@@ -22,7 +22,10 @@ public class Uriparser
 	private void preparemap(String[] token)
 	{
 		md5 = token[1];
-		filename = token[2];
+		for (int i = 2;i<token.length;i++)
+		{
+			filename = filename + "." + token[i];
+		}
 	}
 	
 	public String getmd5()

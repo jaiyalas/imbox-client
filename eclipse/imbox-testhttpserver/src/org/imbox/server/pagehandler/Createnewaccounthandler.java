@@ -10,13 +10,15 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 
-public class Newaccounthandler implements HttpHandler
+public class Createnewaccounthandler implements HttpHandler
 {
 	private HttpExchange httpconnection;
+	private String connectionIP;
 	@Override
 	public void handle(HttpExchange httpconnection) throws IOException 
 	{
 		this.httpconnection = httpconnection;
+		connectionIP = httpconnection.getRemoteAddress().getAddress().toString();
 		Handlerthread multithread = new Handlerthread();
 		multithread.setName("clientconnection");
 		multithread.start();
@@ -32,7 +34,6 @@ public class Newaccounthandler implements HttpHandler
 			{
 				if (httpconnection.getRequestMethod().equals("GET"))
 				{
-					//TODO: modify if get method is needed
 					System.out.println("this is a http get method @ newaccount");
 					String response = "this is a http get method";
 					Httpresponser res = new Httpresponser(httpconnection, response);
@@ -46,14 +47,12 @@ public class Newaccounthandler implements HttpHandler
 						System.out.println("account = " + requestreader.getaccount());
 						System.out.println("password = " + requestreader.getpassword());
 						System.out.println("MAC = " + requestreader.getMAC());
-						//TODO:  createaccount(requestreader.getaccount(),requestreader.getpassword(),requestreader.getMAC());
-						//TODO: getresult();
 						Authenticator auth = new Authenticator();
-						String token = auth.Createaccount(requestreader.getaccount(), requestreader.getpassword(), requestreader.getMAC());
+						String token = auth.Createaccount(requestreader.getaccount(), requestreader.getpassword(), requestreader.getMAC(),connectionIP);
 						if (token.length() >0)
 						{
 							JSONObject obj=new JSONObject();
-							obj.put("token", token);  //TODO: token here
+							obj.put("token", token);
 							obj.put("succ", true);
 							obj.put("errorcode", 0);
 							String response = obj.toString();
@@ -62,9 +61,9 @@ public class Newaccounthandler implements HttpHandler
 						}else
 						{
 							JSONObject obj=new JSONObject();
-							obj.put("token", token);  //TODO: no token here
+							obj.put("token", new String());
 							obj.put("succ", false);
-							obj.put("errorcode", 2);		 //TODO: error code here if any
+							obj.put("errorcode", 19);		 //account registered
 							String response = obj.toString();
 							Httpresponser res = new Httpresponser(httpconnection, response);
 							res.execute();
@@ -79,7 +78,22 @@ public class Newaccounthandler implements HttpHandler
 				}
 			}catch(Exception e)
 			{
-				e.printStackTrace();
+				try
+				{
+					JSONObject obj=new JSONObject();
+					obj.put("token", new String());
+					obj.put("succ", false);
+					obj.put("errorcode", 4);		 //server exception error
+					String response = obj.toString();
+					Httpresponser res = new Httpresponser(httpconnection, response);
+					res.execute();
+					System.out.println("the below error has happen in 'Createnewaccounthandler'");
+					e.printStackTrace();
+				}catch(Exception layer2e)
+				{
+					System.out.println("the below error has happen in 'Createnewaccounthandler', layer2exception");
+					layer2e.printStackTrace();
+				}
 			}
 		}
 		

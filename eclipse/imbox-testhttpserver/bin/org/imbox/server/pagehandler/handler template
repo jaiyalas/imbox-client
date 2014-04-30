@@ -1,41 +1,52 @@
-package pagehandler;
+package org.imbox.server.pagehandler;
+
 import java.io.IOException;
-import java.io.OutputStream;
+
+import org.imbox.server.functions.Httpresponser;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
-public class newaccounthandler implements HttpHandler
+public class Newfilehandler implements HttpHandler
 {
-
+	private HttpExchange httpconnection;
 	@Override
-	public void handle(HttpExchange httpconnection) throws IOException 
+	public void handle(HttpExchange httpconnection) throws IOException {
+		this.httpconnection = httpconnection;
+		Handlerthread multithread = new Handlerthread();
+		multithread.setName("clientconnection");
+		multithread.start();
+		
+	}
+	
+	private class Handlerthread extends Thread
 	{
-		try
+		@Override
+		public void run() 
 		{
-			if (httpconnection.getRequestMethod().equals("GET"))
+			try
 			{
-				
-			}else
-			{
-				if (httpconnection.getRequestMethod().equals("POST"))
+				if (httpconnection.getRequestMethod().equals("GET"))
 				{
 					
 				}else
 				{
-					System.out.println("unknown method:" + httpconnection.getRequestMethod());
-					String response = "this is a unkown method"+ httpconnection.getRequestMethod();
-					httpconnection.sendResponseHeaders(200, response.length());
-		            OutputStream os = httpconnection.getResponseBody();
-		            os.write(response.getBytes());
-		            os.close();
+					if (httpconnection.getRequestMethod().equals("POST"))
+					{
+						
+					}else
+					{
+						System.out.println("unknown method:" + httpconnection.getRequestMethod());
+						String response = "this is a unkown method"+ httpconnection.getRequestMethod();
+						Httpresponser res = new Httpresponser(httpconnection, response);
+						res.execute();
+					}
 				}
+			}catch(Exception e)
+			{
+				e.printStackTrace();
 			}
-		}catch(Exception e)
-		{
-			e.printStackTrace();
 		}
-		
 	}
 	
 }

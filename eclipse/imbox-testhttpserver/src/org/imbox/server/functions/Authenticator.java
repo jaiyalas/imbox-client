@@ -7,18 +7,22 @@ import java.util.Date;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.imbox.database.create_account;
+import org.imbox.database.new_login;
+
 public class Authenticator
 {
+	private String accountname;
 	public Authenticator()
 	{
 		//init DB here?
 	}
 	
-	public String Authenticatebypassword(String accountname, String pwd, String MAC)
+	public String Authenticatebypassword(String accountname, String pwd, String MAC,String IP)
 	{
-		//TODO:getpassword
-		String correctpassword = pwd; //for test, always true
-		if (correctpassword.equals(pwd))
+		new_login logintodb = new new_login(accountname, pwd, MAC, IP);
+		logintodb.acc_insert();
+		if (logintodb.getPwdCorrect())
 		{
 			return Tokenmaker(accountname,MAC);
 		}else
@@ -27,7 +31,7 @@ public class Authenticator
 		}
 	}
 	
-	public boolean Authenticatebytoken(String token, String MAC)
+	public boolean Authenticatebytoken(String token, String MAC,String IP)
 	{
 		Tokenpair decryptedtoken = decrypttoken(token,MAC);
 		Date date = new Date();
@@ -42,17 +46,17 @@ public class Authenticator
 		}
 	}
 	
-	public String Createaccount(String account,String pwd,String MAC)
+	public String Createaccount(String account,String pwd,String MAC,String IP)
 	{
-		//TODO: create account at DB
+		create_account createaccount = new create_account(account, pwd, MAC, IP);
+		createaccount.ac_create();
 		return Tokenmaker(account,MAC);
 	}
 	
 	
-	public String getaccountname(String token, String MAC)
+	public String getaccountname()
 	{
-		Tokenpair tokenpair = decrypttoken(token, MAC);
-		return tokenpair.account;
+		return accountname;
 	}
 	private String Tokenmaker(String account,String MAC)
 	{
@@ -97,6 +101,7 @@ public class Authenticator
 			String account = decryptedstring.substring(8);
 			String timestamp = decryptedstring.substring(0, 8);
 			Tokenpair tokenpair = new Tokenpair(account, timestamp);
+			this.accountname = tokenpair.account;
 			return tokenpair;
 		}catch (Exception e)
 		{

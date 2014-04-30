@@ -7,24 +7,23 @@ import org.imbox.client.networkrelated.ultility.Simpleconnection;
 import org.json.JSONObject;
 
 
-public class filegenerator
+public class Filegenerator
 {
 	private String account;
 	private String filename;
 	private String data;
 	private boolean status;
 	private int errorcode;
-	public filegenerator(String account,String filename)
+	public Filegenerator(String account,String filename)
 	{
 		this.account = account;
 		this.filename = filename;
 		errorcode = -1;
 		data = new String();
 		status = false;
-		sendrequest();
 	}
 	
-	private void sendrequest()
+	public void sendrequest()
 	{
 		try
 		{
