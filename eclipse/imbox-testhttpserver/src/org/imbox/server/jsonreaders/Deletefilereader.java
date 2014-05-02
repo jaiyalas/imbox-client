@@ -10,51 +10,64 @@ import org.json.JSONObject;
 
 import com.sun.net.httpserver.HttpExchange;
 
-public class TokenMACreader 
+public class Deletefilereader
 {
-	private String token;
-	private String MAC;
 	private HttpExchange request;
 	private String jsonstring;
-	public TokenMACreader(HttpExchange httpconnection)
+	private String token;
+	private String MAC;
+	private String filename;
+	public Deletefilereader(HttpExchange httpconnection)
 	{
-		request = httpconnection;
+		this.request = httpconnection;
+		jsonstring = new String();
+		token = new String();
+		MAC = new String();
+		filename = new String();
 	}
 	
-	public void getjson() throws IOException, IMBOXNW_jsonException
+	public void readjson() throws IOException, IMBOXNW_jsonException
 	{
-		try {
+		try
+		{
 			InputStreamReader requestreader =  new InputStreamReader(request.getRequestBody(),"utf-8");
 			BufferedReader br = new BufferedReader(requestreader);
 			jsonstring = br.readLine();
 			br.close();
 			requestreader.close();
 			parsejson();
-		} catch (IOException e) {
+		}catch(IOException e)
+		{
 			e.printStackTrace();
-			throw new IOException("tokenmacreader.getjson");
+			throw new IOException("deletefilereader.readjson");
 		}
 	}
 	
 	private void parsejson() throws IMBOXNW_jsonException
 	{
-		try {
-			JSONObject obj = new JSONObject(jsonstring);
-			token = obj.getString("token");
+		try
+		{
+			JSONObject obj= new JSONObject(jsonstring);
 			MAC = obj.getString("MAC");
-		} catch (JSONException e) {
+			token = obj.getString("token");
+			filename = obj.getString("filename");
+		}catch(JSONException e)
+		{
 			e.printStackTrace();
-			throw new IMBOXNW_jsonException("tokenmacreader.parsejson");
+			throw new IMBOXNW_jsonException("deletefilereader.parsejson");
 		}
 	}
 	
+	public String getmac()
+	{
+		return MAC;
+	}
 	public String gettoken()
 	{
 		return token;
 	}
-	
-	public String getMAC()
+	public String getfilename()
 	{
-		return MAC;
+		return filename;
 	}
 }

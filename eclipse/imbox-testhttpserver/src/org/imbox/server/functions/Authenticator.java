@@ -15,7 +15,7 @@ public class Authenticator
 	private String accountname;
 	public Authenticator()
 	{
-		//init DB here?
+		
 	}
 	
 	public String Authenticatebypassword(String accountname, String pwd, String MAC,String IP)

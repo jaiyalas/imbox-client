@@ -11,6 +11,7 @@ errorcode:
 3: block relate error (block not found)
 4: server exception error (need to check server status & log)
 5: file relate error
+6: deletefile fail
 19: account is already registered
 20: exception failure (see exception log) 
 
@@ -85,7 +86,7 @@ undefined POST/GET is free for use(better blocked?)
     server return {'succ'| 'errorcode'}
 
 /generateURL
-    POST {'token' | 'MAC' | 'account'|'filename'}
+    POST {'token' | 'MAC'|'filename'}
     server return {'URL'|'succ'| 'errorcode'}
 
 /generateFile           <- this is the response action of URL given in generateURL

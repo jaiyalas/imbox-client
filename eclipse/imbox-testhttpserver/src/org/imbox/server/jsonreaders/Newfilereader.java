@@ -1,8 +1,11 @@
 package org.imbox.server.jsonreaders;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 
+import org.imbox.infrastructure.exceptions.IMBOXNW_jsonException;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.sun.net.httpserver.HttpExchange;
@@ -19,9 +22,14 @@ public class Newfilereader
 	public Newfilereader(HttpExchange httpconnection)
 	{
 		request = httpconnection;
+		token = new String();
+		MAC = new String();
+		filename = new String();
+		md5 = new String();
+		jsonstring = new String();
 	}
 	
-	public void readjson()
+	public void readjson() throws IOException, IMBOXNW_jsonException
 	{
 		try {
 			InputStreamReader requestreader =  new InputStreamReader(request.getRequestBody(),"utf-8");
@@ -30,12 +38,13 @@ public class Newfilereader
 			br.close();
 			requestreader.close();
 			parsejson();
-		} catch (Exception e) {
+		} catch (IOException e) {
 			e.printStackTrace();
+			throw new IOException("newfilereader.readjson");
 		}
 	}
 	
-	private void parsejson()
+	private void parsejson() throws IMBOXNW_jsonException
 	{
 		try
 		{
@@ -45,9 +54,10 @@ public class Newfilereader
 			filename = obj.getString("filename");
 			md5 = obj.getString("md5"); 
 			
-		}catch(Exception e)
+		}catch(JSONException e)
 		{
 			e.printStackTrace();
+			throw new IMBOXNW_jsonException("newfilereader.parsejson");
 		}
 	}
 	

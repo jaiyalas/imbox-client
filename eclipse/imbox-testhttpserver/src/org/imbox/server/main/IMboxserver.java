@@ -3,17 +3,20 @@ package org.imbox.server.main;
 import java.net.InetSocketAddress;
 
 import org.imbox.infrastructure.Workspace;
-import org.imbox.server.pagehandler.Createnewaccounthandler;
-import org.imbox.server.pagehandler.GenerateURLhandler;
-import org.imbox.server.pagehandler.Generatefilehandler;
-import org.imbox.server.pagehandler.Getblockhandler;
-import org.imbox.server.pagehandler.Getblockrecordhandler;
-import org.imbox.server.pagehandler.Getserverlockhandler;
-import org.imbox.server.pagehandler.Loginhandler;
 import org.imbox.server.pagehandler.Networkcheckhandler;
-import org.imbox.server.pagehandler.Postblockhandler;
-import org.imbox.server.pagehandler.Releaseserverlockhandler;
-import org.imbox.server.pagehandler.Syncrequesthandler;
+import org.imbox.server.pagehandler.block.Getblockhandler;
+import org.imbox.server.pagehandler.block.Getblockrecordhandler;
+import org.imbox.server.pagehandler.block.Postblockhandler;
+import org.imbox.server.pagehandler.file.Deletefilehandler;
+import org.imbox.server.pagehandler.file.Modifyfilehandler;
+import org.imbox.server.pagehandler.file.Newfilehandler;
+import org.imbox.server.pagehandler.file.Syncrequesthandler;
+import org.imbox.server.pagehandler.lock.Getserverlockhandler;
+import org.imbox.server.pagehandler.lock.Releaseserverlockhandler;
+import org.imbox.server.pagehandler.login.Createnewaccounthandler;
+import org.imbox.server.pagehandler.login.Loginhandler;
+import org.imbox.server.pagehandler.sharelink.GenerateURLhandler;
+import org.imbox.server.pagehandler.sharelink.Generatefilehandler;
 
 import com.sun.net.httpserver.HttpServer;
 
@@ -27,7 +30,6 @@ public class IMboxserver
 		server = HttpServer.create(new InetSocketAddress(80), 0);
 		server.createContext("/createaccount",new Createnewaccounthandler());
 		server.createContext("/login", new Loginhandler());
-		//server.createContext("/getserversnapshot",new Getserversnapshothandler());
 		server.createContext("/getserverlock",new Getserverlockhandler());
 		server.createContext("/releaseserverlock",new Releaseserverlockhandler());
 		server.createContext("/getblock",new Getblockhandler());
@@ -37,6 +39,9 @@ public class IMboxserver
 		server.createContext("/networkcheck",new Networkcheckhandler());
 		server.createContext("/syncrequest",new Syncrequesthandler());
 		server.createContext("/getblockrecord",new Getblockrecordhandler());
+		server.createContext("/modifyfile",new Modifyfilehandler());
+		server.createContext("/newfile",new Newfilehandler());
+		server.createContext("/deletefile",new Deletefilehandler());
         server.setExecutor(null); // creates a default executor
         System.out.println("the server is ready, please use startserver command to start");
         Workspace.prepareWorkspaceS();

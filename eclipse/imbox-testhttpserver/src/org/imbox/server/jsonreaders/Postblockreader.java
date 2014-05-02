@@ -1,8 +1,11 @@
 package org.imbox.server.jsonreaders;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 
+import org.imbox.infrastructure.exceptions.IMBOXNW_jsonException;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.sun.net.httpserver.HttpExchange;
@@ -19,11 +22,15 @@ public class Postblockreader
 	public Postblockreader(HttpExchange httpconnection)
 	{
 		request = httpconnection;
-		getjson();
-		
+		token = new String();
+		MAC= new String();
+		blockdata = new String();
+		filename = new String();
+		sequence = 0;
+		jsonstring = new String();
 	}
 	
-	private void getjson()
+	public void getjson() throws IOException, IMBOXNW_jsonException
 	{
 		try {
 			InputStreamReader requestreader =  new InputStreamReader(request.getRequestBody(),"utf-8");
@@ -32,12 +39,13 @@ public class Postblockreader
 			br.close();
 			requestreader.close();
 			parsejson();
-		} catch (Exception e) {
+		} catch (IOException e) {
 			e.printStackTrace();
+			throw new IOException("Postblockreader.getjson");
 		}
 	}
 	
-	private void parsejson()
+	private void parsejson() throws IMBOXNW_jsonException
 	{
 		try {
 			JSONObject obj = new JSONObject(jsonstring);
@@ -46,8 +54,9 @@ public class Postblockreader
 			blockdata = obj.getString("blockdata");
 			sequence = obj.getInt("seq");
 			filename = obj.getString("filename");
-		} catch (Exception e) {
+		} catch (JSONException e) {
 			e.printStackTrace();
+			throw new IMBOXNW_jsonException("Postblockreader.parsejson");
 		}
 		
 	}
