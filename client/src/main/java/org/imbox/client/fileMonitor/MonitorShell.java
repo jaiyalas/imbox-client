@@ -6,6 +6,7 @@ import java.util.function.*;
 import org.apache.commons.io.monitor.*;
 
 import org.imbox.client.*;
+import org.imbox.client.log.*;
 import org.imbox.client.fileMonitor.*;
 import org.imbox.client.synchronize.*;
 
@@ -13,7 +14,6 @@ import org.imbox.client.networkrelated.*;
 import org.imbox.client.networkrelated.ultility.*;
 
 import org.imbox.infrastructure.*;
-import org.imbox.infrastructure.log.*;
 import org.imbox.infrastructure.file.*;
 
 // this is a client only module

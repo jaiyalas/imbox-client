@@ -11,11 +11,11 @@ import java.io.IOException;
 import org.apache.commons.io.FileUtils; 
 
 import org.imbox.client.*;
+import org.imbox.client.log.*;
 import org.imbox.client.fileMonitor.*;
 import org.imbox.client.synchronize.*;
 
 import org.imbox.infrastructure.*;
-import org.imbox.infrastructure.log.*;
 import org.imbox.infrastructure.file.*;
 import org.imbox.infrastructure.exceptions.*;
 
