@@ -1,4 +1,4 @@
-package org.imbox.infrastructure.log;
+package org.imbox.client.log;
 
 public class LogWriter{
 
