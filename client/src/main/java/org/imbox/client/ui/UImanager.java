@@ -1,4 +1,4 @@
-package org.imbox.client;
+package org.imbox.client.ui;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -16,6 +16,7 @@ public class UImanager{
     private JPanel         mainPanel;
     private int            lineCtr;
     private Loginmaster    loginmaster;
+    private ChooserUI         fChooser;
 
     private JPanel         displayPanel;
     private JScrollPane    scroll;
@@ -29,9 +30,13 @@ public class UImanager{
     private JLabel         nameFieldLabel;
     private JLabel         stateLabel;
 
+    private JButton        syncButton;
+    private JButton        urlButton;
+
     public UImanager(){
 
-	this.loginmaster = new Loginmaster();
+	loginmaster = new Loginmaster();
+	fChooser    = new ChooserUI();
 
 	/** Main Frame Init **/
 	
@@ -69,12 +74,14 @@ public class UImanager{
 	pwdField       = new JPasswordField(12);
         nameField      = new JTextField(12);
 	stateLabel     = new JLabel();
+	syncButton     = new JButton("Manually Sync");
+	urlButton      = new JButton("Share File");
 	
 	/** Login Area Setup**/
 
 	button.setSize(pwdField.getSize());
 	stateLabel.setSize(pwdField.getSize());
-	loginPanel.setLayout(new GridLayout(2,2));
+	loginPanel.setLayout(new GridLayout(3,2));
  
 	stateLabel.setHorizontalAlignment(JLabel.CENTER);
 	stateLabel.setHorizontalTextPosition(JLabel.CENTER);
@@ -93,6 +100,8 @@ public class UImanager{
 	loginPanel.add(stateLabel);
 	loginPanel.add(pwdField);
 	loginPanel.add(button);
+	loginPanel.add(urlButton);
+	loginPanel.add(syncButton);
 	displayPanel.add(scroll);	
 	mainPanel.setLayout(new BorderLayout());
 	mainPanel.add(displayPanel,BorderLayout.CENTER);
@@ -103,16 +112,15 @@ public class UImanager{
 	
 	appendMsg(loginmaster.getMAC());
 
-	btnBehavior(ae->connecting());
+	button.addActionListener(ae->login());
+	urlButton.addActionListener(ae->shareURL());
+	syncButton.addActionListener(ae->manuallySync());
 	
     };
 
     public void show(){mainFrame.setVisible(true);};	
     public void hide(){mainFrame.setVisible(false);};
     
-    public void btnBehavior(ActionListener al){
-	button.addActionListener(al);
-    };
     public void appendMsg(String msg){
 	if(lineCtr >= 1500){
 	    display.setText("*** Refresh Log ***");
@@ -132,6 +140,8 @@ public class UImanager{
 	nameField.setEnabled(false);
 	pwdField.setEnabled(false);
 	button.setEnabled(false);
+	urlButton.setEnabled(true);
+	syncButton.setEnabled(true);
     };
     public void setSYNCHRONIZING(){
 	stateLabel.setForeground(Color.MAGENTA);
@@ -139,6 +149,8 @@ public class UImanager{
 	nameField.setEnabled(false);
 	pwdField.setEnabled(false);
 	button.setEnabled(false);
+	urlButton.setEnabled(false);
+	syncButton.setEnabled(false);
     };
     public void setDISCONNECTED(){
 	stateLabel.setForeground(Color.GRAY);
@@ -146,6 +158,8 @@ public class UImanager{
 	button.setEnabled(true);
 	nameField.setEnabled(true);
 	pwdField.setEnabled(true);
+	urlButton.setEnabled(false);
+	syncButton.setEnabled(false);
     };
     public void setCONFLICT(){
 	stateLabel.setForeground(Color.ORANGE);
@@ -153,6 +167,8 @@ public class UImanager{
 	nameField.setEnabled(false);
 	pwdField.setEnabled(false);
 	button.setEnabled(false);
+	urlButton.setEnabled(true);
+	syncButton.setEnabled(true);
     };
     public void setSHUTDOWN(){
 	stateLabel.setForeground(Color.GRAY);
@@ -160,9 +176,11 @@ public class UImanager{
 	nameField.setEnabled(false);
 	pwdField.setEnabled(false);
 	button.setEnabled(false);
+	urlButton.setEnabled(false);
+	syncButton.setEnabled(false);
     };
 
-    public void connecting(){	
+    private void login(){	
 	String name = nameField.getText();
 	String pwd = pwdField.getText();
 	if(name.equals("") || 
@@ -187,6 +205,18 @@ public class UImanager{
 	    }
 	}	    
 	
+    };
+    private void shareURL(){
+	try{
+	fChooser.ChooseFile();
+	appendMsg(fChooser.getFileName());
+	}catch(HeadlessException e){
+	    //
+	}	
+    };
+
+    private void manuallySync(){
+	//
     };
 
 }

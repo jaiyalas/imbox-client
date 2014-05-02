@@ -11,6 +11,7 @@ import java.io.IOException;
 import org.apache.commons.io.FileUtils; 
 
 import org.imbox.client.*;
+import org.imbox.client.ui.*;
 import org.imbox.client.log.*;
 import org.imbox.client.fileMonitor.*;
 import org.imbox.client.synchronize.*;
