@@ -16,7 +16,8 @@ public class UImanager{
     private JPanel         mainPanel;
     private int            lineCtr;
     private Loginmaster    loginmaster;
-    private ChooserUI         fChooser;
+    private ChooserUI      fChooser;
+    private RegisterUI     reger;
 
     private JPanel         displayPanel;
     private JScrollPane    scroll;
@@ -35,9 +36,6 @@ public class UImanager{
 
     public UImanager(){
 
-	loginmaster = new Loginmaster();
-	fChooser    = new ChooserUI();
-
 	/** Main Frame Init **/
 	
 	mainFrame = new JFrame("IMBOX");
@@ -45,6 +43,10 @@ public class UImanager{
 	lineCtr   = 0;
 	mainFrame.setResizable(false);
 	mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+	loginmaster = new Loginmaster();
+	fChooser    = new ChooserUI();
+	reger       = new RegisterUI();
 
 	/** Console Area Init **/
 
@@ -74,8 +76,8 @@ public class UImanager{
 	pwdField       = new JPasswordField(12);
         nameField      = new JTextField(12);
 	stateLabel     = new JLabel();
-	syncButton     = new JButton("Manually Sync");
-	urlButton      = new JButton("Share File");
+	syncButton     = new JButton();
+	urlButton      = new JButton();
 	
 	/** Login Area Setup**/
 
@@ -85,7 +87,6 @@ public class UImanager{
  
 	stateLabel.setHorizontalAlignment(JLabel.CENTER);
 	stateLabel.setHorizontalTextPosition(JLabel.CENTER);
-	setDISCONNECTED();
 
 	nameField.setBorder(new TitledBorder
 			     (new EtchedBorder(),"User:"));
@@ -113,9 +114,7 @@ public class UImanager{
 	appendMsg(loginmaster.getMAC());
 
 	button.addActionListener(ae->login());
-	urlButton.addActionListener(ae->shareURL());
-	syncButton.addActionListener(ae->manuallySync());
-	
+	setDISCONNECTED();
     };
 
     public void show(){mainFrame.setVisible(true);};	
@@ -134,14 +133,40 @@ public class UImanager{
 	display.setCaretPosition(display.getDocument().getLength());
     }; 
 
+    private void setButtonsOnline(){
+	syncButton.setText("Manually Sync");
+	urlButton.setText("Share File");
+	urlButton.addActionListener(ae->shareURL());
+	syncButton.addActionListener(ae->manuallySync());
+	urlButton.setEnabled(true);
+	syncButton.setEnabled(true);
+    }
+    private void setButtonsOffline(){
+	syncButton.setText("Manually Sync");
+	urlButton.setText("Share File");
+	urlButton.setEnabled(false);
+	syncButton.setEnabled(false);
+    }
+    private void setButtonsSpecialized(){
+	urlButton.setText("Regist");
+	syncButton.setText("Exit");
+	urlButton.addActionListener(ae->{
+		reger.show_UI();
+		//appendMsg(reger.getAcc());
+		//appendMsg(reger.getPwd());
+	    });
+	syncButton.addActionListener(ae->{System.exit(0);});
+	urlButton.setEnabled(true);
+	syncButton.setEnabled(true);
+    }
+
     public void setSYNCHRONIZED(){
 	stateLabel.setForeground(Color.BLUE);
 	stateLabel.setText("SYNCHRONIZED");
 	nameField.setEnabled(false);
 	pwdField.setEnabled(false);
 	button.setEnabled(false);
-	urlButton.setEnabled(true);
-	syncButton.setEnabled(true);
+	setButtonsOnline();
     };
     public void setSYNCHRONIZING(){
 	stateLabel.setForeground(Color.MAGENTA);
@@ -149,8 +174,7 @@ public class UImanager{
 	nameField.setEnabled(false);
 	pwdField.setEnabled(false);
 	button.setEnabled(false);
-	urlButton.setEnabled(false);
-	syncButton.setEnabled(false);
+	setButtonsOffline();
     };
     public void setDISCONNECTED(){
 	stateLabel.setForeground(Color.GRAY);
@@ -158,8 +182,7 @@ public class UImanager{
 	button.setEnabled(true);
 	nameField.setEnabled(true);
 	pwdField.setEnabled(true);
-	urlButton.setEnabled(false);
-	syncButton.setEnabled(false);
+	setButtonsSpecialized();
     };
     public void setCONFLICT(){
 	stateLabel.setForeground(Color.ORANGE);
@@ -167,8 +190,7 @@ public class UImanager{
 	nameField.setEnabled(false);
 	pwdField.setEnabled(false);
 	button.setEnabled(false);
-	urlButton.setEnabled(true);
-	syncButton.setEnabled(true);
+	setButtonsOnline();
     };
     public void setSHUTDOWN(){
 	stateLabel.setForeground(Color.GRAY);
@@ -176,8 +198,7 @@ public class UImanager{
 	nameField.setEnabled(false);
 	pwdField.setEnabled(false);
 	button.setEnabled(false);
-	urlButton.setEnabled(false);
-	syncButton.setEnabled(false);
+	setButtonsOffline();
     };
 
     private void login(){	
