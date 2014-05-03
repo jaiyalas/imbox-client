@@ -13,6 +13,13 @@ import org.imbox.infrastructure.*;
 
 public class FileHandler{
     
+
+    /**
+     * Load blocks for sindle file from given FileChannel.
+     *
+     * @param FileChannel  an FileChannel which is obtained from target file.
+     * @return List<Block> an linear container which consists of Blocks. 
+     */
     public static List<Block> genBlocksFromChannel(FileChannel channel)throws IOException{
 	List<Block> bs = new Vector<Block>();
 	ByteBuffer bb  = ByteBuffer.allocate(Const.blocksize);
@@ -32,28 +39,37 @@ public class FileHandler{
 	return bs;
     };
 
-    /** ------------------------- **/
-
-    // SERVER ONLY
+    /**
+     * Generate a byte[] which consists of whole content of some file which 
+     * is indicated by geven list of block records. 
+     * 
+     * @param _sysDir  an directory where blocks are restored.
+     * @return _brs    an list of block records. 
+     */
     public static byte[] joinBlocksFromHD(String _sysDir,
 					  List<BlockRec> _brs)throws IOException{
-	Collections.sort(_brs,(BlockRec  b0, BlockRec b1) -> {
-		return b0.getPos() - b1.getPos();});
+
+	// sorting list of block record by position-(sequence-)number.
+	Collections.sort(_brs,
+			 (BlockRec  b0, BlockRec b1) -> {
+			     return b0.getPos() - b1.getPos();});
+
+	// a list of Byte that restores byte data which loaded from blocks.
 	List<Byte> byteList = new Vector<Byte>();
-	_brs.forEach(br -> {
-		try{
+	_brs.forEach(br -> { try{
 		    byte[] bytes = Block.readBlockFromHD(_sysDir,br.getName());
 		    for(byte b : bytes){byteList.add(new Byte(b));}
-		}catch(IOException e){}
+		}catch(IOException e){
+		    throw new RuntimeException(e);
+		}
 	    });
+
+	// translate List<Byte> to byte[]
 	byte[] res = new byte[byteList.size()];
-	for(int i = 0;i<byteList.size();i++){
-	    res[i] = byteList.get(i).byteValue();
-	}
+	for(int i = 0;i<byteList.size();i++){res[i] = byteList.get(i).byteValue();}
 	return res;
     };
 
-    // CLIENT ONLY
     public static void writeFileFromBlocks(List<Block> _bs, 
 					   String _targetDir,
 					   String _filename)throws IOException{
@@ -77,22 +93,5 @@ public class FileHandler{
 	OutputStream os = new FileOutputStream(new File(_targetDir+_filename));
 	IOUtils.write(fileContent, os);
 	os.flush();os.close();
-    };
-
-    // -- LOCAL TESTING ONLY -- LOCAL TESTING ONLY -- LOCAL TESTING ONLY --
-    public static void writeFileFromBlocks(String _blockDir, 
-					   List<BlockRec> _brs, 
-					   String _targetDir,
-					   String _filename)throws IOException{
-	File file_ = new File(_targetDir+_filename); 
-	if(file_.exists()){ file_.delete(); }
-	
-	List<Block> bs = new Vector<Block>();
-	_brs.forEach(br -> {
-		try{
-		    bs.add(Block.readBlockFromHD(_blockDir,br));
-		}catch(IOException e){}
-	    });
-	writeFileFromBlocks(bs,_targetDir, _filename);
     };
 }
