@@ -148,12 +148,14 @@ public class UImanager{
 	syncButton.setEnabled(false);
     }
     private void setButtonsSpecialized(){
-	urlButton.setText("Regist");
+	urlButton.setText("New User");
 	syncButton.setText("Exit");
 	urlButton.addActionListener(ae->{
-		reger.show();
-		appendMsg(reger.getAcc());
-		appendMsg(reger.getPwd());
+		if(reger.regist()){
+		    /** really NEW USER here**/
+		    appendMsg(reger.getAcc());
+		    appendMsg(reger.getPwd());
+		}
 	    });
 	syncButton.addActionListener(ae->{System.exit(0);});
 	urlButton.setEnabled(true);

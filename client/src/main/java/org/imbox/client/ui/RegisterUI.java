@@ -23,6 +23,7 @@ public class RegisterUI {
     private JButton jbkOK;
     private JButton jbkReset;
 
+    private boolean completeFlag;
     private String account;
     private String password;
     public String getAcc(){return account;}
@@ -41,7 +42,12 @@ public class RegisterUI {
         jbkOK       = new JButton("OK");
         jbkReset    = new JButton("Reset");
 
+	completeFlag = false;
+	account = "";
+	password = "";
+
      	jdialog.setSize(250,450);
+	jdialog.setResizable(false);
     	jdialog.setLocationRelativeTo(null); 
  
     	mainPanel = new JPanel();  
@@ -120,8 +126,10 @@ public class RegisterUI {
         jdialog.add(mainPanel);
         jdialog.setVisible(false);
     }
-    public void show(){
+    public boolean regist(){
+	resetAll();
 	jdialog.setVisible(true);
+	return completeFlag;
     }
     public void buttonEvent(){
         jbkOK.addActionListener
@@ -138,20 +146,28 @@ public class RegisterUI {
                 	message.setText("successful!");
                 	account=String.valueOf(acc_input.getText());
                 	password=String.valueOf(pwd_input.getPassword());
+			completeFlag = true;
                 	jdialog.dispose();
                 }
                 else{
                 	message.setText("password not the same");
-                	pwd_input.setText("");
-                    repwd_input.setText("");
+			resetPwd();
                 }
 	    });
         jbkReset.addActionListener
-	    ((ae)->{
-		acc_input.setText("");
-                pwd_input.setText("");
-                repwd_input.setText("");
-	    });
+	    ((ae)->{resetAll();});
+    }
+
+    private void resetAll(){
+	resetPwd();
+	account = "";
+	acc_input.setText("");
+    }
+    private void resetPwd(){
+	password = "";
+	pwd_input.setText("");
+	repwd_input.setText("");
+	completeFlag = false;
     }
 
     private Image getImage(final String pathAndFileName) {
