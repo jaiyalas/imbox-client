@@ -46,7 +46,7 @@ public class UImanager{
 
 	loginmaster = new Loginmaster();
 	fChooser    = new ChooserUI();
-	reger       = new RegisterUI();
+	reger       = new RegisterUI(mainFrame);
 
 	/** Console Area Init **/
 
@@ -151,9 +151,9 @@ public class UImanager{
 	urlButton.setText("Regist");
 	syncButton.setText("Exit");
 	urlButton.addActionListener(ae->{
-		reger.show_UI();
-		//appendMsg(reger.getAcc());
-		//appendMsg(reger.getPwd());
+		reger.show();
+		appendMsg(reger.getAcc());
+		appendMsg(reger.getPwd());
 	    });
 	syncButton.addActionListener(ae->{System.exit(0);});
 	urlButton.setEnabled(true);

@@ -1,12 +1,8 @@
-package org.imbox.client.ui;
-
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-import java.net.URL;
-
-public class RegisterUI {
+public class Reg {
     private JDialog        jdialog;
 
     private JTextField     acc_input;
@@ -28,7 +24,7 @@ public class RegisterUI {
     public String getAcc(){return account;}
     public String getPwd(){return password;}
 
-    public RegisterUI(Frame owner){
+    public Reg(Frame owner){
     	jdialog     = new JDialog(owner,"New Account Register",true);
     	accPanel    = new JPanel();
         pwdPanel    = new JPanel();            
@@ -50,7 +46,7 @@ public class RegisterUI {
         mainPanel.setLayout(gl);
 
         //image
-        ImageIcon reIcon = new ImageIcon(getImage("images/group.png"));
+        ImageIcon reIcon = new ImageIcon("group.png");
         JLabel lblShowImg = new JLabel(reIcon);
         GridBagConstraints pic = new GridBagConstraints();
         pic.gridx = 0;          pic.gridy = 0;
@@ -153,10 +149,4 @@ public class RegisterUI {
                 repwd_input.setText("");
 	    });
     }
-
-    private Image getImage(final String pathAndFileName) {
-	final URL url = Thread.currentThread().getContextClassLoader().getResource(pathAndFileName);
-	return Toolkit.getDefaultToolkit().getImage(url);
-    }
-
 }

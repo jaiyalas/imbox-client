@@ -24,7 +24,7 @@
     <sourceDirectory>src</sourceDirectory>
     <resources>
       <resource>
-        <directory>resources</directory>
+        <directory>src/main/resources</directory>
       </resource>
     </resources>
     <plugins>
@@ -74,7 +74,7 @@
     <dependency>
       <groupId>org.imbox</groupId>
       <artifactId>imbox-infra</artifactId>
-      <version>0.2</version>
+      <version>0.2.1</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
