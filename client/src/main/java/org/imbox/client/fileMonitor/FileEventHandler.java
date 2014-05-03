@@ -3,10 +3,10 @@ package org.imbox.client.fileMonitor;
 import java.io.File;
 import java.util.function.Consumer;
 
-import org.apache.commons.io.monitor.*;
+import org.apache.commons.io.monitor.FileAlterationListener;
+import org.apache.commons.io.monitor.FileAlterationObserver;
 
-import org.imbox.client.*;
-import org.imbox.client.fileMonitor.*;
+import org.imbox.client.fileMonitor.AltType;
 
 public class FileEventHandler implements FileAlterationListener{
 

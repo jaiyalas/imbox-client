@@ -1,5 +1,7 @@
 package org.imbox.client.ui;
 
+import java.util.function.*;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -7,15 +9,11 @@ import javax.swing.*;
 import javax.swing.text.*;
 import javax.swing.border.*;
 
-import org.imbox.client.networkrelated.*;
-import org.imbox.client.networkrelated.ultility.*;
-
 public class UImanager{
     
     private JFrame         mainFrame;
     private JPanel         mainPanel;
     private int            lineCtr;
-    private Loginmaster    loginmaster;
     private ChooserUI      fChooser;
     private RegisterUI     reger;
 
@@ -34,7 +32,26 @@ public class UImanager{
     private JButton        syncButton;
     private JButton        urlButton;
 
+
+    private BiConsumer<String,String> newUserFun;
+    private BiConsumer<String,String> loginFun;
+    private Consumer<String> shareURLFun;
+    private Consumer<String> fSyncFun;
+
+    public void updateNewUserFun   
+	(BiConsumer<String,String> newf){newUserFun = newf;};
+    public void updateLoginFun   
+	(BiConsumer<String,String> newf){loginFun = newf;};
+    public void updateShareURLFun
+	(Consumer<String> newf){shareURLFun = newf;};
+    public void updateFSyncFun   
+	(Consumer<String> newf){fSyncFun = newf;};
+
     public UImanager(){
+
+	/** initializing all action handler **/	
+
+	setDefaultFuns();
 
 	/** Main Frame Init **/
 	
@@ -44,7 +61,6 @@ public class UImanager{
 	mainFrame.setResizable(false);
 	mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-	loginmaster = new Loginmaster();
 	fChooser    = new ChooserUI();
 	reger       = new RegisterUI(mainFrame);
 
@@ -82,6 +98,7 @@ public class UImanager{
 	/** Login Area Setup**/
 
 	button.setSize(pwdField.getSize());
+	button.addActionListener((ae) -> {loginAction();});
 	stateLabel.setSize(pwdField.getSize());
 	loginPanel.setLayout(new GridLayout(3,2));
  
@@ -110,10 +127,9 @@ public class UImanager{
 	mainFrame.getContentPane().add(mainPanel);
 	mainFrame.setLocationRelativeTo(null);
 	mainFrame.pack();
-	
-	appendMsg(loginmaster.getMAC());
 
-	button.addActionListener(ae->login());
+	/** setup system as init state **/
+
 	setDISCONNECTED();
     };
 
@@ -133,11 +149,16 @@ public class UImanager{
 	display.setCaretPosition(display.getDocument().getLength());
     }; 
 
+
+    /**
+       DEFINITION OF STATES OF BUTTON SET
+     */
+
     private void setButtonsOnline(){
 	syncButton.setText("Manually Sync");
 	urlButton.setText("Share File");
-	urlButton.addActionListener(ae->shareURL());
-	syncButton.addActionListener(ae->manuallySync());
+	urlButton.addActionListener((ae) -> {shareURLAction();});
+	syncButton.addActionListener((ae) -> {fSyncAction();});
 	urlButton.setEnabled(true);
 	syncButton.setEnabled(true);
     }
@@ -150,17 +171,15 @@ public class UImanager{
     private void setButtonsSpecialized(){
 	urlButton.setText("New User");
 	syncButton.setText("Exit");
-	urlButton.addActionListener(ae->{
-		if(reger.regist()){
-		    /** really NEW USER here**/
-		    appendMsg(reger.getAcc());
-		    appendMsg(reger.getPwd());
-		}
-	    });
-	syncButton.addActionListener(ae->{System.exit(0);});
+	urlButton.addActionListener((ae) -> {newUserAction();});
+	syncButton.addActionListener((ae) -> {systemExitAction();});
 	urlButton.setEnabled(true);
 	syncButton.setEnabled(true);
     }
+
+    /**
+       DEFINITION OF SYSTEM STATES 
+     */
 
     public void setSYNCHRONIZED(){
 	stateLabel.setForeground(Color.BLUE);
@@ -203,43 +222,53 @@ public class UImanager{
 	setButtonsOffline();
     };
 
-    private void login(){	
+    /**
+     *  DEFAULT ACTION
+     */
+    private void newUserAction(){
+	if(reger.regist()){
+	    newUserFun.accept(reger.getAcc(),reger.getPwd());
+	}
+    };
+    private void loginAction(){
 	String name = nameField.getText();
 	String pwd = pwdField.getText();
 	if(name.equals("") || 
 	   pwd.equals("")){
 	    appendMsg("Please check you account name and password!");
-	}else{
-	    /** NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE **/
-
-	    loginmaster.setInfo(name,pwd);
-	    loginmaster.authenticate();
-	    if(loginmaster.getstatus()){
-		appendMsg("Connecting to Server. "+
-			  "You're logging in server with \n"+
-			  "    <"+name+"/"+pwd+">");
-		setSYNCHRONIZING();
-		appendMsg("TOKEN = "+Internetrecord.gettoken());
-		/** auto-sync should be involked here **/
-		setSYNCHRONIZED();
-	    }else{ //loginFail
-		appendMsg("Login failed, please verify your network "+
-			  "and/or your login information.");
-	    }
-	}	    
-	
+	}else{	    
+	    loginFun.accept(name,pwd);
+	}
     };
-    private void shareURL(){
+    private void shareURLAction(){
 	try{
-	fChooser.ChooseFile();
-	appendMsg(fChooser.getFileName());
+	    fChooser.ChooseFile();
+	    shareURLFun.accept(fChooser.getFileName());
 	}catch(HeadlessException e){
-	    //
-	}	
+	    appendMsg("System failure because of a HeadlessException!");
+	    appendMsg("Please restart your Imbox client.");
+	    setSHUTDOWN();
+	}
+    };
+    private void fSyncAction(){
+	fSyncFun.accept("");
+    };
+    private void systemExitAction(){
+	System.exit(0);
     };
 
-    private void manuallySync(){
-	//
+    private void setDefaultFuns(){
+	newUserFun  = (String _acc, String _pwd) -> {
+	    appendMsg("[DEFAULT] new user action");
+	};
+	loginFun    = (String _acc, String _pwd) -> {
+	    appendMsg("[DEFAULT] login action");
+	};
+	shareURLFun = (String _fname) -> {
+	    appendMsg("[DEFAULT] generate URL action");
+	};
+	fSyncFun    = (String _str) -> {
+	    appendMsg("[DEFAULT] forced sync action");
+	};
     };
-
 }
