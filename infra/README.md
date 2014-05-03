@@ -52,7 +52,7 @@ Open your pom.xml file and add the following code:
         <dependency>
             <groupId>org.imbox</groupId>
             <artifactId>imbox-infra</artifactId>
-            <version>0.2</version>
+            <version>0.2.1</version>
         </dependency>
     </dependencies>
     
