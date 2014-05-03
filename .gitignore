@@ -1,5 +1,6 @@
 .DS_Store
 *.class
 *~
-client/target/maven-status/
+client/target/*
+!client/target/*.jar
 
