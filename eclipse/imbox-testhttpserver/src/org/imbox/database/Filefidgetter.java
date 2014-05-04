@@ -20,7 +20,7 @@ public class Filefidgetter extends db_connect
 			Statement stmt = connect.createStatement();
 			String query = "SELECT fid FROM " + account + " WHERE fileName = " + "'" + filename + "'";
 			ResultSet result = stmt.executeQuery(query);
-			if (result.getRow() > 0)
+			if (result.next())
 			{
 				for (result.first();!result.isAfterLast();result.next())
 				{

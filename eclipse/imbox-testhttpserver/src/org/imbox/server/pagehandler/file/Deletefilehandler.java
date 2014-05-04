@@ -6,7 +6,9 @@ import org.imbox.database.Delete_File_user;
 import org.imbox.database.Filefidgetter;
 import org.imbox.server.functions.Authenticator;
 import org.imbox.server.functions.Httpresponser;
+import org.imbox.server.functions.LOCK.Returntype;
 import org.imbox.server.jsonreaders.Deletefilereader;
+import org.imbox.server.main.IMboxserver;
 import org.json.JSONObject;
 
 import com.sun.net.httpserver.HttpExchange;
@@ -48,29 +50,53 @@ public class Deletefilehandler implements HttpHandler
 						reader.readjson();
 						if (auth.Authenticatebytoken(reader.gettoken(), reader.getmac(), IP))
 						{
-							Filefidgetter ffg = new Filefidgetter(auth.getaccountname(), reader.getfilename());
-							ffg.preparefileid();
-							String fid = ffg.getfileid();
-							//TODO: becuase file md5 currently = fid
-							Delete_File_user dfu = new Delete_File_user(auth.getaccountname(), fid);
-							dfu.DeleteFileUser();
-							if (dfu.getFileDelete())
+							Returntype lockresult = IMboxserver.lockthread.lock(reader.getmac());
+							if (lockresult.islock())
 							{
-								JSONObject obj = new JSONObject();
-								obj.put("succ", true);
-								obj.put("errorcode", 0);
-								String response = obj.toString();
-								Httpresponser res = new Httpresponser(httpconnection, response);
-								res.execute();
+								if (lockresult.mac().equals(reader.getmac()))
+								{
+									Filefidgetter ffg = new Filefidgetter(auth.getaccountname(), reader.getfilename());
+									ffg.preparefileid();
+									String fid = ffg.getfileid();
+									//TODO: becuase file md5 currently = fid
+									Delete_File_user dfu = new Delete_File_user(auth.getaccountname(), fid);
+									dfu.DeleteFileUser();
+									if (dfu.getFileDelete())
+									{
+										JSONObject obj = new JSONObject();
+										obj.put("succ", true);
+										obj.put("errorcode", 0);
+										String response = obj.toString();
+										Httpresponser res = new Httpresponser(httpconnection, response);
+										res.execute();
+									}else
+									{
+										JSONObject obj = new JSONObject();
+										obj.put("succ", false);
+										obj.put("errorcode", 6);
+										String response = obj.toString();
+										Httpresponser res = new Httpresponser(httpconnection, response);
+										res.execute();
+									}
+								}else
+								{
+									JSONObject obj = new JSONObject();
+									obj.put("succ", false);
+									obj.put("errorcode", 7);
+									String response = obj.toString();
+									Httpresponser res = new Httpresponser(httpconnection, response);
+									res.execute();
+								}
 							}else
 							{
 								JSONObject obj = new JSONObject();
 								obj.put("succ", false);
-								obj.put("errorcode", 6);
+								obj.put("errorcode", 8);
 								String response = obj.toString();
 								Httpresponser res = new Httpresponser(httpconnection, response);
 								res.execute();
 							}
+							
 						}else
 						{
 							JSONObject obj = new JSONObject();

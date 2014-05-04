@@ -5,7 +5,9 @@ import java.io.IOException;
 import org.imbox.database.Modify_File;
 import org.imbox.server.functions.Authenticator;
 import org.imbox.server.functions.Httpresponser;
+import org.imbox.server.functions.LOCK.Returntype;
 import org.imbox.server.jsonreaders.Modifyfilereader;
+import org.imbox.server.main.IMboxserver;
 import org.json.JSONObject;
 
 import com.sun.net.httpserver.HttpExchange;
@@ -48,27 +50,49 @@ public class Modifyfilehandler implements HttpHandler
 						Authenticator auth = new Authenticator();
 						if (auth.Authenticatebytoken(reader.gettoken(), reader.getmac(), connectionIP))
 						{
-							//db
-							Modify_File modifyfile = new Modify_File(auth.getaccountname(), reader.getfilename(), reader.getnewmd5(),  reader.getfilename(),  reader.getnewmd5());
-							modifyfile.ModifyFile();
-							if (modifyfile.getFileModify())
+							Returntype lockresult = IMboxserver.lockthread.lock(reader.getmac());
+							if (lockresult.islock())
 							{
-								JSONObject obj=new JSONObject();
-								obj.put("succ", true);
-								obj.put("errorcode", 0);
-								String response = obj.toString();
-								Httpresponser res = new Httpresponser(httpconnection, response);
-								res.execute();
+								if (lockresult.mac().equals(reader.getmac()))
+								{
+									Modify_File modifyfile = new Modify_File(auth.getaccountname(), reader.getfilename(), reader.getnewmd5(),  reader.getfilename(),  reader.getnewmd5());
+									modifyfile.ModifyFile();
+									if (modifyfile.getFileModify())
+									{
+										JSONObject obj=new JSONObject();
+										obj.put("succ", true);
+										obj.put("errorcode", 0);
+										String response = obj.toString();
+										Httpresponser res = new Httpresponser(httpconnection, response);
+										res.execute();
+									}else
+									{
+										JSONObject obj=new JSONObject();
+										obj.put("succ", false);
+										obj.put("errorcode", 5);
+										String response = obj.toString();
+										Httpresponser res = new Httpresponser(httpconnection, response);
+										res.execute();
+									}
+								}else
+								{
+									JSONObject obj=new JSONObject();
+									obj.put("succ", false);
+									obj.put("errorcode", 7);
+									String response = obj.toString();
+									Httpresponser res = new Httpresponser(httpconnection, response);
+									res.execute();
+								}
 							}else
 							{
 								JSONObject obj=new JSONObject();
 								obj.put("succ", false);
-								obj.put("errorcode", 5);
+								obj.put("errorcode", 8);
 								String response = obj.toString();
 								Httpresponser res = new Httpresponser(httpconnection, response);
 								res.execute();
 							}
-							//response
+							
 						}else
 						{
 							JSONObject obj=new JSONObject();

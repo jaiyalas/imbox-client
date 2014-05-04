@@ -53,7 +53,7 @@ public class Modifyfilereader
 			token = obj.getString("token");
 			MAC = obj.getString("MAC");
 			filename = obj.getString("filename");
-			newmd5 = obj.getString("md5"); 
+			newmd5 = obj.getString("newmd5"); 
 			
 		}catch(JSONException e)
 		{

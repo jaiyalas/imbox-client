@@ -1,4 +1,6 @@
-package org.imbox.infrastructure.exceptions;
+package org.imbox.server.exception;
+
+import org.imbox.infrastructure.exceptions.IMBOXException;
 
 public class IMBOXNETWORKException extends IMBOXException
 {

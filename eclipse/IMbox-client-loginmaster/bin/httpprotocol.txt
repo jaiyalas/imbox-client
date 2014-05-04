@@ -86,7 +86,7 @@ undefined POST/GET is free for use(better blocked?)
     server return {'succ'| 'errorcode'}
 
 /generateURL
-    POST {'token' | 'MAC' | 'account'|'filename'}
+    POST {'token' | 'MAC'|'filename'}
     server return {'URL'|'succ'| 'errorcode'}
 
 /generateFile           <- this is the response action of URL given in generateURL

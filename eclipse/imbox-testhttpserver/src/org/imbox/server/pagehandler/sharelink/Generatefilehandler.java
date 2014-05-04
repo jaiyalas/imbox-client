@@ -35,7 +35,7 @@ public class Generatefilehandler implements HttpHandler
 			{
 				if (httpconnection.getRequestMethod().equals("GET"))
 				{
-					System.out.println("this is a http get method @ generatefile, post should be used");
+					System.out.println("this is a http get method @ generatefile");
 					URI responsemap;
 					responsemap = httpconnection.getRequestURI();
 					System.out.println(responsemap.toString());
@@ -43,7 +43,6 @@ public class Generatefilehandler implements HttpHandler
 					String md5 = up.getmd5();
 					String filename = up.getfilename();
 					System.out.println(md5 +"\t" + filename);
-				    //TODO: get file by md5 + filename and return as body?
 					blocktofile b2f = new blocktofile(md5);
 					b2f.reconstruct();
 					byte[] file = b2f.getfileinbyte();

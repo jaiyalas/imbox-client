@@ -10,7 +10,7 @@ public class new_user extends db_connect{
     public void insertUserTable(){
     	try{
      		Statement stmt = connect.createStatement();
-			stmt.executeUpdate("CREATE TABLE "+userName+" (" + "fileName VARCHAR(20) "+", fid VARCHAR(20)"
+			stmt.executeUpdate("CREATE TABLE "+userName+" (" + "fileName VARCHAR(40) "+", fid VARCHAR(40)"
      		        +", f_MD5 VARCHAR(40)"+", antedent_f_MD5 VARCHAR(40)"+", PRIMARY KEY(fileName)"
 					+", INDEX (fid))ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_unicode_ci;");
 			//user fid reference to server_file fid

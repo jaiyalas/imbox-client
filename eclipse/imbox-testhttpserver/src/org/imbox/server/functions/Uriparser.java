@@ -10,6 +10,7 @@ public class Uriparser
 	public Uriparser(String uri)
 	{
 		this.uristring = uri;
+		filename = new String();
 		parse();
 	}
 	
@@ -22,7 +23,8 @@ public class Uriparser
 	private void preparemap(String[] token)
 	{
 		md5 = token[1];
-		for (int i = 2;i<token.length;i++)
+		filename = filename + token[2];
+		for (int i = 3;i<token.length;i++)
 		{
 			filename = filename + "." + token[i];
 		}

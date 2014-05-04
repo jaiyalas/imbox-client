@@ -33,7 +33,7 @@ public class Insert_block_V2 extends db_connect{
 				String insert = "INSERT INTO block_map VALUES (NULL,'"+blockName+"', "+seq+",'"+FID+"')";
         		stmt.executeUpdate(insert);
 			}
-    		connect.close();  //close database
+    		//connect.close();  //close database
        	}catch(Exception e){
     		System.out.println(e.toString());
     	}

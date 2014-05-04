@@ -1,15 +1,20 @@
 package org.imbox.server.pagehandler.block;
 import java.io.IOException;
-import java.security.MessageDigest;
+import java.util.List;
 
 import org.imbox.database.Filefidgetter;
 import org.imbox.database.Insert_block_V2;
+import org.imbox.database.broadcast_IP;
 import org.imbox.infrastructure.Casting;
+import org.imbox.infrastructure.Hash;
 import org.imbox.infrastructure.Workspace;
 import org.imbox.infrastructure.file.Block;
 import org.imbox.server.functions.Authenticator;
 import org.imbox.server.functions.Httpresponser;
+import org.imbox.server.functions.LOCK.Returntype;
+import org.imbox.server.functions.boardcast.SocketClient;
 import org.imbox.server.jsonreaders.Postblockreader;
+import org.imbox.server.main.IMboxserver;
 import org.json.JSONObject;
 
 import com.sun.net.httpserver.HttpExchange;
@@ -59,21 +64,50 @@ public class Postblockhandler implements HttpHandler
 						Authenticator auth = new Authenticator();
 						if (auth.Authenticatebytoken(reader.gettoken(), reader.getmac(),connectionIP))
 						{
-							byte[] blockdata = Casting.stringToBytes(reader.getdatastring());
-							Filefidgetter ffg = new Filefidgetter(auth.getaccountname(), reader.getfilename());
-							ffg.preparefileid();
-							byte[] md5array = blockdata.clone();
-							MessageDigest md5calculator = MessageDigest.getInstance("md5");
-							md5calculator.update(md5array);
-							Insert_block_V2 ib2 = new Insert_block_V2(Casting.bytesToString(md5array), reader.getsequence(), ffg.getfileid());
-							ib2.InsertBlock();
-							Block.writeBlock(Workspace.SYSDIRs, blockdata);
-							JSONObject obj=new JSONObject();
-							obj.put("succ", true);
-							obj.put("errorcode", 0);
-							String response = obj.toString();
-							Httpresponser res = new Httpresponser(httpconnection, response);
-							res.execute();
+							Returntype lockresult = IMboxserver.lockthread.lock(reader.getmac());
+							if (lockresult.islock())
+							{
+								if (lockresult.mac().equals(reader.getmac()))
+								{
+									byte[] blockdata = Casting.stringToBytes(reader.getdatastring());
+									Filefidgetter ffg = new Filefidgetter(auth.getaccountname(), reader.getfilename());
+									ffg.preparefileid();
+									Insert_block_V2 ib2 = new Insert_block_V2(Hash.getMD5String(blockdata), reader.getsequence(), ffg.getfileid());
+									ib2.InsertBlock();
+									Block.writeBlock(Workspace.SYSDIRs, blockdata);
+									JSONObject obj=new JSONObject();
+									obj.put("succ", true);
+									obj.put("errorcode", 0);
+									String response = obj.toString();
+									Httpresponser res = new Httpresponser(httpconnection, response);
+									res.execute();
+									broadcast_IP bip = new broadcast_IP(auth.getaccountname());
+									bip.Broadcast();
+									List<String> broadcasttarget = bip.getList();
+									for (int i =0;i<broadcasttarget.size();i++)
+									{
+										new SocketClient(broadcasttarget.size(),broadcasttarget.get(i));
+									}
+								}else
+								{
+									JSONObject obj=new JSONObject();
+									obj.put("succ", false);
+									obj.put("errorcode", 7);
+									String response = obj.toString();
+									Httpresponser res = new Httpresponser(httpconnection, response);
+									res.execute();
+								}
+							}else
+							{
+								JSONObject obj=new JSONObject();
+								obj.put("succ", false);
+								obj.put("errorcode", 8);
+								String response = obj.toString();
+								Httpresponser res = new Httpresponser(httpconnection, response);
+								res.execute();
+							}
+							
+							
 						}else
 						{
 							JSONObject obj=new JSONObject();

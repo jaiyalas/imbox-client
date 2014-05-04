@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import org.imbox.infrastructure.exceptions.IMBOXNW_jsonException;
+import org.imbox.server.exception.IMBOXNW_jsonException;
 import org.json.JSONException;
 import org.json.JSONObject;
 

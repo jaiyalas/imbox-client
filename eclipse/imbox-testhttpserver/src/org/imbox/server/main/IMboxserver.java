@@ -3,6 +3,7 @@ package org.imbox.server.main;
 import java.net.InetSocketAddress;
 
 import org.imbox.infrastructure.Workspace;
+import org.imbox.server.functions.LOCK.Lock;
 import org.imbox.server.pagehandler.Networkcheckhandler;
 import org.imbox.server.pagehandler.block.Getblockhandler;
 import org.imbox.server.pagehandler.block.Getblockrecordhandler;
@@ -24,6 +25,7 @@ import com.sun.net.httpserver.HttpServer;
 public class IMboxserver
 {
 	private HttpServer server;
+	public static Lock lockthread;
 	public IMboxserver()
 	{
 		try{
@@ -45,6 +47,8 @@ public class IMboxserver
         server.setExecutor(null); // creates a default executor
         System.out.println("the server is ready, please use startserver command to start");
         Workspace.prepareWorkspaceS();
+		lockthread = new Lock();
+		lockthread.start();
 		}catch(Exception e)
 		{
 			e.printStackTrace();
@@ -54,6 +58,7 @@ public class IMboxserver
 	public void startserver()
 	{
 		server.start();
+		System.out.println("Server started...");
 	}
 	
 	public void closeserver()

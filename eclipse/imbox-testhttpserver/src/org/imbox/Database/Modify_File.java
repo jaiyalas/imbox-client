@@ -39,7 +39,7 @@ public class Modify_File extends db_connect{
 			else{
 				setFileModify(false);
 			}
-			connect.close();  //close database
+			//connect.close();  //close database
     	}catch(Exception e){
 			System.out.println(e.toString()); 
 		}

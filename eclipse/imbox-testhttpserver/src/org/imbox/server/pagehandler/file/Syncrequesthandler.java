@@ -46,13 +46,13 @@ public class Syncrequesthandler implements HttpHandler
 					{
 						System.out.println("this is a post method @ syncrequest");
 						TokenMACreader reader = new TokenMACreader(httpconnection);
+						reader.getjson();
 						System.out.println("MAC = " + reader.getMAC());
 						System.out.println("token = " + reader.gettoken());
 						Authenticator auth = new Authenticator();
 						if (auth.Authenticatebytoken(reader.gettoken(), reader.getMAC(),connectionIP))
 						{
 							//authenticate success
-							//TODO: return array of file owned by this account
 							Userfilelistgetter ufg = new Userfilelistgetter(auth.getaccountname());
 							ufg.preparefilelist();
 							Filelistgetter fg = new Filelistgetter(ufg.getlist());
@@ -66,9 +66,8 @@ public class Syncrequesthandler implements HttpHandler
 							res.execute();
 						}else
 						{
-							String data = new String();
 							JSONObject obj=new JSONObject();
-							obj.put("data", data);
+							obj.put("filelist", new JSONArray());
 							obj.put("succ", false);
 							obj.put("errorcode", 1);
 							String response = obj.toString();

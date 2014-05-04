@@ -14,14 +14,12 @@ import org.json.JSONObject;
 
 public class URLgenerator
 {
-	private String account;
 	private String filename;
 	private String URL;
 	private boolean status;
 	private int errorcode;
-	public URLgenerator(String account,String filename)
+	public URLgenerator(String filename)
 	{
-		this.account = account;
 		this.filename = filename;
 		URL=new String();
 		status = false;
@@ -35,7 +33,6 @@ public class URLgenerator
 			JSONObject obj = new JSONObject();
 			obj.put("MAC",Internetrecord.getMAC());
 			obj.put("token",Internetrecord.gettoken());
-			obj.put("account", this.account);
 			obj.put("filename", this.filename);
 			Simpleconnection conn = new Simpleconnection();
 			readresponse(conn.httppost("generateURL", obj));

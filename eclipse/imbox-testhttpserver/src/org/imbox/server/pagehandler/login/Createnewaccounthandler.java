@@ -44,6 +44,7 @@ public class Createnewaccounthandler implements HttpHandler
 					{
 						System.out.println("this is a post method @ newaccount");
 						Loginrequestreader requestreader = new Loginrequestreader(httpconnection);
+						requestreader.getjson();
 						System.out.println("account = " + requestreader.getaccount());
 						System.out.println("password = " + requestreader.getpassword());
 						System.out.println("MAC = " + requestreader.getMAC());

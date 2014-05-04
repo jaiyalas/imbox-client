@@ -37,7 +37,7 @@ public class Delete_File extends db_connect{
 			else{
 				setFileDelete(false);
 			}
-			connect.close();  //close database
+			//connect.close();  //close database
     	}catch(Exception e){
 			System.out.println(e.toString()); 
 		}

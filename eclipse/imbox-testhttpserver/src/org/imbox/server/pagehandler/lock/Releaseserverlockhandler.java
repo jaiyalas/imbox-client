@@ -1,10 +1,10 @@
 package org.imbox.server.pagehandler.lock;
 import java.io.IOException;
 
-
 import org.imbox.server.functions.Authenticator;
 import org.imbox.server.functions.Httpresponser;
 import org.imbox.server.jsonreaders.TokenMACreader;
+import org.imbox.server.main.IMboxserver;
 import org.json.JSONObject;
 
 import com.sun.net.httpserver.HttpExchange;
@@ -48,11 +48,10 @@ public class Releaseserverlockhandler implements HttpHandler
 						requestreader.getjson();
 						System.out.println("token = " + requestreader.gettoken());
 						System.out.println("MAC = " + requestreader.getMAC());
-						//TODO: release server lock here
-						//TODO: getresult();
 						Authenticator auth = new Authenticator();
 						if (auth.Authenticatebytoken(requestreader.gettoken(), requestreader.getMAC(),connectionIP))
 						{
+							IMboxserver.lockthread.release(requestreader.getMAC());
 							JSONObject obj=new JSONObject();
 							obj.put("succ", true);
 							obj.put("errorcode", 0);        //TODO: error code here if any

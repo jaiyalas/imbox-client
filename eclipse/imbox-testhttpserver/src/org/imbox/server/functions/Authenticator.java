@@ -15,7 +15,7 @@ public class Authenticator
 	private String accountname;
 	public Authenticator()
 	{
-		
+		accountname = new String();
 	}
 	
 	public String Authenticatebypassword(String accountname, String pwd, String MAC,String IP)
