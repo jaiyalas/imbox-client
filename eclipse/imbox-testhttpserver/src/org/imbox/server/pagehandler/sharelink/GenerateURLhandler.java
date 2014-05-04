@@ -47,9 +47,9 @@ public class GenerateURLhandler implements HttpHandler
 						System.out.println("this is a post method @ generateurl");
 						Deletefilereader reader = new Deletefilereader(httpconnection);
 						reader.readjson();
-						System.out.println("filename = " + reader.getfilename());
-						System.out.println("MAC = " + reader.getmac());
-						System.out.println("token = " + reader.gettoken());
+						System.out.println("[generateurl]filename = " + reader.getfilename());
+						System.out.println("[generateurl]MAC = " + reader.getmac());
+						System.out.println("[generateurl]token = " + reader.gettoken());
 						Authenticator auth = new Authenticator();
 						if (auth.Authenticatebytoken(reader.gettoken(), reader.getmac(),connectionIP))
 						{
@@ -72,7 +72,6 @@ public class GenerateURLhandler implements HttpHandler
 							Httpresponser res = new Httpresponser(httpconnection, response);
 							res.execute();
 						}
-						
 					}else
 					{
 						System.out.println("unknown method:" + httpconnection.getRequestMethod());

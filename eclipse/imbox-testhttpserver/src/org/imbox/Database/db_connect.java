@@ -2,10 +2,10 @@ package org.imbox.database;
 import java.sql.*;
 public class db_connect {
     private static String driver   = "com.mysql.jdbc.Driver";
-    private static String url      = "jdbc:mysql://54.254.1.241:3306/";
+    private static String url      = "jdbc:mysql://127.0.0.1:3306/";
     protected static String dbname   = "group2_db";
     private static String user     = "root";
-    private static String password = "cindyboy";
+    private static String password = "imbox";
     protected static Connection connect;
     static{
 	try{

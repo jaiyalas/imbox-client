@@ -12,6 +12,6 @@
 	<classpathentry kind="lib" path="lib/httpcore-4.3.2.jar"/>
 	<classpathentry kind="lib" path="lib/httpmime-4.3.3.jar"/>
 	<classpathentry kind="lib" path="lib/commons-io-2.4.jar"/>
-	<classpathentry kind="lib" path="lib/imbox-infra-0.2.jar"/>
+	<classpathentry kind="lib" path="lib/imbox-infra-0.2.1.jar.zip"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

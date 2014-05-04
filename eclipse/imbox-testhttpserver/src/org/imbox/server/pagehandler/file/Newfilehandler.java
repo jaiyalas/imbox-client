@@ -48,6 +48,10 @@ public class Newfilehandler implements HttpHandler
 						System.out.println("this is a http post method @ newfilehandler");
 						Newfilereader reader = new Newfilereader(httpconnection);
 						reader.readjson();
+						System.out.println("[newfilehandler]token = " + reader.gettoken());
+						System.out.println("[newfilehandler]mac = " + reader.getmac());
+						System.out.println("[newfilehandler]filename = " + reader.getfilename());
+						System.out.println("[newfilehandler]md5 = " + reader.getmd5());
 						Authenticator auth = new Authenticator();
 						if (auth.Authenticatebytoken(reader.gettoken(), reader.getmac(), connectionIP))
 						{

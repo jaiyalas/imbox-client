@@ -48,6 +48,10 @@ public class Deletefilehandler implements HttpHandler
 						Authenticator auth = new Authenticator();
 						Deletefilereader reader = new Deletefilereader(httpconnection);
 						reader.readjson();
+						System.out.println("this is a http post method @ deletefilehandler");
+						System.out.println("[deletefilehandler]filename = "+reader.getfilename());
+						System.out.println("[deletefilehandler]token = "+reader.gettoken());
+						System.out.println("[deletefilehandler]mac = "+reader.getmac());
 						if (auth.Authenticatebytoken(reader.gettoken(), reader.getmac(), IP))
 						{
 							Returntype lockresult = IMboxserver.lockthread.lock(reader.getmac());

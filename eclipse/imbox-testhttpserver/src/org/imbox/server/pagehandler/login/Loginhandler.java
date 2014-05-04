@@ -44,8 +44,8 @@ public class Loginhandler implements HttpHandler
 						System.out.println("this is a post method @ login");
 						Loginrequestreader requestreader = new Loginrequestreader(httpconnection);
 						requestreader.getjson();
-						System.out.println("account = " + requestreader.getaccount());
-						System.out.println("password = " + requestreader.getpassword());
+						System.out.println("[login]account = " + requestreader.getaccount());
+						System.out.println("[login]password = " + requestreader.getpassword());
 						Authenticator auth = new Authenticator();
 						String token = auth.Authenticatebypassword(requestreader.getaccount(), requestreader.getpassword(), requestreader.getMAC(),connectionIP);
 						if (token.length()>0)
@@ -57,6 +57,7 @@ public class Loginhandler implements HttpHandler
 							String response = obj.toString();
 							Httpresponser res = new Httpresponser(httpconnection, response);
 							res.execute();
+							System.out.println("[login] succ = true   acc = " + requestreader.getaccount());
 						}else
 						{
 							JSONObject obj=new JSONObject();
@@ -66,6 +67,7 @@ public class Loginhandler implements HttpHandler
 							String response = obj.toString();
 							Httpresponser res = new Httpresponser(httpconnection, response);
 							res.execute();
+							System.out.println("[login] succ = false");
 						}
 					}else
 					{

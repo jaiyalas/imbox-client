@@ -48,8 +48,8 @@ public class Getserverlockhandler implements HttpHandler
 						System.out.println("this is a post method @ getserverlock");
 						TokenMACreader requestreader = new TokenMACreader(httpconnection);
 						requestreader.getjson();
-						System.out.println("token = " + requestreader.gettoken());
-						System.out.println("MAC = " + requestreader.getMAC());
+						System.out.println("[getserverlock]token = " + requestreader.gettoken());
+						System.out.println("[getserverlock]MAC = " + requestreader.getMAC());
 						Authenticator auth = new Authenticator();
 						boolean result = auth.Authenticatebytoken(requestreader.gettoken(), requestreader.getMAC(),connectionIP);
 						if (result)

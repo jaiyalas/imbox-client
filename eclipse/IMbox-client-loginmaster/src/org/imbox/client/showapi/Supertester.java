@@ -12,7 +12,7 @@ import org.imbox.client.network.ultility.Internetrecord;
 import org.imbox.infrastructure.Workspace;
 import org.imbox.infrastructure.file.Block;
 import org.imbox.infrastructure.file.BlockRec;
-import org.imbox.infrastructure.file.FileRec;
+import org.imbox.infrastructure.file.FileRecH;
 
 
 
@@ -64,10 +64,10 @@ public class Supertester
 			srq.sendrequest();
 			System.out.println("[syncrequest] succ = " + srq.getstatus());
 			System.out.println("[syncrequest] errorcode = " + srq.geterrorcode());
-			List<FileRec> filelist = srq.getfilelist();
+			List<FileRecH> filelist = srq.getfilelist();
 			for(int i = 0;i<filelist.size();i++)
 			{
-				System.out.println("[Modify file] data = " + filelist.get(i).getName() + "\t" + filelist.get(i).getMd5());
+				System.out.println("[Modify file] data = " + filelist.get(i).getName() + "\t" + filelist.get(i).getCurrentMD5() + "\t" + filelist.get(i).getPastMD55());
 			}
 			System.out.println("================================================================");
 			System.out.println("testing target: block post,  showing all function");

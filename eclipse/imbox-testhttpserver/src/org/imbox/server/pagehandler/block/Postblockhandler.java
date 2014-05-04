@@ -45,22 +45,22 @@ public class Postblockhandler implements HttpHandler
 			{
 				if (httpconnection.getRequestMethod().equals("GET"))
 				{
-					System.out.println("this is a http get method @ postfile, post should be used");
-					String response = "this is a http get method @ postfile";
+					System.out.println("this is a http get method @ postblcok, post should be used");
+					String response = "this is a http get method @ postblcok";
 					Httpresponser res = new Httpresponser(httpconnection, response);
 					res.execute();
 				}else
 				{
 					if (httpconnection.getRequestMethod().equals("POST"))
 					{
-						System.out.println("this is a post method @ postfile");
+						System.out.println("this is a post method @ postblcok");
 						Postblockreader reader = new Postblockreader(httpconnection);
 						reader.getjson();
-						System.out.println("token = " + reader.gettoken());
-						System.out.println("MAC = " + reader.getmac());
-						System.out.println("filename = " + reader.getfilename());
-						System.out.println("blockdata = " + reader.getdatastring());
-						System.out.println("sequence = " + Integer.toString(reader.getsequence()));
+						System.out.println("[postblcok]token = " + reader.gettoken());
+						System.out.println("[postblcok]MAC = " + reader.getmac());
+						System.out.println("[postblcok]filename = " + reader.getfilename());
+						//System.out.println("blockdata = " + reader.getdatastring());
+						System.out.println("[postblcok]sequence = " + Integer.toString(reader.getsequence()));
 						Authenticator auth = new Authenticator();
 						if (auth.Authenticatebytoken(reader.gettoken(), reader.getmac(),connectionIP))
 						{

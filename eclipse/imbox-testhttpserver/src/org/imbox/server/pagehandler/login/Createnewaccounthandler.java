@@ -45,9 +45,9 @@ public class Createnewaccounthandler implements HttpHandler
 						System.out.println("this is a post method @ newaccount");
 						Loginrequestreader requestreader = new Loginrequestreader(httpconnection);
 						requestreader.getjson();
-						System.out.println("account = " + requestreader.getaccount());
-						System.out.println("password = " + requestreader.getpassword());
-						System.out.println("MAC = " + requestreader.getMAC());
+						System.out.println("[newaccount]account = " + requestreader.getaccount());
+						System.out.println("[newaccount]password = " + requestreader.getpassword());
+						System.out.println("[newaccount]MAC = " + requestreader.getMAC());
 						Authenticator auth = new Authenticator();
 						String token = auth.Createaccount(requestreader.getaccount(), requestreader.getpassword(), requestreader.getMAC(),connectionIP);
 						if (token.length() >0)
@@ -59,6 +59,7 @@ public class Createnewaccounthandler implements HttpHandler
 							String response = obj.toString();
 							Httpresponser res = new Httpresponser(httpconnection, response);
 							res.execute();
+							System.out.println("[new account] create account success: " + requestreader.getaccount());
 						}else
 						{
 							JSONObject obj=new JSONObject();
@@ -68,6 +69,7 @@ public class Createnewaccounthandler implements HttpHandler
 							String response = obj.toString();
 							Httpresponser res = new Httpresponser(httpconnection, response);
 							res.execute();
+							System.out.println("[new account] create account fail" );
 						}
 					}else
 					{

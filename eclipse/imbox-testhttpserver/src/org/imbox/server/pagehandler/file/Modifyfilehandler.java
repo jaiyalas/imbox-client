@@ -47,6 +47,10 @@ public class Modifyfilehandler implements HttpHandler
 						System.out.println("this is a http post method @ Modifyfilehandler");
 						Modifyfilereader reader = new Modifyfilereader(httpconnection);
 						reader.readjson();
+						System.out.println("[Modifyfilehandler]filename = " + reader.getfilename());
+						System.out.println("[Modifyfilehandler]token = " + reader.gettoken());
+						System.out.println("[Modifyfilehandler]mac = " + reader.getmac());
+						System.out.println("[Modifyfilehandler]newmd5 = " + reader.getnewmd5());
 						Authenticator auth = new Authenticator();
 						if (auth.Authenticatebytoken(reader.gettoken(), reader.getmac(), connectionIP))
 						{

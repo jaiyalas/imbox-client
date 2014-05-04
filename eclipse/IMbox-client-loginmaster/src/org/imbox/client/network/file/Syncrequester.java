@@ -10,7 +10,7 @@ import org.imbox.client.network.ultility.Responsereader;
 import org.imbox.client.network.ultility.Simpleconnection;
 import org.imbox.infrastructure.exceptions.IMBOXNW_httpstatusException;
 import org.imbox.infrastructure.exceptions.IMBOXNW_jsonException;
-import org.imbox.infrastructure.file.FileRec;
+import org.imbox.infrastructure.file.FileRecH;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -57,14 +57,14 @@ public class Syncrequester
 		
 	}
 	
-	public List<FileRec> getfilelist()
+	public List<FileRecH> getfilelist()
 	{
-		List<FileRec> returnlist = new ArrayList<FileRec>();
+		List<FileRecH> returnlist = new ArrayList<FileRecH>();
 		try
 		{
-			for (int i = 0;i<jsonfilelistarray.length();i+=2)
+			for (int i = 0;i<jsonfilelistarray.length();i+=3)
 			{
-				returnlist.add(new FileRec(jsonfilelistarray.get(i).toString(),jsonfilelistarray.get(i+1).toString()));
+				returnlist.add(new FileRecH(jsonfilelistarray.get(i).toString(),jsonfilelistarray.get(i+1).toString(),jsonfilelistarray.get(i+2).toString()));
 			}
 		}catch(Exception e)
 		{

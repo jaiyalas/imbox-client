@@ -47,8 +47,8 @@ public class Syncrequesthandler implements HttpHandler
 						System.out.println("this is a post method @ syncrequest");
 						TokenMACreader reader = new TokenMACreader(httpconnection);
 						reader.getjson();
-						System.out.println("MAC = " + reader.getMAC());
-						System.out.println("token = " + reader.gettoken());
+						System.out.println("[syncrequest]MAC = " + reader.getMAC());
+						System.out.println("[syncrequest]token = " + reader.gettoken());
 						Authenticator auth = new Authenticator();
 						if (auth.Authenticatebytoken(reader.gettoken(), reader.getMAC(),connectionIP))
 						{

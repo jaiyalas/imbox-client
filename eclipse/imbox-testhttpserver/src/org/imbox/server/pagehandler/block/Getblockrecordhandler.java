@@ -48,9 +48,9 @@ public class Getblockrecordhandler implements HttpHandler
 						System.out.println("this is a post method @ Getblockrecordhandler");
 						Getblockrecordreader reader = new Getblockrecordreader(httpconnection);
 						reader.getjson();
-						System.out.println("MAC = " + reader.getmac());
-						System.out.println("token = " + reader.gettoken());
-						System.out.println("filename = " + reader.getfilename());
+						System.out.println("[Getblockrecordhandler]MAC = " + reader.getmac());
+						System.out.println("[Getblockrecordhandler]token = " + reader.gettoken());
+						System.out.println("[Getblockrecordhandler]filename = " + reader.getfilename());
 						Authenticator auth = new Authenticator();
 						if (auth.Authenticatebytoken(reader.gettoken(), reader.getmac(),connectionIP))
 						{

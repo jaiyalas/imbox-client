@@ -14,6 +14,7 @@ errorcode:
 6: deletefile fail
 7: lock error
 8: lock not locked
+9: token out of date
 19: account is already registered
 20: exception failure (see exception log) 
 

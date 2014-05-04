@@ -46,8 +46,8 @@ public class Releaseserverlockhandler implements HttpHandler
 						System.out.println("this is a post method @ releaseserverlock");
 						TokenMACreader requestreader = new TokenMACreader(httpconnection);
 						requestreader.getjson();
-						System.out.println("token = " + requestreader.gettoken());
-						System.out.println("MAC = " + requestreader.getMAC());
+						System.out.println("[releaseserverlock]token = " + requestreader.gettoken());
+						System.out.println("[releaseserverlock]MAC = " + requestreader.getMAC());
 						Authenticator auth = new Authenticator();
 						if (auth.Authenticatebytoken(requestreader.gettoken(), requestreader.getMAC(),connectionIP))
 						{
