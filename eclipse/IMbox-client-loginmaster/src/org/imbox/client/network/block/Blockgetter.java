@@ -1,4 +1,4 @@
-package org.imbox.client.network.block;
+	package org.imbox.client.network.block;
 
 import java.io.IOException;
 

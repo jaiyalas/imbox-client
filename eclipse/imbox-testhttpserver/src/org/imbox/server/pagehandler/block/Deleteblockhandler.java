@@ -1,33 +1,35 @@
-package org.imbox.server.pagehandler.file;
-
+package org.imbox.server.pagehandler.block;
 import java.io.IOException;
 
-import org.imbox.database.Insert_File;
+import org.imbox.infrastructure.Casting;
+import org.imbox.infrastructure.Workspace;
+import org.imbox.infrastructure.file.Block;
 import org.imbox.server.functions.Authenticator;
 import org.imbox.server.functions.Httpresponser;
 import org.imbox.server.functions.LOCK.Returntype;
-import org.imbox.server.jsonreaders.Newfilereader;
+import org.imbox.server.jsonreaders.Deleteblockreader;
 import org.imbox.server.main.IMboxserver;
 import org.json.JSONObject;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
-public class Newfilehandler implements HttpHandler
+
+public class Deleteblockhandler implements HttpHandler
 {
 	private HttpExchange httpconnection;
 	private String connectionIP;
-	
 	@Override
-	public void handle(HttpExchange httpconnection) throws IOException {
+	public void handle(HttpExchange httpconnection) throws IOException 
+	{	
 		this.httpconnection = httpconnection;
 		connectionIP = httpconnection.getRemoteAddress().getAddress().toString();
 		Handlerthread multithread = new Handlerthread();
 		multithread.setName("clientconnection");
 		multithread.start();
 		
+		
 	}
-	
 	private class Handlerthread extends Thread
 	{
 		@Override
@@ -37,62 +39,61 @@ public class Newfilehandler implements HttpHandler
 			{
 				if (httpconnection.getRequestMethod().equals("GET"))
 				{
-					System.out.println("this is a http get method @ newfilehandler");
-					String response = "this is a http get method";
+					System.out.println("this is a http get method @ Deleteblockhandler, post should be used");
+					String response = "this is a http get method @ Deleteblockhandler";
 					Httpresponser res = new Httpresponser(httpconnection, response);
 					res.execute();
 				}else
 				{
 					if (httpconnection.getRequestMethod().equals("POST"))
 					{
-						System.out.println("this is a http post method @ newfilehandler");
-						Newfilereader reader = new Newfilereader(httpconnection);
+						System.out.println("this is a post method @ Deleteblockhandler");
+						Deleteblockreader reader = new Deleteblockreader(httpconnection);
 						reader.readjson();
-						System.out.println("[newfilehandler]token = " + reader.gettoken());
-						System.out.println("[newfilehandler]mac = " + reader.getmac());
-						System.out.println("[newfilehandler]filename = " + reader.getfilename());
-						System.out.println("[newfilehandler]md5 = " + reader.getmd5());
+						System.out.println("[Deleteblock]token = " + reader.gettoken());
+						System.out.println("[Deleteblock]MAC = "+ reader.getmac());
+						System.out.println("[Deleteblock]blockname = " + reader.getblockname());
+						System.out.println("[Deleteblock]filename = " + reader.getfilename());
 						Authenticator auth = new Authenticator();
-						if (auth.Authenticatebytoken(reader.gettoken(), reader.getmac(), connectionIP))
+						if (auth.Authenticatebytoken(reader.gettoken(), reader.getmac(),connectionIP))
 						{
 							Returntype lockresult = IMboxserver.lockthread.lock(reader.getmac());
 							if (lockresult.islock())
 							{
 								if (lockresult.mac().equals(reader.getmac()))
 								{
-									//db
-									Insert_File newfile = new Insert_File(auth.getaccountname(), reader.getfilename(), reader.getmd5(),  reader.getmd5(),  reader.getmd5());
-									newfile.InsertFile();
-									if (newfile.getFileInsert())
+									try
 									{
-										if (newfile.getBlockInsert())
+										byte[] bytedata = Block.readBlockFromHD(Workspace.SYSDIRs, reader.getblockname());
+										String data = Casting.bytesToString(bytedata);
+										//return result
+										if (data.length() >0)
 										{
 											JSONObject obj=new JSONObject();
 											obj.put("succ", true);
-											obj.put("errorcode", 0);
+											obj.put("errorcode", 0); 
 											String response = obj.toString();
 											Httpresponser res = new Httpresponser(httpconnection, response);
 											res.execute();
 										}else
 										{
 											JSONObject obj=new JSONObject();
-											obj.put("succ", true);
-											obj.put("errorcode", 40);
+											obj.put("succ", false);
+											obj.put("errorcode", 3);
 											String response = obj.toString();
 											Httpresponser res = new Httpresponser(httpconnection, response);
 											res.execute();
 										}
-										
-									}else
+									}catch(Exception e)
 									{
+										e.printStackTrace();
 										JSONObject obj=new JSONObject();
 										obj.put("succ", false);
-										obj.put("errorcode", 5);
+										obj.put("errorcode", 4);
 										String response = obj.toString();
 										Httpresponser res = new Httpresponser(httpconnection, response);
 										res.execute();
 									}
-									//response
 								}else
 								{
 									JSONObject obj=new JSONObject();
@@ -112,6 +113,7 @@ public class Newfilehandler implements HttpHandler
 								res.execute();
 							}
 							
+							
 						}else
 						{
 							JSONObject obj=new JSONObject();
@@ -121,6 +123,7 @@ public class Newfilehandler implements HttpHandler
 							Httpresponser res = new Httpresponser(httpconnection, response);
 							res.execute();
 						}
+						
 					}else
 					{
 						System.out.println("unknown method:" + httpconnection.getRequestMethod());
@@ -133,7 +136,7 @@ public class Newfilehandler implements HttpHandler
 			{
 				try
 				{
-					System.out.println("the below error has happen in 'Newfilehandler'");
+					System.out.println("the below error has happen in 'Deleteblockhandler'");
 					JSONObject obj=new JSONObject();
 					obj.put("succ", false);
 					obj.put("errorcode", 4);
@@ -143,11 +146,12 @@ public class Newfilehandler implements HttpHandler
 					e.printStackTrace();
 				}catch(Exception layer2e)
 				{
-					System.out.println("the below error has happen in 'Newfilehandler',layer2exception");
+					System.out.println("the below error has happen in 'Deleteblockhandler',layer2exception");
 					layer2e.printStackTrace();
 				}
 			}
 		}
+		
 	}
 	
 }

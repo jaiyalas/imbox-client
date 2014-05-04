@@ -26,7 +26,7 @@ public class Userfilelistgetter extends db_connect
 			{
 				datalist.add(result.getString("fileName"));
 				datalist.add(result.getString("f_MD5"));
-				datalist.add(result.getString("antendent_f_MD5"));
+				datalist.add(result.getString("antedent_f_MD5"));
 			}
 		}catch(Exception e)
 		{

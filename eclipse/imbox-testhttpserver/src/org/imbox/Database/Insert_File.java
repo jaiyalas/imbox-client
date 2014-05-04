@@ -3,18 +3,25 @@ import java.sql.*;
 //import java.util.Scanner;
 public class Insert_File extends db_connect{
     private String acc,FileName,FID,old_MD5,new_MD5;
-    private boolean userFileInsert;
+    private boolean userFileInsert,userBlockInsert;
 	//input: account, fileName, fileID, old_MD5, new_MD5
 	public Insert_File(String acc,String FileName,String FID,String old_MD5,String new_MD5){
 		this.acc = acc;   this.FileName = FileName;
 		this.FID = FID;   this.old_MD5 = old_MD5;   this.new_MD5=new_MD5;
 	}
+	public void setBlockInsert(boolean userBlockInsert){    //set if user has file for delete
+    	this.userBlockInsert = userBlockInsert;
+    }
+    public boolean getBlockInsert(){                  //get if user has file for delete
+    	return userBlockInsert;
+    }
 	public void setFileInsert(boolean userFileInsert){    //set if user has file for delete
     	this.userFileInsert = userFileInsert;
     }
     public boolean getFileInsert(){                  //get if user has file for delete
     	return userFileInsert;
     }
+    
 	public void InsertFile(){
 		try{          
 			//search FID for same FID of server's file
@@ -23,11 +30,13 @@ public class Insert_File extends db_connect{
 			ResultSet FIDresult = stmt.executeQuery(searchFID);
 			if(FIDresult.next()){    
 				//if same, add server_file counter of that file
+				setBlockInsert(false);
 				String counter_plus = "UPDATE server_file SET counter=counter+1 WHERE fid = '"+FID+"'";
 				stmt.executeUpdate(counter_plus);
 			}
 			else{    //new file
-				//insert into server_file table�Acounter=1
+				//insert into server_file table，counter=1
+				setBlockInsert(true);
 				String insert = "INSERT INTO server_file VALUES ('"+ FID +"', 1,'"+ new_MD5 +"')";
 				stmt.executeUpdate(insert);
 				//insert block?
@@ -55,7 +64,7 @@ public class Insert_File extends db_connect{
 		String new_MD5 = input.next();
 		Insert_File insert = new Insert_File(acc, FileName, FID, old_MD5, new_MD5);
 		insert.InsertFile();
-		System.out.println(insert.userFileInsert);
+		System.out.println(insert.userBlockInsert);
 		input.close();*/
 	}
 

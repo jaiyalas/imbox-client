@@ -62,9 +62,12 @@ public class Syncrequester
 		List<FileRecH> returnlist = new ArrayList<FileRecH>();
 		try
 		{
-			for (int i = 0;i<jsonfilelistarray.length();i+=3)
+			if (jsonfilelistarray.length() > 0)
 			{
-				returnlist.add(new FileRecH(jsonfilelistarray.get(i).toString(),jsonfilelistarray.get(i+1).toString(),jsonfilelistarray.get(i+2).toString()));
+				for (int i = 0;i<jsonfilelistarray.length();i+=3)
+				{
+					returnlist.add(new FileRecH(jsonfilelistarray.get(i).toString(),jsonfilelistarray.get(i+1).toString(),jsonfilelistarray.get(i+2).toString()));
+				}
 			}
 		}catch(Exception e)
 		{
