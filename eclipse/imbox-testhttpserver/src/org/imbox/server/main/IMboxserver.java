@@ -5,6 +5,7 @@ import java.net.InetSocketAddress;
 import org.imbox.infrastructure.Workspace;
 import org.imbox.server.functions.LOCK.Lock;
 import org.imbox.server.pagehandler.Networkcheckhandler;
+import org.imbox.server.pagehandler.Tokenverifyhandler;
 import org.imbox.server.pagehandler.block.Getblockhandler;
 import org.imbox.server.pagehandler.block.Getblockrecordhandler;
 import org.imbox.server.pagehandler.block.Postblockhandler;
@@ -44,6 +45,7 @@ public class IMboxserver
 		server.createContext("/modifyfile",new Modifyfilehandler());
 		server.createContext("/newfile",new Newfilehandler());
 		server.createContext("/deletefile",new Deletefilehandler());
+		server.createContext("/verifytoken", new Tokenverifyhandler());
         server.setExecutor(null); // creates a default executor
         System.out.println("the server is ready, please use startserver command to start");
         Workspace.prepareWorkspaceS();

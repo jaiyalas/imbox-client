@@ -20,26 +20,40 @@ public class Authenticator
 	
 	public String Authenticatebypassword(String accountname, String pwd, String MAC,String IP)
 	{
-		new_login logintodb = new new_login(accountname, pwd, MAC, IP);
-		logintodb.acc_insert();
-		if (logintodb.getPwdCorrect())
+		if (accountname.length() >0 && pwd.length() >0 && MAC.length() >0 && IP.length() >0 )
 		{
-			return Tokenmaker(accountname,MAC);
+			new_login logintodb = new new_login(accountname, pwd, MAC, IP);
+			logintodb.acc_insert();
+			if (logintodb.getPwdCorrect())
+			{
+				return Tokenmaker(accountname,MAC);
+			}else
+			{
+				return new String();
+			}
 		}else
 		{
 			return new String();
 		}
+		
+		
 	}
 	
 	public boolean Authenticatebytoken(String token, String MAC,String IP)
 	{
-		Tokenpair decryptedtoken = decrypttoken(token,MAC);
-		Date date = new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-		String timestring = sdf.format(date.getTime());
-		if (decryptedtoken.timestamp.equals(timestring))   // TODO: and check account exist
+		if (token.length() >0 && MAC.length() >0 && IP.length() >0 )
 		{
-			return true;
+			Tokenpair decryptedtoken = decrypttoken(token,MAC);
+			Date date = new Date();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+			String timestring = sdf.format(date.getTime());
+			if (decryptedtoken.timestamp.equals(timestring))   // TODO: and check account exist
+			{
+				return true;
+			}else
+			{
+				return false;
+			}
 		}else
 		{
 			return false;
