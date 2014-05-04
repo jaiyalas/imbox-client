@@ -23,13 +23,13 @@ public class MonitorShell{
 	fao = new FileAlterationObserver(workspace);
 	monitor = new FileAlterationMonitor(Const.monitorPeriod * 1000);
 	
-	handlersInitial();
+	resetShellHandlers();
 
 	fao.addListener(eventHandler);
 	monitor.addObserver(fao);
     };
 
-    private void handlersInitial(){
+    public void resetShellHandlers(){
 	Consumer<File> emptyFun = (File f) -> {};
 	
 	eventHandler.updateHandler(AltType.FileCreate, emptyFun);

@@ -46,7 +46,7 @@ public class ClientApp{
 	updateUIFunctions();
 	ui.show();
 
-	updateShellHandler();
+	shell.resetShellHandlers();
 	try{
 	    shell.start(); //folk
 	}catch(Exception e){}
@@ -62,14 +62,13 @@ public class ClientApp{
 			ui.appendMsg("Your account ("+_acc+
 				     ") has been created successfully");
 		    }else{
-			ui.appendMsg("Account creating have failed");
+			ui.appendMsg("Account creating have failed,"+
+				     " please verify your network "+
+				     "and try again.");
 		    }
-		}catch(IMBOXNW_jsonException e){
+		}catch(Exception e){
 		    ui.appendMsg("Create new user failure.");
-		}catch(IMBOXNW_httpstatusException e){
-		    ui.appendMsg("Create new user failure.");
-		}catch(IOException e){
-		    ui.appendMsg("Create new user failure.");
+		    ui.appendMsg("[EXCEPTION]:"+e.toString());
 		}		
 	    });
 	ui.updateLoginFun((_acc,_pwd) ->{
@@ -77,21 +76,18 @@ public class ClientApp{
 		try{
 		    loginmaster.authenticate();
 		    if(loginmaster.getstatus()){
+			updateShellHandler();
 			ui.setSYNCHRONIZING();
-			ui.appendMsg("Connecting to Server...");
 			ui.appendMsg("You're logging in server with "+_acc);
 			ui.setSYNCHRONIZED();
 		    }else{
 			ui.appendMsg("Login failed,"+
 				     " please verify your network "+
-				     "and/or your login information.");
+				     "and try again.");
 		    }
-		}catch(IMBOXNW_jsonException e){
+		}catch(Exception e){
 		    ui.appendMsg("Login failure.");
-		}catch(IMBOXNW_httpstatusException e){
-		    ui.appendMsg("Login failure.");
-		}catch(IOException e){
-		    ui.appendMsg("Login failure.");
+		    ui.appendMsg("[EXCEPTION]:"+e.toString());
 		}
 	    }); 
 	ui.updateShareURLFun((_fname) -> {
@@ -105,30 +101,31 @@ public class ClientApp{
     private void updateShellHandler(){
 	shell.updateHandler(AltType.FileCreate, (File file)->{
 		ui.appendMsg(file.getAbsoluteFile() + " was created.");
-		try{
-		    ui.setSYNCHRONIZING();
-		    List<Block> bs = FileHandler.genBlocksFromChannel
-			(new RandomAccessFile(file,"r").getChannel());
-		    bs.forEach
-			(b -> {
-			    try{
-				Blockposter bp = new Blockposter(file.getName(),
-								 b.getContent(),b.getPos());
-				 bp.sendrequest();
-				 if(bp.getstatus()){
-				     ui.appendMsg("Block "+b.getName()+"has been sent");
-				 }else{
-				     ui.appendMsg("Sending has failed");
-				 }
-			    }catch(Exception e){
-				ui.appendMsg("GOT a Exception");
-			    }
-			});
-		    ui.setSYNCHRONIZED();
-		}catch(IOException e){
-		    ui.appendMsg("Loading file ("+file.getName()+") has failed");
-		    ui.setSHUTDOWN();
-		} 
+		// try{
+		//     ui.setSYNCHRONIZING();
+		//     List<Block> bs = FileHandler.genBlocksFromChannel
+		// 	(new RandomAccessFile(file,"r").getChannel());
+		//     bs.forEach
+		// 	(b -> {
+		// 	    try{
+		// 		Blockposter bp = new Blockposter(file.getName(),
+		// 						 b.getContent(),b.getPos());
+		// 		 bp.sendrequest();
+		// 		 if(bp.getstatus()){
+		// 		     ui.appendMsg("Block "+b.getName()+"has been sent");
+		// 		 }else{
+		// 		     ui.appendMsg("Sending has failed");
+		// 		 }
+		// 	    }catch(Exception e){
+		// 		ui.appendMsg("GOT a Exception");
+		// 	    }
+		// 	});
+		//     ui.setSYNCHRONIZED();
+		// }catch(IOException e){
+		//     ui.appendMsg("Loading file ("+file.getName()+") has failed");
+		//     ui.setSHUTDOWN();
+		// }
+		
 	    });
 	shell.updateHandler(AltType.FileDelete, (File file)->{
 		ui.appendMsg(file.getAbsoluteFile() + " was removed.");

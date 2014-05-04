@@ -98,7 +98,7 @@ public class UImanager{
 	/** Login Area Setup**/
 
 	button.setSize(pwdField.getSize());
-	button.addActionListener((ae) -> {loginAction();});
+	button.addActionListener(loginAction);
 	stateLabel.setSize(pwdField.getSize());
 	loginPanel.setLayout(new GridLayout(3,2));
  
@@ -157,8 +157,10 @@ public class UImanager{
     private void setButtonsOnline(){
 	syncButton.setText("Manually Sync");
 	urlButton.setText("Share File");
-	urlButton.addActionListener((ae) -> {shareURLAction();});
-	syncButton.addActionListener((ae) -> {fSyncAction();});
+	urlButton.removeActionListener(newUserAction);
+	syncButton.removeActionListener(systemExitAction);
+	urlButton.addActionListener(shareURLAction);
+	syncButton.addActionListener(fSyncAction);
 	urlButton.setEnabled(true);
 	syncButton.setEnabled(true);
     }
@@ -171,8 +173,10 @@ public class UImanager{
     private void setButtonsSpecialized(){
 	urlButton.setText("New User");
 	syncButton.setText("Exit");
-	urlButton.addActionListener((ae) -> {newUserAction();});
-	syncButton.addActionListener((ae) -> {systemExitAction();});
+	urlButton.removeActionListener(shareURLAction);
+	syncButton.removeActionListener(fSyncAction);
+	urlButton.addActionListener(newUserAction);
+	syncButton.addActionListener(systemExitAction);
 	urlButton.setEnabled(true);
 	syncButton.setEnabled(true);
     }
@@ -225,12 +229,12 @@ public class UImanager{
     /**
      *  DEFAULT ACTION
      */
-    private void newUserAction(){
+    private ActionListener newUserAction = (ActionEvent e) -> {
 	if(reger.regist()){
 	    newUserFun.accept(reger.getAcc(),reger.getPwd());
 	}
     };
-    private void loginAction(){
+    private ActionListener loginAction = (ActionEvent e) -> {
 	String name = nameField.getText();
 	String pwd = pwdField.getText();
 	if(name.equals("") || 
@@ -240,20 +244,20 @@ public class UImanager{
 	    loginFun.accept(name,pwd);
 	}
     };
-    private void shareURLAction(){
+    private ActionListener shareURLAction = (ActionEvent e) -> {
 	try{
 	    fChooser.ChooseFile();
 	    shareURLFun.accept(fChooser.getFileName());
-	}catch(HeadlessException e){
+	}catch(HeadlessException he){
 	    appendMsg("System failure because of a HeadlessException!");
 	    appendMsg("Please restart your Imbox client.");
 	    setSHUTDOWN();
 	}
     };
-    private void fSyncAction(){
+    private ActionListener fSyncAction = (ActionEvent e) -> {
 	fSyncFun.accept("");
     };
-    private void systemExitAction(){
+    private ActionListener systemExitAction = (ActionEvent e) -> {
 	System.exit(0);
     };
 
