@@ -3,7 +3,7 @@ import java.sql.*;
 public class db_connect {
     private static String driver   = "com.mysql.jdbc.Driver";
     private static String url      = "jdbc:mysql://127.0.0.1:3306/";
-    protected static String dbname   = "imbox";
+    protected static String dbname   = "group2_db";  // real : group2_db
     private static String user     = "root";
     private static String password = "imbox";
     protected static Connection connect;
