@@ -9,6 +9,7 @@ import org.imbox.client.log.*;
 import org.imbox.client.fileMonitor.*;
 import org.imbox.client.synchronize.*;
 
+import org.imbox.client.network.*;
 import org.imbox.client.network.login.*;
 import org.imbox.client.network.block.*;
 
@@ -26,7 +27,7 @@ public class ClientApp{
     private MonitorShell shell;
     
     public ClientApp(){	
-	workspace= new File(Workspace.HOME);
+	workspace= new File(Workspace.SYSDIRc);
 	ui = new UImanager();
 	shell = new MonitorShell(workspace);
 
@@ -91,10 +92,13 @@ public class ClientApp{
 		}
 	    }); 
 	ui.updateShareURLFun((_fname) -> {
-		//
+		ui.appendMsg("share URL");
+		List<FileRec> frs = logwriter.readLog();
+		for (FileRec fr : frs)
+		    ui.appendMsg("Name = "+fr.getName());
 	    });
 	ui.updateFSyncFun((_str) -> {
-		//
+		logwriter.refreshLog();
 	    });
     };
 	
@@ -134,4 +138,14 @@ public class ClientApp{
 		ui.appendMsg(file.getAbsoluteFile() + " was modified.");
 	    });
     };
+
+    private boolean tokenCheck(){
+	try{
+	    Tokenverifier tv = new Tokenverifier();
+	    tv.verifytoken();
+	    return tv.gettokenverifyresult() && tv.gettokenverifyresult();
+	}catch(Exception e){}
+	return false;
+    }
+
 }

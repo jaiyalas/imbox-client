@@ -26,17 +26,17 @@ public class FileEventHandler implements FileAlterationListener{
 	chgDireHandler = (file) -> {file.toString();};
     };
  
-    public void onDirectoryCreate(final File dir)
+    public void onDirectoryCreate(File dir)
     {newDireHandler.accept(dir);};
-    public void onDirectoryChange(final File dir)
+    public void onDirectoryChange(File dir)
     {chgDireHandler.accept(dir);};
-    public void onDirectoryDelete(final File dir)
+    public void onDirectoryDelete(File dir)
     {delDireHandler.accept(dir);};
-    public void onFileCreate(final File file)
+    public void onFileCreate(File file)
     {newFileHandler.accept(file);};
-    public void onFileChange(final File file)
+    public void onFileChange(File file)
     {chgDireHandler.accept(file);};
-    public void onFileDelete(final File file)
+    public void onFileDelete(File file)
     {delDireHandler.accept(file);};
 
     public void updateHandler(AltType at, Consumer<File> fun){
