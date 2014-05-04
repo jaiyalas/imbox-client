@@ -12,6 +12,8 @@ errorcode:
 4: server exception error (need to check server status & log)
 5: file relate error
 6: deletefile fail
+7: lock error
+8: lock not locked
 19: account is already registered
 20: exception failure (see exception log) 
 
