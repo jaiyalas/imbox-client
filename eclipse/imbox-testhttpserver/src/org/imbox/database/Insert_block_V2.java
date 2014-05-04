@@ -19,7 +19,7 @@ public class Insert_block_V2 extends db_connect{
 			int count = count_result.getInt(1);
 			if(count>0){
 				//file's old block update
-				if(seq <= count){
+				if(seq <= count-1){
 					String update = "UPDATE block_map SET blockName='"+blockName+"' WHERE FID = '"+FID+"' AND sequence ="+seq;
 					stmt.executeUpdate(update);
 				}

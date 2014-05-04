@@ -3,11 +3,14 @@ package org.imbox.client.showapi;
 import java.util.List;
 
 import org.imbox.client.network.Connectionchecker;
+import org.imbox.client.network.block.Blockposter;
 import org.imbox.client.network.block.Blockrecordgetter;
 import org.imbox.client.network.file.Syncrequester;
 import org.imbox.client.network.login.Loginmaster;
 import org.imbox.client.network.sharelink.URLgenerator;
 import org.imbox.client.network.ultility.Internetrecord;
+import org.imbox.infrastructure.Workspace;
+import org.imbox.infrastructure.file.Block;
 import org.imbox.infrastructure.file.BlockRec;
 import org.imbox.infrastructure.file.FileRec;
 
@@ -66,12 +69,12 @@ public class Supertester
 			{
 				System.out.println("[Modify file] data = " + filelist.get(i).getName() + "\t" + filelist.get(i).getMd5());
 			}
-//			System.out.println("================================================================");
-//			System.out.println("testing target: block post,  showing all function");
-//			Blockposter bp = new Blockposter("test.txt",Block.readBlockFromHD(Workspace.SYSDIRs, "47cd0be18d3456e83cc1b7d7823c8def"),1);
-//			bp.sendrequest();
-//			System.out.println("[block post] succ = " + bp.getstatus());
-//			System.out.println("[block post] errorcode = " + bp.geterrorcode());
+			System.out.println("================================================================");
+			System.out.println("testing target: block post,  showing all function");
+			Blockposter bp = new Blockposter("test.txt",Block.readBlockFromHD(Workspace.SYSDIRs, "3c3ddf981871d1ad7b33630255115ce0"),2);
+			bp.sendrequest();
+			System.out.println("[block post] succ = " + bp.getstatus());
+			System.out.println("[block post] errorcode = " + bp.geterrorcode());
 //			System.out.println("================================================================");
 //			System.out.println("testing target: block get,  showing all function");
 //			Blockgetter bg = new Blockgetter("4e4b036c810b7d2a4d03eb1ab124d0e8", 0);

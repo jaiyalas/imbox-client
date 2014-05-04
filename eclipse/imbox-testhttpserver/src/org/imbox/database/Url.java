@@ -1,4 +1,5 @@
 package org.imbox.database;
+import java.net.InetAddress;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
@@ -9,7 +10,8 @@ public class Url extends db_connect{
 	static String domain = "127.0.0.1";
 	public Url(String account,String filename){
 		try{
-			
+		InetAddress IP=InetAddress.getLocalHost();
+		domain = IP.getHostAddress();
 		Statement stmt = connect.createStatement();	
 		String md5 = "SELECT f_MD5 FROM " +account+ " WHERE fileName = '"+filename+"'";
 		ResultSet md5_result = stmt.executeQuery(md5);
