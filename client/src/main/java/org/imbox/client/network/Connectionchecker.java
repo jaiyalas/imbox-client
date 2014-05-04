@@ -1,7 +1,8 @@
-package org.imbox.client.networkrelated;
+package org.imbox.client.network;
 
 import org.apache.http.HttpResponse;
-import org.imbox.client.networkrelated.ultility.Simpleconnection;
+import org.imbox.client.network.ultility.Simpleconnection;
+import org.imbox.infrastructure.exceptions.IMBOXNW_httpstatusException;
 
 
 public class Connectionchecker
@@ -11,7 +12,7 @@ public class Connectionchecker
 		
 	}
 	
-	public boolean checknetworkstatus()
+	public boolean checknetworkstatus() throws IMBOXNW_httpstatusException
 	{
 		try
 		{
@@ -27,7 +28,7 @@ public class Connectionchecker
 		}catch(Exception e)
 		{
 			e.printStackTrace();
-			return false;
+			throw new IMBOXNW_httpstatusException("connectionchecker");
 		}
 	}
 }

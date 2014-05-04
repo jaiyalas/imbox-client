@@ -1,9 +1,14 @@
-package org.imbox.client.networkrelated;
+package org.imbox.client.network.lock;
+
+import java.io.IOException;
 
 import org.apache.http.HttpResponse;
-import org.imbox.client.networkrelated.ultility.Internetrecord;
-import org.imbox.client.networkrelated.ultility.Responsereader;
-import org.imbox.client.networkrelated.ultility.Simpleconnection;
+import org.imbox.client.network.ultility.Internetrecord;
+import org.imbox.client.network.ultility.Responsereader;
+import org.imbox.client.network.ultility.Simpleconnection;
+import org.imbox.infrastructure.exceptions.IMBOXNW_httpstatusException;
+import org.imbox.infrastructure.exceptions.IMBOXNW_jsonException;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 
@@ -15,10 +20,9 @@ public class Serverlockgetter
 	{
 		status = false;
 		errorcode = -1;
-		getlock();
 	}
 	
-	private void getlock()
+	public void getlock() throws IMBOXNW_jsonException, IMBOXNW_httpstatusException, IOException
 	{
 		try
 		{
@@ -28,13 +32,14 @@ public class Serverlockgetter
 			Simpleconnection conn = new Simpleconnection();
 			HttpResponse res = conn.httppost("getserverlock", obj);
 			checkstatus(res);
-		}catch(Exception e)
+		}catch(JSONException e)
 		{
 			e.printStackTrace();
+			throw new IMBOXNW_jsonException("Serverlockgetter-getlock");
 		}
 	}
 	
-	private void checkstatus(HttpResponse res)
+	private void checkstatus(HttpResponse res) throws IMBOXNW_jsonException, IOException
 	{
 		try {
 			if (res.getStatusLine().getStatusCode() == 200)
@@ -49,10 +54,11 @@ public class Serverlockgetter
 				status = false;
 				errorcode = -2;
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (JSONException e) {
 			status = false;
 			errorcode = 20;
+			e.printStackTrace();
+			throw new IMBOXNW_jsonException("Serverlockgetter-checkstatus");
 		}
 		
 	}

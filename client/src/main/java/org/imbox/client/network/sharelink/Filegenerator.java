@@ -1,30 +1,34 @@
-package org.imbox.client.networkrelated;
+package org.imbox.client.network.sharelink;
+
+import java.io.IOException;
 
 import org.apache.http.HttpResponse;
-import org.imbox.client.networkrelated.ultility.Internetrecord;
-import org.imbox.client.networkrelated.ultility.Responsereader;
-import org.imbox.client.networkrelated.ultility.Simpleconnection;
+import org.imbox.client.network.ultility.Internetrecord;
+import org.imbox.client.network.ultility.Responsereader;
+import org.imbox.client.network.ultility.Simpleconnection;
+import org.imbox.infrastructure.exceptions.IMBOXNW_httpstatusException;
+import org.imbox.infrastructure.exceptions.IMBOXNW_jsonException;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 
-public class URLgenerator
+public class Filegenerator
 {
 	private String account;
 	private String filename;
-	private String URL;
+	private String data;
 	private boolean status;
 	private int errorcode;
-	public URLgenerator(String account,String filename)
+	public Filegenerator(String account,String filename)
 	{
 		this.account = account;
 		this.filename = filename;
-		URL=new String();
-		status = false;
 		errorcode = -1;
-		sendrequest();
+		data = new String();
+		status = false;
 	}
 	
-	private void sendrequest()
+	public void sendrequest() throws IMBOXNW_jsonException, IMBOXNW_httpstatusException, IOException
 	{
 		try
 		{
@@ -34,15 +38,16 @@ public class URLgenerator
 			obj.put("account", this.account);
 			obj.put("filename", this.filename);
 			Simpleconnection conn = new Simpleconnection();
-			readresponse(conn.httppost("generateURL", obj));
-		}catch(Exception e)
+			readresponse(conn.httppost("generatefile", obj));
+		}catch(JSONException e)
 		{
 			e.printStackTrace();
+			throw new IMBOXNW_jsonException("Filegenerator-sendrequest");
 		}
 		
 	}
 	
-	private void readresponse(HttpResponse res)
+	private void readresponse(HttpResponse res) throws IMBOXNW_jsonException
 	{
 		try
 		{
@@ -50,27 +55,29 @@ public class URLgenerator
 			{
 				Responsereader reader = new Responsereader(res);
 				JSONObject obj = new JSONObject(reader.getresponse());
-				URL = obj.getString("URL");
+				data = obj.getString("data");
 				status = obj.getBoolean("succ");
 				errorcode = obj.getInt("errorcode");
 			}else
 			{
 				System.out.println("http error: " + Integer.toString(res.getStatusLine().getStatusCode()));
-				URL=new String();
+				data = new String();
 				status = false;
 				errorcode = -2;
 			}
+			
 		}catch(Exception e)
 		{
 			e.printStackTrace();
-			URL = new String();
+			data = new String();
 			status = false;
 			errorcode = 20;
+			throw new IMBOXNW_jsonException("Filegenerator-readresponse");
 		}
 	}
-	public String geturl()
+	public String getdata()
 	{
-		return URL;
+		return data;
 	}
 	public boolean getstatus()
 	{

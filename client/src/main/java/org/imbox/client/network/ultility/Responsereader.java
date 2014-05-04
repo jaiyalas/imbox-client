@@ -1,6 +1,7 @@
-package	org.imbox.client.networkrelated.ultility;
+package	org.imbox.client.network.ultility;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 
 import org.apache.http.HttpResponse;
@@ -8,7 +9,7 @@ import org.apache.http.HttpResponse;
 public class Responsereader
 {
 	private String responsebody;
-	public Responsereader(HttpResponse res )
+	public Responsereader(HttpResponse res ) throws IOException
 	{
 		try{
 		BufferedReader br = new BufferedReader(new InputStreamReader(res.getEntity().getContent()));
@@ -18,9 +19,10 @@ public class Responsereader
 		{
 		   responsebody = responsebody + readLine;
 		}
-		}catch(Exception e)
+		}catch(IOException e)
 		{
 			e.printStackTrace();
+			throw new IOException();
 		}
 	}
 	

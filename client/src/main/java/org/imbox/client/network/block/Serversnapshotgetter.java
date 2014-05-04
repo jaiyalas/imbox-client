@@ -1,12 +1,12 @@
-package org.imbox.client.networkrelated;
+/*package org.imbox.client.network.block;
 
 import org.apache.http.HttpResponse;
-import org.imbox.client.networkrelated.ultility.Responsereader;
-import org.imbox.client.networkrelated.ultility.Simpleconnection;
+import org.imbox.client.network.ultility.Responsereader;
+import org.imbox.client.network.ultility.Simpleconnection;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-
+//not using any more
 public class Serversnapshotgetter
 {
 	private JSONArray snapshot;
@@ -50,4 +50,4 @@ public class Serversnapshotgetter
 	{
 		return snapshot;
 	}
-}
+}*/

@@ -1,14 +1,19 @@
-package org.imbox.client.networkrelated;
+package org.imbox.client.network.login;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import org.apache.http.HttpResponse;
-import org.imbox.client.networkrelated.ultility.Internetrecord;
-import org.imbox.client.networkrelated.ultility.Responsereader;
-import org.imbox.client.networkrelated.ultility.Simpleconnection;
+import org.imbox.client.network.ultility.Internetrecord;
+import org.imbox.client.network.ultility.Responsereader;
+import org.imbox.client.network.ultility.Simpleconnection;
+import org.imbox.infrastructure.Casting;
+import org.imbox.infrastructure.exceptions.IMBOXNW_httpstatusException;
+import org.imbox.infrastructure.exceptions.IMBOXNW_jsonException;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 
@@ -37,7 +42,7 @@ public class Loginmaster
 		this.password = pwd;
 	}
 	
-	public void authenticate()
+	public void authenticate() throws IMBOXNW_jsonException, IMBOXNW_httpstatusException, IOException
 	{
 		try {
 			JSONObject obj=new JSONObject();
@@ -47,15 +52,16 @@ public class Loginmaster
 			Simpleconnection conn = new Simpleconnection();
 			HttpResponse res = conn.httppost("login", obj);
 			readresponse(res);
-		} catch (Exception e){
+		} catch (JSONException e){
 			e.printStackTrace();
 			Internetrecord.settoken("");
 			status = false;
 			errorcode = 0;
+			throw new IMBOXNW_jsonException("Loginmaster-authenticate");
 		}	 
 	}
 	
-	private void readresponse(HttpResponse res)
+	private void readresponse(HttpResponse res) throws IMBOXNW_jsonException, IOException
 	{
 		try{
 			if (res.getStatusLine().getStatusCode() == 200)
@@ -72,12 +78,13 @@ public class Loginmaster
 				status = false;
 				errorcode = -2;
 			}
-		}catch(Exception e)
+		}catch(JSONException e)
 		{
 			e.printStackTrace();
 			Internetrecord.settoken("");
 			status = false;
 			errorcode = 20;
+			throw new IMBOXNW_jsonException("Loginmaster-readresponse");
 		}
 	}
 	
@@ -105,10 +112,10 @@ public class Loginmaster
 	private String getencrypt()
 	{
 		try {
-			MessageDigest encrypter = MessageDigest.getInstance("SHA-256");
+			MessageDigest encrypter = MessageDigest.getInstance("md5");
 			encrypter.update(password.getBytes());
 			byte[] digest = encrypter.digest();
-			return new String(digest);
+			return Casting.bytesToString(digest);
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}

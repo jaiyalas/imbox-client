@@ -1,12 +1,17 @@
-package org.imbox.client.networkrelated;
+package org.imbox.client.network.login;
 
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import org.apache.http.HttpResponse;
-import org.imbox.client.networkrelated.ultility.Internetrecord;
-import org.imbox.client.networkrelated.ultility.Responsereader;
-import org.imbox.client.networkrelated.ultility.Simpleconnection;
+import org.imbox.client.network.ultility.Internetrecord;
+import org.imbox.client.network.ultility.Responsereader;
+import org.imbox.client.network.ultility.Simpleconnection;
+import org.imbox.infrastructure.Casting;
+import org.imbox.infrastructure.exceptions.IMBOXNW_httpstatusException;
+import org.imbox.infrastructure.exceptions.IMBOXNW_jsonException;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 
@@ -26,10 +31,9 @@ public class Accountcreator
 		responsestatus = false;
 		responseerrorcode = -1;
 		token = "";
-		register();
 	}
 	
-	private void register()
+	public void register() throws IMBOXNW_jsonException, IMBOXNW_httpstatusException, IOException
 	{
 		try {
 			JSONObject obj=new JSONObject();
@@ -54,11 +58,12 @@ public class Accountcreator
 				responseerrorcode = -2;
 			}
 			
-		} catch (Exception e){
+		} catch (JSONException e){
 			e.printStackTrace();
 			responsestatus = false;
 			token = "";
 			responseerrorcode = 20;
+			throw new IMBOXNW_jsonException("Accountcreator-register");
 		}
 	}
 	
@@ -87,10 +92,10 @@ public class Accountcreator
 	private String getencrypt()
 	{
 		try {
-			MessageDigest encrypter = MessageDigest.getInstance("SHA-256");
+			MessageDigest encrypter = MessageDigest.getInstance("md5");
 			encrypter.update(password.getBytes());
 			byte[] digest = encrypter.digest();
-			return new String(digest);
+			return Casting.bytesToString(digest);
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
