@@ -49,7 +49,7 @@
             <manifest>
               <addClasspath>true</addClasspath>
 	      <classpathPrefix>lib/</classpathPrefix>
-              <mainClass>org.imbox.Imbox</mainClass>
+              <mainClass>org.imbox.ImboxClient</mainClass>
             </manifest>
           </archive>
         </configuration>
@@ -59,7 +59,7 @@
       <configuration>
         <archive>
           <manifest>
-            <mainClass>org.imbox.Imbox</mainClass>
+            <mainClass>org.imbox.ImboxClient</mainClass>
           </manifest>
         </archive>
         <descriptorRefs>
