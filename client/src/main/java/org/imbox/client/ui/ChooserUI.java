@@ -14,7 +14,7 @@ public class ChooserUI {
     public ChooserUI(){path = Workspace.SYSDIRc;}
     public String getFileName(){return fname;}
     public String getURL(){return URL;}
-    public void ChooseFile() throws HeadlessException{
+    public boolean ChooseFile() throws HeadlessException{
 	try{
 	    JFileChooser chooser = new JFileChooser(path);
 	    chooser.setMultiSelectionEnabled(false);
@@ -31,8 +31,10 @@ public class ChooserUI {
 		
 		/** connecting to server here! **/
 		this.fname = chooser.getSelectedFile().getName();
+		return true;
 	    }
 	}catch(IllegalArgumentException ignored){}
+	return false;
     }
     public void Message(){}
 }

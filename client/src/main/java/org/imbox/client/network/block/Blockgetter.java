@@ -1,4 +1,4 @@
-package org.imbox.client.network.block;
+	package org.imbox.client.network.block;
 
 import java.io.IOException;
 
@@ -17,7 +17,7 @@ import org.json.JSONObject;
 public class Blockgetter
 {
 	private String blockname;
-	private int seq;
+	public int seq;
 	private boolean status;
 	private String datastring;
 	private int errorcode;

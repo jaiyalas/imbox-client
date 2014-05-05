@@ -14,7 +14,6 @@ public class UImanager{
     private JFrame         mainFrame;
     private JPanel         mainPanel;
     private int            lineCtr;
-    private ChooserUI      fChooser;
     private RegisterUI     reger;
 
     private JPanel         displayPanel;
@@ -61,7 +60,6 @@ public class UImanager{
 	mainFrame.setResizable(false);
 	mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-	fChooser    = new ChooserUI();
 	reger       = new RegisterUI(mainFrame);
 
 	/** Console Area Init **/
@@ -246,8 +244,10 @@ public class UImanager{
     };
     private ActionListener shareURLAction = (ActionEvent e) -> {
 	try{
-	    fChooser.ChooseFile();
-	    shareURLFun.accept(fChooser.getFileName());
+	    ChooserUI fChooser = new ChooserUI();
+	    if(fChooser.ChooseFile()){
+		shareURLFun.accept(fChooser.getFileName());
+	    }
 	}catch(HeadlessException he){
 	    appendMsg("System failure because of a HeadlessException!");
 	    appendMsg("Please restart your Imbox client.");

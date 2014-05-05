@@ -17,12 +17,14 @@ public class Newfilerequester
 	private String md5;
 	private int errorcode;
 	private boolean succ;
+	private boolean needtopostblock;
 	public Newfilerequester(String filename,String md5)
 	{
 		this.filename = filename;
 		this.md5 = md5;
 		errorcode = -1;
 		succ = false;
+		needtopostblock = true;
 	}
 	
 	public void sendrequest()throws IMBOXNW_jsonException, IOException, IMBOXNW_httpstatusException
@@ -48,6 +50,10 @@ public class Newfilerequester
 				succ = false;
 				errorcode = -2;
 			}
+			if (succ && errorcode == 40)
+			{
+				needtopostblock = false;
+			}
 		}catch(JSONException e)
 		{
 			e.printStackTrace();
@@ -63,5 +69,9 @@ public class Newfilerequester
 	public int geterrorcode()
 	{
 		return errorcode;
+	}
+	public boolean needtopostblock()
+	{
+		return needtopostblock;
 	}
 }

@@ -35,9 +35,9 @@ public class FileEventHandler implements FileAlterationListener{
     public void onFileCreate(File file)
     {newFileHandler.accept(file);};
     public void onFileChange(File file)
-    {chgDireHandler.accept(file);};
+    {chgFileHandler.accept(file);};
     public void onFileDelete(File file)
-    {delDireHandler.accept(file);};
+    {delFileHandler.accept(file);};
 
     public void updateHandler(AltType at, Consumer<File> fun){
 	switch(at){
