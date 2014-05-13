@@ -26,7 +26,7 @@ public class ClientApp{
     private UImanager ui;
     private File workspace; 
 
-    
+    private LogWriter logwriter;
     private Synker    synker;
     private MonitorShell shell;
     
@@ -35,7 +35,8 @@ public class ClientApp{
 	ui = new UImanager();
 	shell = new MonitorShell(workspace);
 
-	synker    = new Synker(ui);	
+	logwriter = new LogWriter();
+	synker    = new Synker(ui,logwriter);	
     };
     public void exec(){
 	try{
@@ -83,6 +84,8 @@ public class ClientApp{
 			updateShellHandler();
 			ui.setSYNCHRONIZING();
 			ui.appendMsg("You're logging in server with "+_acc);
+			logwriter.refreshLog();
+			synker.sync();
 			ui.setSYNCHRONIZED();
 		    }else{
 			ui.appendMsg("Login failed,"+

@@ -26,9 +26,9 @@ public class Synker{
     private UImanager ui;
     private LogWriter logwriter;
 
-    public Synker(UImanager _ui){
+    public Synker(UImanager _ui,LogWriter _log ){
 	this.ui = _ui;
-	logwriter = new LogWriter();
+	logwriter = _log;
     }
 
     public void sync(){
@@ -53,8 +53,12 @@ public class Synker{
 		    if(frh.getCurrentMD5().equalsIgnoreCase("ffffffffffffffffffffffffffffffff")){
 			int i = remote_frhs.indexOf(frh);
 			remote_frhs.remove(i);
-			FileUtils.deleteQuietly(new File(Workspace.SYSDIRc+frh.getName()));
-			ui.appendMsg("Remove file: "+frh.getName());
+
+			File f = new File(Workspace.SYSDIRc+frh.getName());
+			if(f.exists() && !f.isDirectory()){
+			    FileUtils.deleteQuietly(f);
+			    ui.appendMsg("Remove file: "+frh.getName());
+			}
 		    }
 		}
 
