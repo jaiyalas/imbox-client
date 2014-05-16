@@ -77,6 +77,11 @@
       <version>0.2.1</version>
     </dependency>
     <dependency>
+      <groupId>org.imbox</groupId>
+      <artifactId>imbox-client-network</artifactId>
+      <version>0.1</version>
+    </dependency>
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.11</version>
